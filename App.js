@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons';
 
 
 function HomeScreen({ navigation }) {
@@ -99,11 +100,37 @@ const Tab1 = createBottomTabNavigator();
 
 function NotificationsScreen() {
   return (
-    <Tab1.Navigator>
-      <Tab1.Screen name="Tab1" component={TabScreen1} />
-      <Tab1.Screen name="Tab2" component={TabScreen2} />
-      <Tab1.Screen name="Tab3" component={TabScreen3} />
-      <Tab1.Screen name="Tab4" component={TabScreen4} />
+    <Tab1.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === 'Top') {
+          iconName = focused
+            ? 'ios-information-circle'
+            : 'ios-information-circle-outline';
+        } else if (route.name === 'Post') {
+          iconName = focused ? 'ios-list-box' : 'ios-list';
+        } else if (route.name === 'Search') {
+          iconName = focused ? 'ios-search' : 'ios-search'
+        } else if (route.name === 'Profile') {
+          iconName = focused ? 'ios-contact' : 'ios-contact'
+        }
+
+        // You can return any component that you like here!
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+    })}
+    tabBarOptions={{
+      activeTintColor: '#5E9CFE',
+      inactiveTintColor: 'gray',
+    }}
+    
+    >
+      <Tab1.Screen name="Top" component={TabScreen1} />
+      <Tab1.Screen name="Post" component={TabScreen2} />
+      <Tab1.Screen name="Search" component={TabScreen3} />
+      <Tab1.Screen name="Profile" component={TabScreen4} />
     </Tab1.Navigator>
 
   );
