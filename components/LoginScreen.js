@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, } from 'react-native-elements'
+import Details from '../App'
 
 
 export default class LoginScreen extends React.Component {
-    render(){
+    render(navigation){
         return (
             <View style={styles.container}>
             <View>
@@ -30,7 +31,7 @@ export default class LoginScreen extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => this.props.navigation.navigate('Details')}
+                onPress={() => navigation.navigate(Details)}
             >
                 <Text style={styles.buttonText}> Sign In </Text>
             </TouchableOpacity>

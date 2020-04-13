@@ -5,7 +5,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
-
+// import LoginScreen from './components/LoginScreen'
+import TabScreen1 from './components/TabScreen1';
+import TabScreen2 from './components/TabScreen2';
+import TabScreen3 from './components/TabScreen3';
+import TabScreen4 from './components/TabScreen4';
 
 function HomeScreen({ navigation }) {
   return (
@@ -56,46 +60,6 @@ function LoginScreen({ navigation }) {
 );
 }
 
-function TabScreen1() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Tab 1 page"
-      />
-    </View>
-  );
-}
-
-function TabScreen2() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Tab 2 page"
-      />
-    </View>
-  );
-}
-
-function TabScreen3() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Tab 3 page"
-      />
-    </View>
-  );
-}
-
-function TabScreen4() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Tab 4 page"
-      />
-    </View>
-  );
-}
-
 const Tab1 = createBottomTabNavigator();
 
 function NotificationsScreen() {
@@ -135,7 +99,6 @@ function NotificationsScreen() {
 
   );
 }
-
 
 const Stack = createStackNavigator();
 
