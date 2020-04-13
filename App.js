@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, Button, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Button, View, TouchableOpacity, TextInput, Tab } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, } from 'react-native-elements'
 
 
@@ -10,13 +11,13 @@ function HomeScreen({ navigation }) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
         title="Go to Profile"
-        onPress={() => navigation.navigate('Profile')}
+        onPress={() => navigation.navigate('LoginScreen')}
       />
     </View>
   );
 }
 
-function ProfileScreen({ navigation }) {
+function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
     <View>
@@ -42,7 +43,7 @@ function ProfileScreen({ navigation }) {
     </TouchableOpacity>
     <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => navigation.navigate('Notifications')}
     >
         <Text style={styles.buttonText}> Sign In </Text>
     </TouchableOpacity>
@@ -54,25 +55,60 @@ function ProfileScreen({ navigation }) {
 );
 }
 
-function NotificationsScreen({ navigation }) {
+function TabScreen1() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        title="Go to Settings"
-        onPress={() => navigation.navigate('Settings')}
+        title="Tab 1 page"
       />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }
 
-function SettingsScreen({ navigation }) {
+function TabScreen2() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button
+        title="Tab 2 page"
+      />
     </View>
   );
 }
+
+function TabScreen3() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        title="Tab 3 page"
+      />
+    </View>
+  );
+}
+
+function TabScreen4() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        title="Tab 4 page"
+      />
+    </View>
+  );
+}
+
+const Tab1 = createBottomTabNavigator();
+
+function NotificationsScreen() {
+  return (
+    <Tab1.Navigator>
+      <Tab1.Screen name="Tab1" component={TabScreen1} />
+      <Tab1.Screen name="Tab2" component={TabScreen2} />
+      <Tab1.Screen name="Tab3" component={TabScreen3} />
+      <Tab1.Screen name="Tab4" component={TabScreen4} />
+    </Tab1.Navigator>
+
+  );
+}
+
 
 const Stack = createStackNavigator();
 
@@ -80,9 +116,8 @@ function MyStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }
