@@ -1,13 +1,11 @@
 import React from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, } from 'react-native-elements'
-import Details from '../../App'
 
-
-export default class LoginScreen extends React.Component {
-    render(navigation){
-        return (
-            <View style={styles.container}>
+export default LoginScreen = (props) => {
+    return (
+        <View style={styles.container}>
             <View>
                 <Text style={styles.logo}>TomoSume</Text>
             </View>
@@ -18,7 +16,6 @@ export default class LoginScreen extends React.Component {
                     placeholderTextColor="#003f5c"
                 />
             </View>
-
             <View style={styles.inputView} >
                 <TextInput  
                     style={styles.inputText}
@@ -27,21 +24,21 @@ export default class LoginScreen extends React.Component {
                 />
             </View>
             <TouchableOpacity>
-            <Text style={styles.forgot}>Forgot Password?</Text>
+                <Text style={styles.forgot}>Forgot Password?</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate(Details)}
+                onPress={() => props.navigation.navigate('Tab')}
             >
                 <Text style={styles.buttonText}> Sign In </Text>
             </TouchableOpacity>
             <TouchableOpacity
+                onPress={() => props.navigation.navigate('creatAccount')}            
             >
                 <Text> Create Account </Text>
             </TouchableOpacity>
-            </View>
-        );
-    }
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
