@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Button, View, TouchableOpacity, TextInput, Tab } from 'react-native';
+import { StyleSheet, Button, View, TouchableOpacity, TextInput, Tab, AppRegistry } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,6 +10,7 @@ import TabScreen1 from './src/components/TabScreen1';
 import TabScreen2 from './src/components/TabScreen2';
 import TabScreen3 from './src/components/TabScreen3';
 import TabScreen4 from './src/components/TabScreen4';
+import firebase from './firebase';
 
 function HomeScreen({ navigation }) {
   return (
@@ -23,6 +24,26 @@ function HomeScreen({ navigation }) {
 }
 
 function CreateAccount({ navigation }) {
+  const [userId, setName] = useState()
+  const [password, setPass] = useState()
+  const userIdInput = (text) => {
+    setName(text)
+  }
+  const passwordInput = (pass) => {
+    setPass(pass)
+  }
+  const signUp = () => {
+    console.log(userId);
+    console.log(password)
+    firebase.auth().createUserWithEmailAndPassword(userId, password)
+    .then(function() {
+      alert('sign up success')
+    })
+    .catch(function(error) {
+      alert(error.message)
+    })
+  }
+
   return (
     <View style={styles.container}>
     <View>
@@ -33,8 +54,8 @@ function CreateAccount({ navigation }) {
             style={styles.inputText}
             placeholder="userID"
             placeholderTextColor="#818181"
-            // value={userId}
-            // onChangeText={userIdInput}
+            value={userId}
+            onChangeText={userIdInput}
         />
     </View>
 
@@ -43,9 +64,9 @@ function CreateAccount({ navigation }) {
           style={styles.inputText}
           placeholder="password" 
           placeholderTextColor="#818181"
-          // value={password}
-          // secureTextEntry={true}
-          // onChangeText={passwordInput}
+          value={password}
+          secureTextEntry={true}
+          onChangeText={passwordInput}
         />
     </View>
 
@@ -62,8 +83,7 @@ function CreateAccount({ navigation }) {
     <TouchableOpacity
         style={styles.signUpButton}
         // onPress={() => navigation.navigate('Notifications')}
-        // onPress={login}
-
+        onPress={signUp}
     >
         <Text style={styles.buttonText}> Sign Up </Text>
     </TouchableOpacity>
@@ -79,7 +99,7 @@ function CreateAccount({ navigation }) {
 function LoginScreen({ navigation }) {
 
   const [userId, setName] = useState()
-  const [password, setPass] = useState('')
+  const [password, setPass] = useState()
   const userIdInput = (text) => {
     setName(text)
   }
@@ -193,6 +213,8 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+AppRegistry.registerComponent('Appname', () => App);
 
 
 const styles = StyleSheet.create({
