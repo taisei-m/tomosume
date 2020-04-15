@@ -1,14 +1,27 @@
 import React from 'react';
-import { StyleSheet, Button, View, TouchableOpacity, TextInput, Tab } from 'react-native';
+import {MapView,Marker} from 'react-native-maps';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+
+export default function TabScreen2() {
 
 
-
-export default function TabScreen1() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Tab 2 page"
-        />
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.mapStyle}/>
       </View>
     );
   }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    mapStyle: {
+      width: '90%',
+      height: '90%',
+    },
+  });
+  

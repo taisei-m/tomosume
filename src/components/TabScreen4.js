@@ -57,7 +57,7 @@ export default function TabScreen4() {
     <View style={styles.container}>
       <Image
         source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-        style={{ width: 150, height: 150, borderRadius: 200/ 2, position: 'fixed', marginTop: 500}}
+        style={{ width: 80, height: 80, borderRadius: 80/ 2, marginTop: 500}}
       />
       <Text style={styles.userName}>yuya okuse</Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 20}}>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 20,
-    marginBottom: 450
+    marginBottom: 400
   },
   item: {
     backgroundColor: '#f5f5f5',
