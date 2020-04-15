@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, } from 'react-native-elements'
-
+import firebase from '../../firebase'
 
 export default CreateAccount = (props) => {
     const [userId, setName] = useState()
