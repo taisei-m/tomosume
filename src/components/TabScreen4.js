@@ -7,13 +7,13 @@ function Item({ title, context }) {
     <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.context}>{context}</Text>
-      <View >     
+      <View>     
         <Rating
           style={styles.rating}
           count={5}
           defaultRating={4}
           size={20}
-        />
+          ></Rating>
       </View>
     </TouchableOpacity>
   );
