@@ -103,17 +103,17 @@ export default function TabScreen3() {
       <View>
         <Button
           style={styles.shareButton}
-          title="シェア"
+          title="位置情報登録"
           type="outline"
-          onPress={share}
+          onPress={locationData}
         />
       </View>
       <View>
         <Button
           style={styles.shareButton}
-          title="位置情報登録"
+          title="シェア"
           type="outline"
-          onPress={locationData}
+          onPress={share}
         />
       </View>
       {/* <View><Text>{locationResultLatitude}</Text></View>
