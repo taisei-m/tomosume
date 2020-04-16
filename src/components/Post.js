@@ -9,13 +9,17 @@ import * as Permissions from 'expo-permissions';
 
 export default function TabScreen3() {
   let ratingValue = 0
-  const[locationResult, setResult] = useState()
+  const[locationResultLatitude, setResultLatitude] = useState()
+  const[locationResultLongitude, setResultLongitude] = useState()
   const [shopName, setName] = useState()
   const [favoriteMenu, setMenu] = useState()
   const [price, setPrice] = useState()
 
-  const setLocationResult = (location) => {
-    setResult(location)
+  const setLatitude = (latitude) => {
+    setResultLatitude(latitude)
+  }
+  const setLongitude = (longitude) => {
+    setResultLongitude(longitude)
   }
   const inputShopName = (text) => {
     setName(text)
@@ -34,7 +38,8 @@ export default function TabScreen3() {
       price: price,
       ratingValue: ratingValue,
       createdAt: new Date(),
-      // locationData: locationResult
+      latitude: locationResultLatitude,
+      longitude: locationResultLongitude,
     })
     .then(function() {
       console.log('success')
@@ -46,15 +51,15 @@ export default function TabScreen3() {
   const locationData = async () => {
     alert('location data')
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      setLocationResult('Permission to access location was denied');
-  }
+  //   if (status !== 'granted') {
+  //     setLocationResult('Permission to access location was denied');
+  // }
   let location = await Location.getCurrentPositionAsync({});
-    console.log('data' + JSON.stringify(location.coords.latitude));
-    console.log('data' + JSON.stringify(location.coords.longitude));
-    setLocationResult(JSON.stringify(location));
+    setLatitude(JSON.stringify(location.coords.latitude))
+    setLongitude(JSON.stringify(location.coords.longitude))
+    console.log(locationResultLatitude)
+    console.log(locationResultLongitude);
   }
-
   const ratingCompleted = (rating) => {
     ratingValue = rating
   }
@@ -98,21 +103,23 @@ export default function TabScreen3() {
       <View>
         <Button
           style={styles.shareButton}
-          title="シェア"
-          type="outline"
-          onPress={share}
-        />
-      </View>
-      <View>
-        <Button
-          style={styles.shareButton}
           title="位置情報登録"
           type="outline"
           onPress={locationData}
         />
       </View>
-      <View><Text>{locationResult}</Text></View>
+      <View>
+        <Button
+          style={styles.shareButton}
+          title="シェア"
+          type="outline"
+          onPress={share}
+        />
+      </View>
+      {/* <View><Text>{locationResultLatitude}</Text></View>
+      <View><Text>{locationResultLongitude}</Text></View> */}
     </View>
+    
   );
 }
 

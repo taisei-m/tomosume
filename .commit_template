@@ -1,0 +1,35 @@
+# ======== Emoji Prefix ========
+# 🎉  :tada: Initial commit.
+# ✨  :sparkles: New features.
+# 🔧  :wrench: Changing configuration files.
+# 💄  :lipstick: Updating the UI and style files.
+# 😅　:neckbeard: Fixing typos.
+# 📝  :memo: Writing docs.
+# 🔥  :fire: Removing code or files.
+# 🐛  :bug: Fixing a bug.
+# ♻  :recycle: Refactoring code.
+# 🚧  :construction: Work in progress.
+# 💩  :hankey: Writing bad code that needs to be improved.
+# 🚑  :ambulance: Critical hotfix.
+# ➕  :heavy_plus_sign: Adding a dependency.
+# ➖  :heavy_minus_sign: Removing a dependency.
+# 🔊  :loud_sound: Adding logs.
+# 🔇  :mute: Removing logs.
+# ✅  :white_check_mark: Adding tests.
+# 🔒  :lock: Fixing security issues.
+# ⏪  :rewind: Reverting changes.
+# 🔀  :twisted_rightwards_arrows: Merging branches.
+# 🚚  :truck: Moving or renaming files.
+# 🙈  :see_no_evil: Adding or updating a .gitignore file
+# 🚀  :rocket: Deploying stuff.
+# 🎨  :art: Improving structure / format of the code.
+ 
+
+# ======== Format ========
+# :emoji: Subject
+#
+# Commit body...
+# test
+#
+# =========================
+# git config commit.template .commit_template
