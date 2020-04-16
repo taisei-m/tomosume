@@ -13,7 +13,7 @@ export default Router = () => {
       <Stack.Navigator>
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="creatAccount" component={CreateAccount} options={{ headerShown: false }}/>
-        <Stack.Screen name="Tab" component={Tab} />
+        <Stack.Screen name="Tab" component={Tab} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
 

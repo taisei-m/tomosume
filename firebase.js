@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
 
 import {
     FIREBASE_API_KEY,
@@ -23,5 +24,4 @@ const firebaseConfig =  {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 export default firebase;
