@@ -5,6 +5,3 @@ TomoSume
 ```
 expo start
 ```
-
-
-
