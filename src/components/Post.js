@@ -1,15 +1,22 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 import { Button, AirbnbRating} from 'react-native-elements';
 import firebase from '../../firebase'
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 
 export default function TabScreen3() {
   let ratingValue = 0
+  const[locationResult, setResult] = useState()
   const [shopName, setName] = useState()
   const [favoriteMenu, setMenu] = useState()
   const [price, setPrice] = useState()
 
+  const setLocationResult = (location) => {
+    setResult(location)
+  }
   const inputShopName = (text) => {
     setName(text)
   }
@@ -27,6 +34,7 @@ export default function TabScreen3() {
       price: price,
       ratingValue: ratingValue,
       createdAt: new Date(),
+      // locationData: locationResult
     })
     .then(function() {
       console.log('success')
@@ -35,6 +43,18 @@ export default function TabScreen3() {
       console.log(error)
     })
   }
+  const locationData = async () => {
+    alert('location data')
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      setLocationResult('Permission to access location was denied');
+  }
+  let location = await Location.getCurrentPositionAsync({});
+    console.log('data' + JSON.stringify(location.coords.latitude));
+    console.log('data' + JSON.stringify(location.coords.longitude));
+    setLocationResult(JSON.stringify(location));
+  }
+
   const ratingCompleted = (rating) => {
     ratingValue = rating
   }
@@ -83,6 +103,15 @@ export default function TabScreen3() {
           onPress={share}
         />
       </View>
+      <View>
+        <Button
+          style={styles.shareButton}
+          title="位置情報登録"
+          type="outline"
+          onPress={locationData}
+        />
+      </View>
+      <View><Text>{locationResult}</Text></View>
     </View>
   );
 }
