@@ -1,6 +1,6 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import TabScreen1 from './TabScreen1';
+import Top from './Top';
 import TabScreen2 from './TabScreen2';
 import Post from './Post';
 import TabScreen4 from './TabScreen4';
@@ -34,7 +34,7 @@ export default Tab = () => {
       inactiveTintColor: 'gray',
     }}
     >
-      <Tab1.Screen name="Top" component={TabScreen1} />
+      <Tab1.Screen name="Top" component={Top} />
       <Tab1.Screen name="Search" component={TabScreen2} />
       <Tab1.Screen name="Post" component={Post} />
       <Tab1.Screen name="Profile" component={TabScreen4} />
