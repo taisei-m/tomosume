@@ -1,63 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
-import { Card, Button, AirbnbRating, Rating } from 'react-native-elements'
+import { Avatar, Rating } from 'react-native-elements';
+import firebase from '../../firebase';
 
-function Item({ title, context }) {
-  return (
-    <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.context}>{context}</Text>
-      <View >     
-        <Rating
-          style={styles.rating}
-          count={5}
-          defaultRating={4}
-          size={20}
-        />
-      </View>
-    </TouchableOpacity>
-  );
+function getData() {
+  const [postedData, changePostedData] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('postShopData')
+      .onSnapshot((snapshot) => {
+        const tempShopData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        changePostedData(tempShopData)
+      })
+  }, [])
+  return postedData
 }
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
+function Item({ title, context, rating }) {
+  return (
+    <View style={styles.listItem}>
+    <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
 
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-];
-
-
-export default function TabScreen4() {
+      <Text style={styles.shopName}>{title}</Text>
+      <Text style={styles.favoriteMenu}>おすすめメニュー：{context}</Text>
+      <View>   
+        <Rating
+          style={styles.rating}
+          ratingCount={5}
+          startingValue={rating}
+          imageSize={35}
+          />
+      </View>
+    </TouchableOpacity>
+    </View>
+  );
+}
+export default function Profile() {
+  const shopData = getData()
+  const [followStatus, changeStatus] = useState('follow')
+  const [pressStatus, changePress] = useState(false)
+  const follow = () => {
+    changePress(!pressStatus)
+    if(followStatus == 'follow') {
+      changeStatus('unfollow')
+    } else {
+      changeStatus('follow')
+    }
+  }
+  const toFollowList = () => {
+    
+  }
   return (
     <View style={styles.container}>
       <Image
         source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-        style={{ width: 150, height: 150, borderRadius: 200/ 2, marginTop: 500}}
+        style = {styles.userIcon}
       />
       <Text style={styles.userName}>yuya okuse</Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 20}}>
@@ -66,7 +67,10 @@ export default function TabScreen4() {
           <Text style={styles.numberKey}>post</Text>
         </View>
         <View style={{marginRight: 50, marginLeft: 50, width: 50, height: 50,}}>
-          <Text style={styles.number}>100</Text>
+          <Text 
+            style={styles.number}
+            onPress={toFollowList}
+            >100</Text>
           <Text style={styles.numberKey}>follow</Text>
         </View>
         <View style={{width: 50, height: 50,}}>
@@ -75,37 +79,29 @@ export default function TabScreen4() {
         </View>
       </View>
       <TouchableOpacity
-        style={styles.button}
+        style={
+          pressStatus
+          ? styles.followButton
+          : styles.unFollowButton
+          }
+        onPress={follow}
       >
-        <Text style={styles.buttonText}> follow </Text>
-      </TouchableOpacity>
-
-      <SafeAreaView style={styles.list}>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <Item title={item.title} context={item.context}/>}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
-
-      {/* <Card
-        title='starbucks'
-        image={require('../../assets/okuse_yuya.jpg')}>
-        <Text style={{marginBottom: 10}}>
-          The idea with React Native Elements is more about component structure than actual design.
+        <Text 
+          style={
+            pressStatus
+            ? styles.followButtonText
+            : styles.unfollowButtonText
+            }>
+          {followStatus}
         </Text>
-        <Rating
-          count={5}
-          defaultRating={4}
-          style={{ paddingVertical: 10 }}
-          size={20}
+      </TouchableOpacity>
+      <SafeAreaView style={styles.list}>
+        <FlatList
+          data={shopData}
+          renderItem={({ item }) => <Item title={item.shopName} context={item.favoriteMenu} rating={item.ratingValue}/>}
+          keyExtractor={item => item.id}
         />
-        <Button
-          icon={{name: 'code'}}
-          backgroundColor='#03A9F4'
-          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-          title='Read More' />
-      </Card> */}
+      </SafeAreaView>
     </View>
 
   );
@@ -123,6 +119,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 20,
   },
+  userIcon: {
+    width: 80,
+    height: 80, 
+    borderRadius: 80/ 2, 
+    marginTop: 300
+  },
+  listItem: {
+    margin: 15,
+  },
+  shopName: {
+    fontSize: 25
+  },
+  favoriteMenu: {
+    margin: 10
+  },
   number: {
     fontSize: 28
   },
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#818181'
   },
-  button: {
+  followButton: {
     width:"30%",
     backgroundColor:"white",
     borderRadius:25,
@@ -142,15 +153,29 @@ const styles = StyleSheet.create({
     borderColor: '#5E9CFE',
     borderWidth: 1
   },
-  buttonText: {
+  unFollowButton: {
+    width:"30%",
+    backgroundColor:"#5E9CFE",
+    borderRadius:25,
+    height:25,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop: 20,
+    borderColor: '#5E9CFE',
+    borderWidth: 1
+  },
+  followButtonText: {
     color: '#5E9CFE'
   },
+  unfollowButtonText: {
+    color: 'white'
+  },
   list: {
-    marginTop: 20,
-    marginBottom: 450
+    marginTop: 10,
+    marginBottom: 250,
   },
   item: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -162,7 +187,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   rating: {
-    paddingVertical: 20,
-    backgroundColor: '#f5f5f5',
+    paddingVertical: 10,
+    backgroundColor: 'white',
   }
 })

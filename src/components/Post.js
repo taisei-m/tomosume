@@ -1,15 +1,37 @@
 import React from 'react';
-import { useState } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 import { Button, AirbnbRating} from 'react-native-elements';
 import firebase from '../../firebase'
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 
 export default function TabScreen3() {
+    firebase.firestore().collection('postShopData')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc => {
+        console.log(doc.data().shopName)
+        console.log(doc.data().longitude)
+        console.log(doc.data().latitude)
+        console.log('-------------------')
+      }))
+    })
+
   let ratingValue = 0
+  const[locationResultLatitude, setResultLatitude] = useState()
+  const[locationResultLongitude, setResultLongitude] = useState()
   const [shopName, setName] = useState()
   const [favoriteMenu, setMenu] = useState()
   const [price, setPrice] = useState()
 
+  const setLatitude = (latitude) => {
+    setResultLatitude(latitude)
+  }
+  const setLongitude = (longitude) => {
+    setResultLongitude(longitude)
+  }
   const inputShopName = (text) => {
     setName(text)
   }
@@ -27,6 +49,8 @@ export default function TabScreen3() {
       price: price,
       ratingValue: ratingValue,
       createdAt: new Date(),
+      latitude: locationResultLatitude,
+      longitude: locationResultLongitude,
     })
     .then(function() {
       console.log('success')
@@ -34,6 +58,18 @@ export default function TabScreen3() {
     .catch(function(error) {
       console.log(error)
     })
+  }
+  const locationData = async () => {
+    alert('location data')
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== 'granted') {
+  //     setLocationResult('Permission to access location was denied');
+  // }
+  let location = await Location.getCurrentPositionAsync({});
+    setLatitude(JSON.stringify(location.coords.latitude))
+    setLongitude(JSON.stringify(location.coords.longitude))
+    console.log(locationResultLatitude)
+    console.log(locationResultLongitude);
   }
   const ratingCompleted = (rating) => {
     ratingValue = rating
@@ -78,12 +114,23 @@ export default function TabScreen3() {
       <View>
         <Button
           style={styles.shareButton}
+          title="位置情報登録"
+          type="outline"
+          onPress={locationData}
+        />
+      </View>
+      <View>
+        <Button
+          style={styles.shareButton}
           title="シェア"
           type="outline"
           onPress={share}
         />
       </View>
+      {/* <View><Text>{locationResultLatitude}</Text></View>
+      <View><Text>{locationResultLongitude}</Text></View> */}
     </View>
+    
   );
 }
 

@@ -4,9 +4,10 @@ import Top from './Top';
 import Search from './Search';
 import Post from './Post';
 import Profile from './Profile';
+import followTabList from './followTabList';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 const Tab1 = createBottomTabNavigator();
+
 
 export default Tab = () => {
   return (
@@ -38,6 +39,7 @@ export default Tab = () => {
       <Tab1.Screen name="Search" component={Search} />
       <Tab1.Screen name="Post" component={Post} />
       <Tab1.Screen name="Profile" component={Profile} />
+      <Tab1.Screen name="ProfollowTabListfile" component={followTabList} />
     </Tab1.Navigator>
   );
 }

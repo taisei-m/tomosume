@@ -9,7 +9,6 @@ import { Subscribe } from 'unstated'
 import GlobalStateContainer from '../containers/GlobalState';
 
 class Index extends Component{
-  //コンストラクタ
   constructor(props) {
     super(props);
     this.state = {
@@ -43,6 +42,7 @@ class Index extends Component{
   )
   }
 }
+
 
 
 const indexWrapper = () => {
