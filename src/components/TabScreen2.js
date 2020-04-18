@@ -1,79 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect }from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View, Dimension, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import * as Permissions from 'expo-permissions'
+import firebase from '../../firebase'
 
-export default class App extends React.Component {
-  state = {
-    search: '',
-    title: 'park',
-    description: '遊び場',
-    latlng: {
-      latitude: 34.726912,
-      longitude: 137.7202243,
-    },
-    isNotificationPermitted: false,
-    isLocationPermitted: false,
-  };
-  updateSearch = search => {
-    this.setState({ search });
-  };
-  async componentDidMount () {
-    this.setState({
-      isNotificationPermitted: await this._confirmNotificationPermission(),
-      isLocationPermitted: await this._confirmLocationPermission()
-    })
-  }
-  render() {
-    const { search } = this.state;
+
+function useFirestore() {
+  const [locationData, changeLocationData] = useState([])
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('postShopData')
+      .onSnapshot((snapshot) => {
+        const newLocationData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        changeLocationData(newLocationData)
+      })
+  },[])
+  return locationData
+}
+
+export default TabScreen2 = () =>{
+  const locationData = useFirestore()
+
+  const [title, changeTitle] = useState('park');
+  const [description, changeDescription] = useState('play ground');
+  const [latitude, changeLatitude] = useState(32.726912);
+  const [longitude, changeLongitude] = useState(135.7202243);
+
     return (
-      
       <View style={styles.container}>
-              <SearchBar
-        placeholder="Type Here..."
-        onChangeText={this.updateSearch}
-        value={search}
-      />
+        <SearchBar
+          placeholder="Type Here..."
+        />
         <MapView style={styles.mapStyle}
         initialRegion={{
-          latitude: 34.726912,
-          longitude: 137.7202243,
+          latitude,
+          longitude,
           latitudeDelta: 0.5,
           longitudeDelta: 0.5,
         }}>
-          <Marker
-            title={this.state.title}
-            description={this.state.description}
-            coordinate={this.state.latlng}
-          />
+
+          {/* {locationData.map((location) => 
+          
+            <Marker
+              title={location.shopName}
+              description={location.ratingValue}
+              coordinate={
+                {
+                  latitude: {location.latitude},
+                  longitude: {location.longitude}
+                }
+              }
+            />
+          )} */}
+
         </MapView>
         <View>
-          <Text>Notification Permission: { this.state.isNotificationPermitted ? '○' : '×' }</Text>
-          <Text>Location Permission: { this.state.isLocationPermitted ? '○' : '×' }</Text>
+          {locationData.map((location) => 
+            <Text key={location.id}>{location.shopName}</Text>
+          )}
         </View>
-      </View>
-    );
-  }
-
-  async _confirmNotificationPermission () {
-    const permission = await Permissions.getAsync(Permissions.NOTIFICATIONS)
-    if (permission.status === 'granted') return true
-    const askResult = await Permissions.askAsync(Permissions.NOTIFICATIONS)
-    return askResult.status === 'granted'
-  }
-
-  async _confirmLocationPermission () {
-    const permissionIsValid = () => {
-      if (permission.status !== 'granted') return false
-      if (Platform.OS !== 'ios') return true
-      return permission.permissions.location.ios.scope === 'always'
-    }
-    const permission = await Permissions.getAsync(Permissions.LOCATION)
-    if (permissionIsValid(permission)) return true
-    const askResult = await Permissions.askAsync(Permissions.LOCATION)
-    return permissionIsValid(askResult)
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -84,6 +76,6 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     width: '100%',
-    height: '100%'
+    height: '50%'
   },
 });
