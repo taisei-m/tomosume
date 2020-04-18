@@ -39,7 +39,6 @@ function Item({ title, context, rating }) {
     </View>
   );
 }
-
 export default function Profile() {
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')

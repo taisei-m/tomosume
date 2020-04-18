@@ -1,7 +1,50 @@
+function TabScreen11(props) {
+  console.log("TabScreen1");
+  console.log(props);
+
+  const [GlobalState, a] = useState(props.globalState);
+  
+
+  logout = () => {        
+    console.log("method logout")
+    GlobalState.logout();
+    // this.state.navigation.navigate('NavLogined');
+  }
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          title="Tab 1 page"
+        />
+         <TouchableOpacity
+                    style={styles.button}
+                    onPress={logout}
+                    
+                >
+                    <Text> logout </Text>
+                </TouchableOpacity>
+      </View>
+    );
+}
+  
+
+const TabScreen1Wrapper = ({ navigation }) => {
+  return (
+      <Subscribe to={[GlobalStateContainer]}>
+          {
+              globalState => <TabScreen11 globalState={globalState} navigation = {navigation} />
+          }
+      </Subscribe>
+  );
+}
+
+export default TabScreen1Wrapper;
+
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import { Avatar, Rating } from 'react-native-elements'
-import firebase from '../../firebase'
+import firebase from '../../firebase';
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
 
 function getData() {
   const [postedData, changePostedData] = useState([]);

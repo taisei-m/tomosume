@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, Dimension, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import * as Permissions from 'expo-permissions'
 import firebase from '../../firebase'
-//誰が書いたことになっとる？
 
 function useFirestore() {
   const [locationData, changeLocationData] = useState([])
@@ -67,3 +66,4 @@ const styles = StyleSheet.create({
     height: '100%'
   },
 });
+
