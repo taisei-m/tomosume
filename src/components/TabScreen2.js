@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Dimension, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import * as Permissions from 'expo-permissions'
 import firebase from '../../firebase'
-
+//誰が書いたことになっとる？
 
 function useFirestore() {
   const [locationData, changeLocationData] = useState([])
@@ -40,24 +40,19 @@ export default TabScreen2 = () =>{
         initialRegion={{
           latitude,
           longitude,
-          latitudeDelta: 0.5,
-          longitudeDelta: 0.5,
         }}>
-
-          {/* {locationData.map((location) => 
-          
+          {locationData.map((location) => 
             <Marker
               title={location.shopName}
               description={location.ratingValue}
               coordinate={
                 {
-                  latitude: {location.latitude},
-                  longitude: {location.longitude}
+                  latitude: location.latitude,
+                  longitude: location.longitude
                 }
               }
             />
-          )} */}
-
+          )}
         </MapView>
         <View>
           {locationData.map((location) => 
