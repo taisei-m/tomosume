@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 import { Button, AirbnbRating} from 'react-native-elements';
 import firebase from '../../firebase'
@@ -8,6 +8,17 @@ import * as Permissions from 'expo-permissions';
 
 
 export default function TabScreen3() {
+    firebase.firestore().collection('postShopData')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc => {
+        console.log(doc.data().shopName)
+        console.log(doc.data().longitude)
+        console.log(doc.data().latitude)
+        console.log('-------------------')
+      }))
+    })
+
   let ratingValue = 0
   const[locationResultLatitude, setResultLatitude] = useState()
   const[locationResultLongitude, setResultLongitude] = useState()
