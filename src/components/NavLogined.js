@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab1 = createBottomTabNavigator();
 
-export default Tab = () => {
+export default NavLogined = () => {
   return (
     <Tab1.Navigator
     screenOptions={({ route }) => ({

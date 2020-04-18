@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../components/LoginScreen';
-import Tab from '../components/Tab';
+import NavLogined from '../components/NavLogined';
 import CreateAccount from '../components/CreateAccount';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -13,7 +13,7 @@ export default Router = () => {
       <Stack.Navigator>
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="creatAccount" component={CreateAccount} options={{ headerShown: false }}/>
-        <Stack.Screen name="Tab" component={Tab} />
+        <Stack.Screen name="NavLogined" component={NavLogined} />
       </Stack.Navigator>
     </NavigationContainer>
   );
