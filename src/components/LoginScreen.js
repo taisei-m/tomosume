@@ -28,12 +28,12 @@ export default LoginScreen = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => props.navigation.navigate('Tab')}
+                onPress={() => props.navigation.navigate('NavLogined')}
             >
                 <Text style={styles.buttonText}> Sign In </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => props.navigation.navigate('creatAccount')}            
+                onPress={() => props.navigation.navigate('CreateAccount')}            
             >
                 <Text> Create Account </Text>
             </TouchableOpacity>

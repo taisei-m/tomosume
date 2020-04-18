@@ -11,10 +11,10 @@ const Tab1 = createBottomTabNavigator();
 export default Tab = () => {
   return (
     <Tab1.Navigator
+    initialRouteName = "Search"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
-
         if (route.name === 'Top') {
           iconName = focused
             ? 'ios-information-circle'
