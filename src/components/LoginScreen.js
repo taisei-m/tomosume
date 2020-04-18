@@ -1,45 +1,79 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
-import { Text, } from 'react-native-elements'
+import { Text, } from 'react-native-elements';
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
 
-export default LoginScreen = (props) => {
+
+class LoginScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            globalState: props.globalState,
+            navigation: props.navigation
+        }; 
+        console.log("LoginScreen");
+        console.log(this.state.globalState);
+    }
+
+    login = () => {        
+        console.log("method login")
+        this.state.globalState.login();
+        // this.state.navigation.navigate('NavLogined');
+    }
+    
+        
+    render() {
+        return (
+            <View style={styles.container}>
+                <View>
+                    <Text style={styles.logo}>TomoSume</Text>
+                </View>
+                <View style={styles.inputView} >
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="userID"
+                        placeholderTextColor="#003f5c"
+                    />
+                </View>
+                <View style={styles.inputView} >
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="password"
+                        placeholderTextColor="#003f5c"
+                    />
+                </View>
+                <TouchableOpacity>
+                    <Text style={styles.forgot}>Forgot Password?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.login}
+                >
+                    <Text style={styles.buttonText}> Sign In </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('CreateAccount')}
+                >
+                    <Text> Create Account </Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+}
+
+const LoginScreenWrapper = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <View>
-                <Text style={styles.logo}>TomoSume</Text>
-            </View>
-            <View style={styles.inputView} >
-                <TextInput  
-                    style={styles.inputText}
-                    placeholder="userID"
-                    placeholderTextColor="#003f5c"
-                />
-            </View>
-            <View style={styles.inputView} >
-                <TextInput  
-                    style={styles.inputText}
-                    placeholder="password" 
-                    placeholderTextColor="#003f5c"
-                />
-            </View>
-            <TouchableOpacity>
-                <Text style={styles.forgot}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => props.navigation.navigate('NavLogined')}
-            >
-                <Text style={styles.buttonText}> Sign In </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => props.navigation.navigate('CreateAccount')}            
-            >
-                <Text> Create Account </Text>
-            </TouchableOpacity>
-        </View>
+        <Subscribe to={[GlobalStateContainer]}>
+            {
+                globalState => <LoginScreen globalState={globalState} navigation = {navigation} />
+            }
+        </Subscribe>
     );
 }
+
+export default LoginScreenWrapper;
+
 
 const styles = StyleSheet.create({
     container: {
