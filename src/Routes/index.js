@@ -16,6 +16,5 @@ export default Router = () => {
         <Stack.Screen name="Tab" component={Tab} />
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }

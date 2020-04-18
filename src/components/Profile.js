@@ -3,8 +3,6 @@ import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList
 import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
 
-
-
 function getData() {
   const [postedData, changePostedData] = useState([]);
   useEffect(() => {
@@ -26,10 +24,6 @@ function Item({ title, context, rating }) {
   return (
     <View style={styles.listItem}>
     <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
-      <View style={styles.userInfomation}>   
-        <Avatar rounded icon={{ name: 'home' }}/>
-        <Text style={styles.postUserName}>okuse</Text>
-      </View>
 
       <Text style={styles.shopName}>{title}</Text>
       <Text style={styles.favoriteMenu}>おすすめメニュー：{context}</Text>
@@ -46,15 +40,26 @@ function Item({ title, context, rating }) {
   );
 }
 
-
-
-export default function TabScreen4() {
+export default function Profile() {
   const shopData = getData()
+  const [followStatus, changeStatus] = useState('follow')
+  const [pressStatus, changePress] = useState(false)
+  const follow = () => {
+    changePress(!pressStatus)
+    if(followStatus == 'follow') {
+      changeStatus('unfollow')
+    } else {
+      changeStatus('follow')
+    }
+  }
+  const toFollowList = () => {
+    
+  }
   return (
     <View style={styles.container}>
       <Image
         source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-        style={{ width: 80, height: 80, borderRadius: 80/ 2, marginTop: 500}}
+        style = {styles.userIcon}
       />
       <Text style={styles.userName}>yuya okuse</Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 20}}>
@@ -63,7 +68,10 @@ export default function TabScreen4() {
           <Text style={styles.numberKey}>post</Text>
         </View>
         <View style={{marginRight: 50, marginLeft: 50, width: 50, height: 50,}}>
-          <Text style={styles.number}>100</Text>
+          <Text 
+            style={styles.number}
+            onPress={toFollowList}
+            >100</Text>
           <Text style={styles.numberKey}>follow</Text>
         </View>
         <View style={{width: 50, height: 50,}}>
@@ -72,11 +80,22 @@ export default function TabScreen4() {
         </View>
       </View>
       <TouchableOpacity
-        style={styles.button}
+        style={
+          pressStatus
+          ? styles.followButton
+          : styles.unFollowButton
+          }
+        onPress={follow}
       >
-        <Text style={styles.buttonText}> follow </Text>
+        <Text 
+          style={
+            pressStatus
+            ? styles.followButtonText
+            : styles.unfollowButtonText
+            }>
+          {followStatus}
+        </Text>
       </TouchableOpacity>
-
       <SafeAreaView style={styles.list}>
         <FlatList
           data={shopData}
@@ -84,25 +103,6 @@ export default function TabScreen4() {
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
-
-      {/* <Card
-        title='starbucks'
-        image={require('../../assets/okuse_yuya.jpg')}>
-        <Text style={{marginBottom: 10}}>
-          The idea with React Native Elements is more about component structure than actual design.
-        </Text>
-        <Rating
-          count={5}
-          defaultRating={4}
-          style={{ paddingVertical: 10 }}
-          size={20}
-        />
-        <Button
-          icon={{name: 'code'}}
-          backgroundColor='#03A9F4'
-          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-          title='Read More' />
-      </Card> */}
     </View>
 
   );
@@ -120,17 +120,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 20,
   },
+  userIcon: {
+    width: 80,
+    height: 80, 
+    borderRadius: 80/ 2, 
+    marginTop: 300
+  },
   listItem: {
     margin: 15,
-  },
-  userInfomation: {
-    flexDirection: 'row',
-    marginBottom: 10
-  },
-  postUserName: {
-    fontSize: 18,
-    paddingTop: 5,
-    paddingLeft: 10
   },
   shopName: {
     fontSize: 25
@@ -146,7 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#818181'
   },
-  button: {
+  followButton: {
     width:"30%",
     backgroundColor:"white",
     borderRadius:25,
@@ -157,12 +154,26 @@ const styles = StyleSheet.create({
     borderColor: '#5E9CFE',
     borderWidth: 1
   },
-  buttonText: {
+  unFollowButton: {
+    width:"30%",
+    backgroundColor:"#5E9CFE",
+    borderRadius:25,
+    height:25,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop: 20,
+    borderColor: '#5E9CFE',
+    borderWidth: 1
+  },
+  followButtonText: {
     color: '#5E9CFE'
   },
+  unfollowButtonText: {
+    color: 'white'
+  },
   list: {
-    marginTop: 20,
-    marginBottom: 400,
+    marginTop: 10,
+    marginBottom: 250,
   },
   item: {
     backgroundColor: 'white',
