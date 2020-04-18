@@ -1,58 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
-import { Card, Button, AirbnbRating, Rating } from 'react-native-elements'
+import { Avatar, Rating } from 'react-native-elements';
+import firebase from '../../firebase';
 
-function Item({ title, context }) {
+
+
+function getData() {
+  const [postedData, changePostedData] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('postShopData')
+      .onSnapshot((snapshot) => {
+        const tempShopData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        changePostedData(tempShopData)
+      })
+  }, [])
+  return postedData
+}
+
+function Item({ title, context, rating }) {
   return (
+    <View style={styles.listItem}>
     <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.context}>{context}</Text>
-      <View>     
+      <View style={styles.userInfomation}>   
+        <Avatar rounded icon={{ name: 'home' }}/>
+        <Text style={styles.postUserName}>okuse</Text>
+      </View>
+
+      <Text style={styles.shopName}>{title}</Text>
+      <Text style={styles.favoriteMenu}>おすすめメニュー：{context}</Text>
+      <View>   
         <Rating
           style={styles.rating}
-          count={5}
-          defaultRating={4}
-          size={20}
-          ></Rating>
+          ratingCount={5}
+          startingValue={rating}
+          imageSize={35}
+          />
       </View>
     </TouchableOpacity>
+    </View>
   );
 }
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    context: 'The idea with React Native Elements is more about component structure than actual design'
-  },
-];
 
 
 export default function TabScreen4() {
+  const shopData = getData()
   return (
     <View style={styles.container}>
       <Image
@@ -81,12 +78,12 @@ export default function TabScreen4() {
       </TouchableOpacity>
 
       <SafeAreaView style={styles.list}>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <Item title={item.title} context={item.context}/>}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+        <FlatList
+          data={shopData}
+          renderItem={({ item }) => <Item title={item.shopName} context={item.favoriteMenu} rating={item.ratingValue}/>}
+          keyExtractor={item => item.id}
+        />
+      </SafeAreaView>
 
       {/* <Card
         title='starbucks'
@@ -123,6 +120,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 20,
   },
+  listItem: {
+    margin: 15,
+  },
+  userInfomation: {
+    flexDirection: 'row',
+    marginBottom: 10
+  },
+  postUserName: {
+    fontSize: 18,
+    paddingTop: 5,
+    paddingLeft: 10
+  },
+  shopName: {
+    fontSize: 25
+  },
+  favoriteMenu: {
+    margin: 10
+  },
   number: {
     fontSize: 28
   },
@@ -147,10 +162,10 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 20,
-    marginBottom: 400
+    marginBottom: 400,
   },
   item: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -162,7 +177,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   rating: {
-    paddingVertical: 20,
-    backgroundColor: '#f5f5f5',
+    paddingVertical: 10,
+    backgroundColor: 'white',
   }
 })
