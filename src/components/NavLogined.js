@@ -1,9 +1,9 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import TabScreen1 from './TabScreen1';
-import TabScreen2 from './TabScreen2';
+import Top from './Top';
+import Search from './Search';
 import Post from './Post';
-import TabScreen4 from './TabScreen4';
+import Profile from './Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab1 = createBottomTabNavigator();
@@ -34,10 +34,10 @@ export default Tab = () => {
       inactiveTintColor: 'gray',
     }}
     >
-      <Tab1.Screen name="Top" component={TabScreen1} />
-      <Tab1.Screen name="Search" component={TabScreen2} />
+      <Tab1.Screen name="Top" component={Top} />
+      <Tab1.Screen name="Search" component={Search} />
       <Tab1.Screen name="Post" component={Post} />
-      <Tab1.Screen name="Profile" component={TabScreen4} />
+      <Tab1.Screen name="Profile" component={Profile} />
     </Tab1.Navigator>
   );
 }
