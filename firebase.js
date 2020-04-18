@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import 'firebase/firestore';
 
 import {
     FIREBASE_API_KEY,
