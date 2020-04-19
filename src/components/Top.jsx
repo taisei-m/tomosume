@@ -16,7 +16,7 @@ import GlobalStateContainer from '../containers/GlobalState';
 //   logout = () => {        
 //     console.log("method logout")
 //     GlobalState.logout();
-  
+
 //   }
 //     return (
 //       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -64,6 +64,7 @@ function getData() {
   }, [])
   return postedData
 }
+
 
 function Item({ title, context, rating }) {
   return (
