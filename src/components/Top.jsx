@@ -1,43 +1,43 @@
-function TabScreen11(props) {
-  console.log("TabScreen1");
-  console.log(props);
+// function TabScreen11(props) {
+//   console.log("TabScreen1");
+//   console.log(props);
 
-  const [GlobalState, a] = useState(props.globalState);
+//   const [GlobalState, a] = useState(props.globalState);
   
 
-  logout = () => {        
-    console.log("method logout")
-    GlobalState.logout();
-    // this.state.navigation.navigate('NavLogined');
-  }
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Tab 1 page"
-        />
-         <TouchableOpacity
-                    style={styles.button}
-                    onPress={logout}
+//   logout = () => {        
+//     console.log("method logout")
+//     GlobalState.logout();
+//     // this.state.navigation.navigate('NavLogined');
+//   }
+//     return (
+//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+//         <Button
+//           title="Tab 1 page"
+//         />
+//          <TouchableOpacity
+//                     style={styles.button}
+//                     onPress={logout}
                     
-                >
-                    <Text> logout </Text>
-                </TouchableOpacity>
-      </View>
-    );
-}
+//                 >
+//                     <Text> logout </Text>
+//                 </TouchableOpacity>
+//       </View>
+//     );
+// }
   
 
-const TabScreen1Wrapper = ({ navigation }) => {
-  return (
-      <Subscribe to={[GlobalStateContainer]}>
-          {
-              globalState => <TabScreen11 globalState={globalState} navigation = {navigation} />
-          }
-      </Subscribe>
-  );
-}
+// const TabScreen1Wrapper = ({ navigation }) => {
+//   return (
+//       <Subscribe to={[GlobalStateContainer]}>
+//           {
+//               globalState => <TabScreen11 globalState={globalState} navigation = {navigation} />
+//           }
+//       </Subscribe>
+//   );
+// }
 
-export default TabScreen1Wrapper;
+// export default TabScreen1Wrapper;
 
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';

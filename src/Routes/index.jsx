@@ -34,7 +34,7 @@ class Index extends Component{
                 <Stack.Screen name="NavUnlogin" component={NavUnlogin} options={{ headerShown: false }} />
             ) : (
                 // User is signed in
-                <Stack.Screen name="NavLogined" component={NavLogined} options={{ headerShown: false }} />
+                <Stack.Screen name="NavLogined" component={NavLogined} />
             )}
           </Stack.Navigator>
         </NavigationContainer>
