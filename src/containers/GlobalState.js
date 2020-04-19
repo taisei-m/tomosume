@@ -12,7 +12,7 @@ export default class GlobalContainer extends Container {
 
    endLoding = () => {
       this.setState({
-         isLoading: false
+         isLoading: true
       })
    }
 
@@ -28,14 +28,14 @@ export default class GlobalContainer extends Container {
       console.log("method end");
    }
 
-
    signup = () => {
       this.state({
-         userToken: "どこでメソッド呼ぼうかなあ"
+         userToken: "どこでメソッド呼ぼうかな"
       })
    }
    
    logout = () => {
+      console.log();
       this.setState({
          isSignout: true
       })

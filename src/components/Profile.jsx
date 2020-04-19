@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -39,10 +41,20 @@ function Item({ title, context, rating }) {
     </View>
   );
 }
-export default function Profile() {
+const Profile =  (props) => {
+  console.log("Profile")
+  console.log(props);
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
+  const [navigation, setNavigation] = useState(props.navigation);
+  const [globalState, setGlobalState] = useState(props.globalState);
+
+  const logout = () => {        
+    console.log("logout")
+    globalState.logout();
+  } 
+
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -54,6 +66,8 @@ export default function Profile() {
   const toFollowList = () => {
     
   }
+
+
   return (
     <View style={styles.container}>
       <Image
@@ -95,6 +109,18 @@ export default function Profile() {
           {followStatus}
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={
+          pressStatus
+          ? styles.followButton
+          : styles.unFollowButton
+          }
+        onPress={logout}
+      >
+        <Text>
+          ログアウト
+        </Text>
+      </TouchableOpacity>
       <SafeAreaView style={styles.list}>
         <FlatList
           data={shopData}
@@ -103,9 +129,21 @@ export default function Profile() {
         />
       </SafeAreaView>
     </View>
-
   );
 }
+
+
+const ProfileWrapper = ({ navigation }) => {
+  return (
+      <Subscribe to={[GlobalStateContainer]}>
+          {
+              globalState => <Profile globalState={globalState} navigation = {navigation} />
+          }
+      </Subscribe>
+  );
+}
+
+export default ProfileWrapper;
 
 const styles = StyleSheet.create({
   container: {
