@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
 
 import {
     FIREBASE_API_KEY,
@@ -10,6 +11,7 @@ import {
     FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID
 } from 'react-native-dotenv';
+
 
 const firebaseConfig =  {
     apiKey: FIREBASE_API_KEY,
