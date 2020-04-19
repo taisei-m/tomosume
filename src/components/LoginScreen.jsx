@@ -21,7 +21,6 @@ class LoginScreen extends Component {
         this.state.globalState.login();
         // this.state.navigation.navigate('NavLogined');
     }
-    
         
     render() {
         return (
