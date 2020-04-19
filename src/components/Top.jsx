@@ -1,3 +1,11 @@
+
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { Avatar, Rating } from 'react-native-elements'
+import firebase from '../../firebase';
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
+
 // function TabScreen11(props) {
 //   console.log("TabScreen1");
 //   console.log(props);
@@ -8,7 +16,7 @@
 //   logout = () => {        
 //     console.log("method logout")
 //     GlobalState.logout();
-//     // this.state.navigation.navigate('NavLogined');
+
 //   }
 //     return (
 //       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -39,12 +47,6 @@
 
 // export default TabScreen1Wrapper;
 
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
-import { Avatar, Rating } from 'react-native-elements'
-import firebase from '../../firebase';
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -62,7 +64,6 @@ function getData() {
   }, [])
   return postedData
 }
-
 
 
 function Item({ title, context, rating }) {
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
   favoriteMenu: {
     margin: 10
   }
-  
 });
 
 
