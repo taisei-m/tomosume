@@ -28,9 +28,10 @@ export default class GlobalContainer extends Container {
       console.log("method end");
    }
 
+
    signup = () => {
       this.state({
-         userToken: "どこでメソッド呼ぼうかな"
+         userToken: "どこでメソッド呼ぼうかなあ"
       })
    }
    
