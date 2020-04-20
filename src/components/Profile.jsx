@@ -2,6 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
+import {Subscribe} from 'unstated'
+import GlobalStateContainer from '../containers/GlobalState'
+
+const ProfileWrapper = ({ navigation }) => {
+  return (
+      <Subscribe to={[GlobalStateContainer]}>
+          {
+              globalState => <Profile globalState={globalState} navigation = {navigation} />
+          }
+      </Subscribe>
+  );
+}
+
+export default ProfileWrapper;
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -39,10 +53,12 @@ function Item({ title, context, rating }) {
     </View>
   );
 }
-export default function Profile() {
+function Profile(props) {
+  console.log(props)
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
+  const [globalState, setglobalstate] = useState(props.navigation)
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -52,7 +68,10 @@ export default function Profile() {
     }
   }
   const toFollowList = () => {
-    
+    globalState.navigate('followTabList')
+  }
+  const toFollowerList = () => {
+    globalState.navigate('followTabList')
   }
   return (
     <View style={styles.container}>
@@ -74,7 +93,10 @@ export default function Profile() {
           <Text style={styles.numberKey}>follow</Text>
         </View>
         <View style={{width: 50, height: 50,}}>
-          <Text style={styles.number}>100</Text>
+          <Text 
+            style={styles.number}
+            onPress={toFollowerList}
+            >100</Text>
           <Text style={styles.numberKey}>follower</Text>
         </View>
       </View>
