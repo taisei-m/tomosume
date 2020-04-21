@@ -4,17 +4,7 @@ import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-const ProfileWrapper = ({ navigation }) => {
-  return (
-      <Subscribe to={[GlobalStateContainer]}>
-          {
-              globalState => <Profile globalState={globalState} navigation = {navigation} />
-          }
-      </Subscribe>
-  );
-}
 
-export default ProfileWrapper;
 
 
 function getData() {
