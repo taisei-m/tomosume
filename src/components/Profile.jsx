@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
+import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, AsyncStorage} from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
 import { Subscribe } from 'unstated';
@@ -42,17 +42,29 @@ function Item({ title, context, rating }) {
   );
 }
 const Profile =  (props) => {
-  console.log("Profile")
-  console.log(props);
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
   const [navigation, setNavigation] = useState(props.navigation);
   const [globalState, setGlobalState] = useState(props.globalState);
+  console.log("Profile////////////////////////////////////")
+  console.log(globalState.state);
+   AsyncStorage.getItem('Authenticated', (err, result) => {
+      console.log("Authenticated = " + result)
+    })
 
-  const logout = () => {        
-    console.log("logout")
-    globalState.logout();
+  const logout = () => {  
+    firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+      console.log("Sign-out successful and call global.logout")
+      AsyncStorage.setItem('Authenticated', 'false', () => {
+        globalState.logout();
+      });
+    })
+    .catch(function(error) {
+    // An error happened.
+      console.log(error); 
+    }); 
   } 
 
   const follow = () => {

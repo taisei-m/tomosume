@@ -8,7 +8,7 @@ const TabUnlogin = createStackNavigator();
 
 export default Unlogin = () => {
   return (
-    <TabUnlogin.Navigator>
+    <TabUnlogin.Navigator initialRouteName = "LoginScreen">
       <TabUnlogin.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }}/>
       <TabUnlogin.Screen name="CreateAccount" component={CreateAccount} options={{ headerShown: false }}/>
       <TabUnlogin.Screen name="NavLogined" component={NavLogined} options={{ headerShown: false }} />

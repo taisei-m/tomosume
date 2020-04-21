@@ -12,7 +12,7 @@ const Tab1 = createBottomTabNavigator();
 export default Tab = () => {
   return (
     <Tab1.Navigator
-    initialRouteName = "Top"
+    initialRouteName = "Profile"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;

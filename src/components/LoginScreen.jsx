@@ -1,19 +1,56 @@
 import React, { Component, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
 import { Text, } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-
+import firebase from '../../firebase'
 
 const LoginScreen = (props) => {
-    console.log("LoginScreen")
-    console.log(props);
     const [navigation, setNavigation] = useState(props.navigation);
     const [globalState, setGlobalState] = useState(props.globalState);
+    const [email, setEmail] = useState();
+    const [password, setPass] = useState();
+    console.log("LoginScreen/////////////////////////////////////")
+    console.log(globalState.state);
 
-    login = () => {        
-        console.log("method login")
-        globalState.login();
+    AsyncStorage.getItem('Authenticated', (err, result) => {
+      console.log("Authenticated = " + result)
+    })
+
+
+    const emailInput = (text) => {
+        setEmail(text)
+    }
+    const passwordInput = (pass) => {
+        setPass(pass)
+    }
+
+
+    const login = () => {
+        console.log("pushed login")
+        if(email == null ){
+            alert("emailを入力してください");
+        }
+        else if(password == null ){
+            alert("passwordを入力してください");
+        }
+        else{
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(error)
+                return error;
+            }).then((result) =>{
+                if(result.message){
+                    alert(result.message);
+                } else if(result.user){
+                        AsyncStorage.setItem('Authenticated', 'true');                    
+                        globalState.login();
+                } else {
+                    console.log("予期せぬエラーが発生しました");
+                }
+            })
+        }
     }
         
     return (
@@ -24,15 +61,19 @@ const LoginScreen = (props) => {
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
-                    placeholder="userID"
-                    placeholderTextColor="#003f5c"
+                    placeholder="email"
+                    placeholderTextColor="#818181"
+                    value={email}
+                    onChangeText={emailInput}
                 />
             </View>
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
                     placeholder="password"
-                    placeholderTextColor="#003f5c"
+                    placeholderTextColor="#818181"
+                    value={password}
+                    onChangeText={passwordInput}
                 />
             </View>
             <TouchableOpacity>
@@ -40,12 +81,12 @@ const LoginScreen = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={this.login}
+                onPress={login}
             >
                 <Text style={styles.buttonText}> Sign In </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('CreateAccount')}
+                onPress={() => navigation.navigate('CreateAccount')}
             >
                 <Text> Create Account </Text>
             </TouchableOpacity>
@@ -90,7 +131,7 @@ const styles = StyleSheet.create({
     },
     inputText:{
         height:50,
-        color:"white"
+        color:"black"
     },
     forgot: {
         margin: 20,

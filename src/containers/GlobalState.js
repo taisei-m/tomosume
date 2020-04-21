@@ -5,27 +5,33 @@ export default class GlobalContainer extends Container {
       // isLoading - We set this to true when we're trying to check if we already have a token saved in AsyncStorage
       // isSignout - We set this to true when user is signing out, otherwise set it to false
       // userToken - The token for the user. If it's non-null, we assume the user is logged in, otherwise not.
-      isLoading: false,
-      isSignout: true,
-      userToken: undefined
+      isSplash: true,
+      isSignout: "",
+      userData: undefined
    }
 
-   endLoding = () => {
+   setUser = (user) => {
       this.setState({
-         isLoading: true
+         user: user
       })
    }
 
-   login = () => {
-      console.log("method start");
-      
+   endSplash = (result) => {
       this.setState({
-         isSignout: false
-      })
+         isSplash: false
+      }),
       this.setState({
-         userToken: 'やったね！'
+         isSignout: result
       })
-      console.log("method end");
+   }
+
+   login = (user) => {
+      this.setState({
+         isSignout: "false"
+      }),
+      this.setState({
+         user: user
+      })
    }
 
    signup = () => {
@@ -35,9 +41,8 @@ export default class GlobalContainer extends Container {
    }
    
    logout = () => {
-      console.log();
       this.setState({
-         isSignout: true
+         isSignout: "true"
       })
    }
 
