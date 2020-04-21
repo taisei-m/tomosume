@@ -5,58 +5,46 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import firebase from '../../firebase'
 
-const LoginScreen = (props) => {
+const ResetPassword = (props) => {
     const [navigation, setNavigation] = useState(props.navigation);
     const [globalState, setGlobalState] = useState(props.globalState);
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
-    console.log("LoginScreen/////////////////////////////////////")
+    console.log("ResetPassword/////////////////////////////////////")
     console.log(globalState.state);
 
-    AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
-    })
-
+    
 
     const emailInput = (text) => {
         setEmail(text)
     }
-    const passwordInput = (pass) => {
-        setPass(pass)
-    }
-
-
-    const login = () => {
-        console.log("pushed login")
-        if(email == null || email == ""){
+   
+    const resetPassword = () => {
+        console.log("pushed resetPassword")
+        console.log(email)
+        if(email == "" || email == null ){
             alert("emailを入力してください");
-        }
-        else if(password == null || email == ""){
-            alert("passwordを入力してください");
-        }
+        }   
         else{
-            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(error)
-                return error;
-            }).then((result) =>{
-                if(result.message){
-                    alert(result.message);
-                } else if(result.user){
-                        AsyncStorage.setItem('Authenticated', 'true');                    
-                        globalState.login(result.user);
-                } else {
-                    console.log("予期せぬエラーが発生しました");
-                }
-            })
+            var auth = firebase.auth();
+            firebase.auth().languageCode = 'ja';
+            auth.sendPasswordResetEmail(email).then(function() {
+            // Email sent.
+               alert("再設定メールを送信しました。");
+               props.navigation.navigate('LoginScreen');
+            }).catch(function(error) {
+            // An error happened.
+               console.log(error);
+               console.log(error.message);
+               alert(error.message);
+            });
         }
     }
         
     return (
         <View style={styles.container}>
             <View>
-                <Text style={styles.logo}>TomoSume</Text>
+                <Text style={styles.logo}>Reset Password</Text>
             </View>
             <View style={styles.inputView} >
                 <TextInput
@@ -67,46 +55,32 @@ const LoginScreen = (props) => {
                     onChangeText={emailInput}
                 />
             </View>
-            <View style={styles.inputView} >
-                <TextInput
-                    style={styles.inputText}
-                    placeholder="password"
-                    placeholderTextColor="#818181"
-                    value={password}
-                    onChangeText={passwordInput}
-                />
-            </View>
-            <TouchableOpacity 
-                onPress={() => navigation.navigate('ResetPassword')}
-            >
-                <Text style={styles.forgot}>Forgot Password?</Text>
-            </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={login}
+                onPress={resetPassword}
             >
-                <Text style={styles.buttonText}> Sign In </Text>
+                <Text style={styles.buttonText}> submit </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('CreateAccount')}
+                onPress={() => navigation.navigate('LoginScreen')}
             >
-                <Text> Create Account </Text>
+                <Text>  Already have an account  </Text>
             </TouchableOpacity>
         </View>
     );
 }
 
-const LoginScreenWrapper = ({ navigation }) => {
+const ResetPasswordWrapper = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalStateContainer]}>
             {
-                globalState => <LoginScreen globalState={globalState} navigation = {navigation} />
+                globalState => <ResetPassword globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
 }
 
-export default LoginScreenWrapper;
+export default ResetPasswordWrapper;
 
 
 const styles = StyleSheet.create({
@@ -118,7 +92,7 @@ const styles = StyleSheet.create({
     },
     logo:{
         fontWeight:"bold",
-        fontSize:50,
+        fontSize:40,
         color:"black",
         marginBottom:40
     },

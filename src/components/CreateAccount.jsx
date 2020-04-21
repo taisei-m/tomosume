@@ -22,10 +22,10 @@ export default CreateAccount = (props) => {
     }
 
     const signUp = () => {
-         if(email == null ){
+         if(email == null || email == "" ){
             alert("emailを入力してください");
         }
-        else if(password == null ){
+        else if(password == null || email == ""){
             alert("passwordを入力してください");
         }
         else{
