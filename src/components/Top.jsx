@@ -1,52 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { Avatar, Rating } from 'react-native-elements'
 import firebase from '../../firebase';
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
-
-// function TabScreen11(props) {
-//   console.log("TabScreen1");
-//   console.log(props);
-
-//   const [GlobalState, a] = useState(props.globalState);
-  
-
-//   logout = () => {        
-//     console.log("method logout")
-//     GlobalState.logout();
-
-//   }
-//     return (
-//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//         <Button
-//           title="Tab 1 page"
-//         />
-//          <TouchableOpacity
-//                     style={styles.button}
-//                     onPress={logout}
-                    
-//                 >
-//                     <Text> logout </Text>
-//                 </TouchableOpacity>
-//       </View>
-//     );
-// }
-  
-
-// const TabScreen1Wrapper = ({ navigation }) => {
-//   return (
-//       <Subscribe to={[GlobalStateContainer]}>
-//           {
-//               globalState => <TabScreen11 globalState={globalState} navigation = {navigation} />
-//           }
-//       </Subscribe>
-//   );
-// }
-
-// export default TabScreen1Wrapper;
-
+// import { Subscribe } from 'unstated';
+// import GlobalStateContainer from '../containers/GlobalState';
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -65,25 +23,34 @@ function getData() {
   return postedData
 }
 
-
 function Item({ title, context, rating }) {
   return (
     <View style={styles.listItem}>
-    <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
+    <TouchableOpacity  onPress={() => console.log('good')}>
       <View style={styles.userInfomation}>   
         <Avatar rounded icon={{ name: 'home' }}/>
         <Text style={styles.userName}>okuse</Text>
       </View>
-
+      <View style={{flexDirection: 'row'}}>
+      <View>      
+        <Image
+        style={styles.tinyLogo}
+        source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+      /></View>
+      <View>
       <Text style={styles.shopName}>{title}</Text>
       <Text style={styles.favoriteMenu}>おすすめメニュー：{context}</Text>
-      <View>   
+      <View style={{flexDirection: 'row'}}>   
         <Rating
+          readonly
           style={styles.rating}
           ratingCount={5}
           startingValue={rating}
-          imageSize={35}
+          imageSize={20}
           />
+          <Text style={styles.ratingText}>{rating}</Text>
+      </View>
+      </View>
       </View>
     </TouchableOpacity>
     </View>
@@ -94,13 +61,11 @@ export default function Top() {
   const shopData = getData()
   return(
     <View style={styles.container}>
-      <SafeAreaView style={styles.list}>
         <FlatList
           data={shopData}
           renderItem={({ item }) => <Item title={item.shopName} context={item.favoriteMenu} rating={item.ratingValue}/>}
           keyExtractor={item => item.id}
         />
-      </SafeAreaView>
     </View>
   )
 }
@@ -108,11 +73,13 @@ export default function Top() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 60,
+    paddingVertical: 10,
     backgroundColor: 'white',
+    alignItems: 'center',
   },
   listItem: {
-    margin: 15
+    marginTop: 10,
+    marginBottom: 10,
   },
   userInfomation: {
     flexDirection: 'row',
@@ -124,11 +91,27 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
   shopName: {
-    fontSize: 25
+    fontSize: 25,
+    marginLeft: 10
   },
   favoriteMenu: {
     margin: 10
-  }
+  },
+  rating: {
+    marginLeft: 10
+  },
+  ratingText: {
+    marginLeft: 5,
+    marginTop: 2
+  },
+  tinyLogo: {
+    width: 80,
+    height: 80,
+  },
+  logo: {
+    width: 66,
+    height: 58,
+  },
 });
 
 
