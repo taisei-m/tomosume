@@ -41,11 +41,22 @@ const LoginScreen = (props) => {
                 console.log(error)
                 return error;
             }).then((result) =>{
+                console.log("result/////////////////////////////////////////")
+                console.log(result)
                 if(result.message){
                     alert(result.message);
                 } else if(result.user){
+                    if(result.user.emailVerified == true){
+                        //////メール認証ができている場合
+                        console.log("メール認証済")
                         AsyncStorage.setItem('Authenticated', 'true');                    
                         globalState.login(result.user);
+                    }
+                    else if(result.user.emailVerified == false){
+                        //////メールを登録したけどメール認証していない場合
+                        console.log("メール未認証")
+                        alert("認証エラー：アカウント作成時に送信された認証メールを確認してくだい");
+                    }
                 } else {
                     console.log("予期せぬエラーが発生しました");
                 }
