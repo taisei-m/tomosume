@@ -45,7 +45,7 @@ const LoginScreen = (props) => {
                     alert(result.message);
                 } else if(result.user){
                         AsyncStorage.setItem('Authenticated', 'true');                    
-                        globalState.login();
+                        globalState.login(result.user);
                 } else {
                     console.log("予期せぬエラーが発生しました");
                 }

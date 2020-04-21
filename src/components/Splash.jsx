@@ -16,15 +16,29 @@ const Splash = (props) => {
       console.log("push end splash>>>")
       AsyncStorage.getItem('Authenticated', (err, result) => {
          let asyncAuth;
+         
          if(err){
+            //////アプリ初回インストール後の起動時
             console.log('Authenticated err = ' + err)
             asyncAuth = "false";
          } else if(result){
+            //////アプリ初回インストール後の起動移行の起動時
             console.log('Authenticated result = ' + result)
             console.log(result);
             if(result == "true"){
+               //////認証済みの場合
                asyncAuth = "false";
+               firebase.auth().onAuthStateChanged(function(user) {
+                  if (user) {
+                     // User is signed in.
+                     globalState.setUserData(user);
+                  } else {
+                     // No user is signed in.
+                     console.log("No user is signed in.");
+                  }
+               });
             } else if(result == "false"){
+               //////未認証の場合
                asyncAuth = "true"
             } else {
                console.log("asyncAuthの取得でエラー");

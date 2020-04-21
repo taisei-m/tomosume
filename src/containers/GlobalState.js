@@ -10,13 +10,13 @@ export default class GlobalContainer extends Container {
       userData: undefined
    }
 
-   setUser = (user) => {
+   setUserData = (user) => {
       this.setState({
-         user: user
+         userData: user
       })
    }
 
-   endSplash = (result) => {
+   endSplash = (result, user) => {
       this.setState({
          isSplash: false
       }),
