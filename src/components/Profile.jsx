@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
+import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, AsyncStorage} from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
-import {Subscribe} from 'unstated'
-import GlobalStateContainer from '../containers/GlobalState'
-
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
 const ProfileWrapper = ({ navigation }) => {
   return (
       <Subscribe to={[GlobalStateContainer]}>
@@ -16,6 +15,7 @@ const ProfileWrapper = ({ navigation }) => {
 }
 
 export default ProfileWrapper;
+
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -53,12 +53,34 @@ function Item({ title, context, rating }) {
     </View>
   );
 }
-function Profile(props) {
-  console.log(props)
+
+const Profile =  (props) => {
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [globalState, setglobalstate] = useState(props.navigation)
+  const [navigation, setNavigation] = useState(props.navigation);
+  const [globalState, setGlobalState] = useState(props.globalState);
+  console.log("Profile////////////////////////////////////")
+  console.log(globalState.state);
+   AsyncStorage.getItem('Authenticated', (err, result) => {
+      console.log("Authenticated = " + result)
+    })
+
+  const logout = () => {  
+    firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+      console.log("Sign-out successful and call global.logout")
+      AsyncStorage.setItem('Authenticated', 'false', () => {
+        globalState.logout();
+      });
+    })
+    .catch(function(error) {
+    // An error happened.
+      console.log(error); 
+    }); 
+  } 
+
+
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -73,6 +95,8 @@ function Profile(props) {
   const toFollowerList = () => {
     globalState.navigate('followTabList')
   }
+
+
   return (
     <View style={styles.container}>
       <Image
@@ -117,6 +141,18 @@ function Profile(props) {
           {followStatus}
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={
+          pressStatus
+          ? styles.followButton
+          : styles.unFollowButton
+          }
+        onPress={logout}
+      >
+        <Text>
+          ログアウト
+        </Text>
+      </TouchableOpacity>
       <SafeAreaView style={styles.list}>
         <FlatList
           data={shopData}
@@ -125,9 +161,21 @@ function Profile(props) {
         />
       </SafeAreaView>
     </View>
-
   );
 }
+
+
+const ProfileWrapper = ({ navigation }) => {
+  return (
+      <Subscribe to={[GlobalStateContainer]}>
+          {
+              globalState => <Profile globalState={globalState} navigation = {navigation} />
+          }
+      </Subscribe>
+  );
+}
+
+export default ProfileWrapper;
 
 const styles = StyleSheet.create({
   container: {

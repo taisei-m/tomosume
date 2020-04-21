@@ -1,49 +1,61 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
 import { Text, } from 'react-native-elements'
 import firebase from '../../firebase'
 import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 
 export default CreateAccount = (props) => {
-    console.log(props)
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
     const [navigation, setNavigation] = useState(props.navigation);
-    const userIdInput = (text) => {
+    console.log("CreateAccount////////////////////////////////////////")
+    AsyncStorage.getItem('Authenticated', (err, result) => {
+      console.log("Authenticated = " + result)
+    })
+
+    const emailInput = (text) => {
         setEmail(text)
     }
     const passwordInput = (pass) => {
         setPass(pass)
     }
+
     const signUp = () => {
-        console.log(email);
-        console.log(password)
-        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode)
-            console.log(errorMessage)
-            // ...
-        }).then(() => {
-            console.log("success 登録");
-            var user = firebase.auth().currentUser;
-            firebase.auth().languageCode = "ja";
-            user.sendEmailVerification().then(function() {
-                // Email sent.
-              }).catch(function(error) {
-                // An error happened.
-              });
-        }).then(() => {
-            alert("メール見て");
-            // var result = confirm("登録したメールアドレスに認証メールを送信しました。ログインするために認証してください。");
-            if (true) {
-                navigation.navigate('LoginScreen');
-            } else {
-                result;
-            }
-        })
+         if(email == null ){
+            alert("emailを入力してください");
+        }
+        else if(password == null ){
+            alert("passwordを入力してください");
+        }
+        else{
+            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+                // var errorCode = error.code;
+                // var errorMessage = error.message;
+                // console.log("errorCode: "+errorCode)
+                // console.log("errorMessage: "+errorMessage)
+                return error;
+            }).then((result) => {
+                if(result.message){
+                    alert(result.message);
+                }　else if(result.user) {
+                    var user = firebase.auth().currentUser;
+                    firebase.auth().languageCode = "ja";
+
+                    console.log("user = "+ user)
+
+                    user.sendEmailVerification().then(function() {
+                        alert("メールを送信しました。メールを確認して本登録をしてください");
+                        navigation.navigate('LoginScreen');
+                    }).catch(function(error) {
+                        cosole.log("error = " + error);
+                        alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")
+                    });
+                } else{
+                    console.log("予期せぬエラーが発生しました");
+                }
+            });
+        }
     }
 
 
@@ -55,10 +67,10 @@ export default CreateAccount = (props) => {
         <View style={styles.inputView} >
             <TextInput  
                 style={styles.inputText}
-                placeholder="mail"
+                placeholder="email"
                 placeholderTextColor="#818181"
                 value={email}
-                onChangeText={userIdInput}
+                onChangeText={emailInput}
             />
         </View>
         <View style={styles.inputView} >
