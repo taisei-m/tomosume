@@ -8,16 +8,16 @@ import * as Permissions from 'expo-permissions';
 
 
 export default function TabScreen3() {
-    firebase.firestore().collection('postShopData')
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc => {
-        console.log(doc.data().shopName)
-        console.log(doc.data().longitude)
-        console.log(doc.data().latitude)
-        console.log('-------------------')
-      }))
-    })
+    // firebase.firestore().collection('postShopData')
+    // .get()
+    // .then((querySnapshot) => {
+    //   querySnapshot.forEach((doc => {
+    //     console.log(doc.data().shopName)
+    //     console.log(doc.data().longitude)
+    //     console.log(doc.data().latitude)
+    //     console.log('-------------------')
+    //   }))
+    // })
 
   let ratingValue = 0
   const[locationResultLatitude, setResultLatitude] = useState()
@@ -25,7 +25,10 @@ export default function TabScreen3() {
   const [shopName, setName] = useState()
   const [favoriteMenu, setMenu] = useState()
   const [price, setPrice] = useState()
-
+  const [locationResult, permitResult] = useState(null)
+  const inputResult = () => {
+    permitResult(locationResult)
+  }
   const setLatitude = (latitude) => {
     setResultLatitude(latitude)
   }
@@ -59,13 +62,19 @@ export default function TabScreen3() {
       console.log(error)
     })
   }
+  const permit = async () => {
+    let locationResult = await Permissions.askAsync(Permissions.LOCATION);
+    inputResult()
+    console.log(locationResult.status)
+    if (locationResult.status !== 'granted') {
+      alert('noo')
+    }else if(locationResult.status === 'granted'){
+      alert('ok')
+    }
+  }
   const locationData = async () => {
-    alert('location data')
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-  //   if (status !== 'granted') {
-  //     setLocationResult('Permission to access location was denied');
-  // }
   let location = await Location.getCurrentPositionAsync({});
+    console.log('good')
     setLatitude(JSON.stringify(location.coords.latitude))
     setLongitude(JSON.stringify(location.coords.longitude))
     console.log(locationResultLatitude)
@@ -118,6 +127,17 @@ export default function TabScreen3() {
           type="outline"
           onPress={locationData}
         />
+      </View>
+      <View>
+        <Button
+          style={styles.shareButton}
+          title="位置情報許可"
+          type="outline"
+          onPress={permit}
+        />
+        <Text style={{color: 'black'}}>
+          {locationResult}
+        </Text>
       </View>
       <View>
         <Button
