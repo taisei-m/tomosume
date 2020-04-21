@@ -130,7 +130,7 @@ export default function Post() {
             size={30}
             onFinishRating={ratingCompleted}
         />
-        <View style={{alignContent: 'center', marginHorizontal: 60 }}>
+        <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
             <Button
             style={styles.shareButton}
             title="シェア"
