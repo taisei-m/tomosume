@@ -8,6 +8,7 @@ import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 export default CreateAccount = (props) => {
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
+    const [confirmPassword, setConfPass] = useState();
     const [navigation, setNavigation] = useState(props.navigation);
     console.log("CreateAccount////////////////////////////////////////")
     AsyncStorage.getItem('Authenticated', (err, result) => {
@@ -27,6 +28,8 @@ export default CreateAccount = (props) => {
         }
         else if(password == null || email == ""){
             alert("passwordを入力してください");
+        }else if(password != confirmPassword){
+            alert("パスワードが一致していません")
         }
         else{
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
@@ -81,6 +84,7 @@ export default CreateAccount = (props) => {
                 value={password}
                 secureTextEntry={true}
                 onChangeText={passwordInput}
+                
             />
         </View>
         <View style={styles.inputView} >
@@ -88,6 +92,9 @@ export default CreateAccount = (props) => {
                 style={styles.inputText}
                 placeholder="confirm-password" 
                 placeholderTextColor="#818181"
+                value={confirmPassword}
+                secureTextEntry={true}
+                onChangeText={setConfPass}
             />
         </View>
         <TouchableOpacity
