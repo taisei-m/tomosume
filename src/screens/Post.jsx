@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
+import { StyleSheet, View, } from 'react-native';
 import { Button, AirbnbRating} from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
 import firebase from '../../firebase'
@@ -9,6 +9,10 @@ import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
 
 export default function Post() {
+    useEffect(() => {
+        permit();
+    }, [])
+
     let finalRating = 0
     const [locationResultLatitude, setResultLatitude] = useState()
     const [locationResultLongitude, setResultLongitude] = useState()
@@ -34,47 +38,44 @@ export default function Post() {
     }
 
     const share = () => {
-    const postShopData = firebase.firestore().collection('postShopData')
-    postShopData.add({
-        shopName: shopName,
-        favoriteMenu: favoriteMenu,
-        price: price,
-        category: selectedCategory,
-        rating: finalRating,
-        createdAt: new Date(),
-        latitude: locationResultLatitude,
-        longitude: locationResultLongitude,
-    })
-    .then(function() {
-        console.log('success')
-    })
-    .catch(function(error) {
-        console.log(error)
-    })
-    }
-    const permit = async () => {
-    let locationResult = await Permissions.askAsync(Permissions.LOCATION);
-    inputResult()
-    console.log(locationResult.status)
-    if (locationResult.status !== 'granted') {
-        alert('noo')
-    }else if(locationResult.status === 'granted'){
-        alert('ok')
-    }
-    }
-    const locationData = async () => {
-    let location = await Location.getCurrentPositionAsync({});
-    console.log('good')
-    setLatitude(JSON.stringify(location.coords.latitude))
-    setLongitude(JSON.stringify(location.coords.longitude))
-    console.log(locationResultLatitude)
-    console.log(locationResultLongitude);
+        const postShopData = firebase.firestore().collection('postShopData')
+        postShopData.add({
+            shopName: shopName,
+            favoriteMenu: favoriteMenu,
+            price: price,
+            category: selectedCategory,
+            rating: finalRating,
+            createdAt: new Date(),
+            latitude: locationResultLatitude,
+            longitude: locationResultLongitude,
+        })
+        .then(function() {
+            console.log('success')
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
     }
 
+    const permit = async () => {
+        let locationResult = await Permissions.askAsync(Permissions.LOCATION);
+        inputResult()
+        console.log(locationResult.status)
+        if (locationResult.status !== 'granted') {
+            alert('noo')
+        } else if (locationResult.status === 'granted') {
+            alert('ok')
+            let location = await Location.getCurrentPositionAsync({});
+            console.log('good')
+            setLatitude(JSON.stringify(location.coords.latitude))
+            setLongitude(JSON.stringify(location.coords.longitude))
+            console.log(locationResultLatitude)
+            console.log(locationResultLongitude);
+        }
+    }
     const [shopName, changeShop] = useState()
     const [favoriteMenu, changeFavorite] = useState()
     const [price, changePrice] = useState()
-
 
     const changeShopName = (text) => {
         changeShop(text)
@@ -90,7 +91,6 @@ export default function Post() {
     }
 
     return (
-        <>
         <View style={styles.container}>
             <InputText 
                 holderName='店名'
@@ -130,26 +130,6 @@ export default function Post() {
             size={30}
             onFinishRating={ratingCompleted}
         />
-
-        <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-            <Button
-            style={styles.shareButton}
-            title="位置情報登録"
-            type="outline"
-            onPress={locationData}
-            />
-        </View>
-        <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-            <Button
-            style={styles.shareButton}
-            title="位置情報許可"
-            type="outline"
-            onPress={permit}
-            />
-            <Text style={{color: 'black'}}>
-            {locationResult}
-            </Text>
-        </View>
         <View style={{alignContent: 'center', marginHorizontal: 60 }}>
             <Button
             style={styles.shareButton}
@@ -159,7 +139,6 @@ export default function Post() {
             />
         </View>
         </View>
-        </>
     );
 }
 
