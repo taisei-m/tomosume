@@ -4,6 +4,18 @@ import { Avatar, Rating } from 'react-native-elements';
 import firebase from '../../firebase';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
+const ProfileWrapper = ({ navigation }) => {
+  return (
+      <Subscribe to={[GlobalStateContainer]}>
+          {
+              globalState => <Profile globalState={globalState} navigation = {navigation} />
+          }
+      </Subscribe>
+  );
+}
+
+export default ProfileWrapper;
+
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -41,6 +53,7 @@ function Item({ title, context, rating }) {
     </View>
   );
 }
+
 const Profile =  (props) => {
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
@@ -67,6 +80,7 @@ const Profile =  (props) => {
     }); 
   } 
 
+
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -76,7 +90,10 @@ const Profile =  (props) => {
     }
   }
   const toFollowList = () => {
-    
+    globalState.navigate('followTabList')
+  }
+  const toFollowerList = () => {
+    globalState.navigate('followTabList')
   }
 
 
@@ -100,7 +117,10 @@ const Profile =  (props) => {
           <Text style={styles.numberKey}>follow</Text>
         </View>
         <View style={{width: 50, height: 50,}}>
-          <Text style={styles.number}>100</Text>
+          <Text 
+            style={styles.number}
+            onPress={toFollowerList}
+            >100</Text>
           <Text style={styles.numberKey}>follower</Text>
         </View>
       </View>
