@@ -4,7 +4,7 @@ import Top from '../screens/Top';
 import Search from './Search';
 import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProfileStack from './ProfileStack';
+import ProfileStack from '../Routes/ProfileStack';
 
 const Tab1 = createBottomTabNavigator();
 
