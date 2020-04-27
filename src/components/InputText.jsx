@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 export default InputText = (props) => {
