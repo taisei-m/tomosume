@@ -43,10 +43,10 @@ function Item({ title, context, rating }) {
 }
 
 const Profile =  (props) => {
+  console.log(props)
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [globalState, setGlobalState] = useState(props.globalState);
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
@@ -56,7 +56,7 @@ const Profile =  (props) => {
     // Sign-out successful.
       console.log("Sign-out successful and call global.logout")
       AsyncStorage.setItem('Authenticated', 'false', () => {
-        globalState.logout();
+        props.globalState.logout();
       });
     })
     .catch(function(error) {
@@ -74,11 +74,11 @@ const Profile =  (props) => {
       changeStatus('follow')
     }
   }
-  const toFollowList = () => {
-    globalState.navigate('followTabList')
+  function toFollowList() {
+    props.navigation.navigate('followTabList')
   }
   const toFollowerList = () => {
-    globalState.navigate('followTabList')
+    props.navigation.navigate('followTabList')
   }
   return (
     <View style={styles.container}>
