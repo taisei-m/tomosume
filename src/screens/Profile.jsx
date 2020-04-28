@@ -43,10 +43,12 @@ function Item({ title, context, rating }) {
 }
 
 const Profile =  (props) => {
+  console.log(props)
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
   const [globalState, setGlobalState] = useState(props.globalState);
+  const [navigation, setNavigation] = useState(props.navigation);
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
@@ -74,11 +76,11 @@ const Profile =  (props) => {
       changeStatus('follow')
     }
   }
-  const toFollowList = () => {
-    globalState.navigate('followTabList')
+  function toFollowList() {
+    navigation.navigate('followTabList')
   }
   const toFollowerList = () => {
-    globalState.navigate('followTabList')
+    navigation.navigate('followTabList')
   }
   return (
     <View style={styles.container}>
@@ -241,3 +243,42 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   }
 })
+
+// Object {
+//   "globalState": GlobalContainer {
+//     "_listeners": Array [
+//       [Function anonymous],
+//       [Function anonymous],
+//     ],
+//     "endSplash": [Function anonymous],
+//     "login": [Function anonymous],
+//     "logout": [Function anonymous],
+//     "setUserData": [Function anonymous],
+//     "signup": [Function anonymous],
+//     "state": Object {
+//       "isSignout": undefined,
+//       "isSplash": false,
+//       "userData": undefined,
+//     },
+//   },
+//   "navigation": Object {
+//     "addListener": [Function addListener],
+//     "canGoBack": [Function canGoBack],
+//     "dangerouslyGetParent": [Function dangerouslyGetParent],
+//     "dangerouslyGetState": [Function anonymous],
+//     "dispatch": [Function dispatch],
+//     "goBack": [Function anonymous],
+//     "isFocused": [Function isFocused],
+//     "jumpTo": [Function anonymous],
+//     "navigate": [Function anonymous],
+//     "pop": [Function anonymous],
+//     "popToTop": [Function anonymous],
+//     "push": [Function anonymous],
+//     "removeListener": [Function removeListener],
+//     "replace": [Function anonymous],
+//     "reset": [Function anonymous],
+//     "setOptions": [Function setOptions],
+//     "setParams": [Function anonymous],
+//   },
+// }
+// Authenticated = null
