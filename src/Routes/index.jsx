@@ -1,14 +1,11 @@
 import React, { useState, Component } from 'react';
-import { Provider } from 'unstated';
 import { createStackNavigator } from '@react-navigation/stack';
 import NavLogined from '../components/NavLogined';
 import NavUnlogin from '../components/NavUnlogin';
 import { NavigationContainer } from '@react-navigation/native';
-import { AsyncStorage } from 'react-native';
 import { Subscribe } from 'unstated'
 import GlobalStateContainer from '../containers/GlobalState';
 import SplashScreen from '../components/Splash'
-import firebase from '../../firebase'
 
 const Index = (props) => {
   console.log("index//////////////////////////////////////////////////////");
@@ -19,17 +16,7 @@ const Index = (props) => {
   const [user, setUser] = useState(props.globalState.state.user);
   const Stack = createStackNavigator();
   
-  // componentDidMount() {
-  // // 初回のフェッチ
-  // console.log("first");
-  // }
-
-  // componentDidUpdate() {
-  // // props.id が変更されたら再フェッチ
-  //   // console.log(props.globalState.isLoading,props.globalState.isSignout);
-  // }
   console.log("check how you are")
-  // console.log("isSplash = " + isSplash,"isSignout = " + isSignout);
   console.log("global.isSplash = " + props.globalState.state.isSplash)
   console.log("global.isSignout = " + props.globalState.state.isSignout)
 
@@ -50,7 +37,6 @@ const Index = (props) => {
       )
   } else {
     console.log("to splash");
-    // We haven't finished checking for the token yet
     return <SplashScreen />;
   } 
 }

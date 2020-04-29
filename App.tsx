@@ -11,7 +11,7 @@ import { Provider } from 'unstated';
 export default function App() {
   return (
     <Provider>
-      <Router loading="true" />
+      <Router />
     </Provider>
   );
 }
