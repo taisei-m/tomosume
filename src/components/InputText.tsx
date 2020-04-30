@@ -1,7 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
+import { StyleSheet, View, TextInput, } from 'react-native';
 
-export default InputText = (props) => {
+interface InputTextProps{
+    holderName: string,
+    value: string,
+    change: any
+}
+
+const InputText = (props: InputTextProps) => {
     return(
         <View style={styles.inputView} >
             <TextInput  
@@ -14,6 +20,9 @@ export default InputText = (props) => {
         </View> 
     )
 }
+
+export default InputText
+
 const styles = StyleSheet.create({
     inputView:{
         borderRadius:25,
