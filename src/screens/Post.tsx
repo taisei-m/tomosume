@@ -55,6 +55,7 @@ const Post = () => {
     const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
+    
     return (
         <View style={styles.container}>
             <InputText 
