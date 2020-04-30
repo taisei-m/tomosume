@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, } from 'react-native';
-import { AirbnbRating} from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
 //@ts-ignore
 import firebase from '../../firebase'
@@ -11,6 +10,14 @@ import InputText from '../components/InputText';
 import ShareButton from '../components/ShareButton'
 
 const Post = () => {
+    const [shopName, changeShop] = useState<string>('')
+    const [favoriteMenu, changeFavorite] = useState<string>('')
+    const [price, changePrice] = useState<string>('')
+    const [locationResultLatitude, setResultLatitude] = useState<number>(0)
+    const [locationResultLongitude, setResultLongitude] = useState<number>(0)
+    const [locationResult, permitResult] = useState<string>('')
+    const [selectedCategory, selectItem] = useState<string>('')
+
     useEffect(() => {
         (async function () {
             let locationResult = await Permissions.askAsync(Permissions.LOCATION);
@@ -21,21 +28,12 @@ const Post = () => {
             } else if (locationResult.status === 'granted') {
                 let location = await Location.getCurrentPositionAsync({});
                 console.log('good')
+                alert('ok')
                 setLatitude(Number(JSON.stringify(location.coords.latitude)))
                 setLongitude(Number(JSON.stringify(location.coords.longitude)))
             }
         }());
     }, [])
-
-    let finalRating = 0
-    const [shopName, changeShop] = useState<string>('')
-    const [favoriteMenu, changeFavorite] = useState<string>('')
-    const [price, changePrice] = useState<string>('')
-    const [locationResultLatitude, setResultLatitude] = useState<number>(0)
-    const [locationResultLongitude, setResultLongitude] = useState<number>(0)
-    const [locationResult, permitResult] = useState<string>('')
-    const [selectedCategory, selectItem] = useState<string>('')
-
     const changeShopName = (text: string) => {
         changeShop(text)
     }
@@ -44,9 +42,6 @@ const Post = () => {
     }
     const changeMenuPrice = (price: string) => {
         changePrice(price)
-    }
-    const ratingCompleted = (rating: number) => {
-        finalRating = rating
     }
     const selectCategory = (text: string) => {
         selectItem(text)
@@ -92,13 +87,6 @@ const Post = () => {
                     onChangeText={selectCategory}
                 />
             </View>
-            <AirbnbRating
-                count={5}
-                reviews={["1/5", "2/5", "3/5", "4/5", "5/5",]}
-                defaultRating={0}
-                size={30}
-                onFinishRating={ratingCompleted}
-            />
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
                 <ShareButton
                     buttonTitle='シェア'
@@ -107,7 +95,6 @@ const Post = () => {
                     favoriteMenu={favoriteMenu}
                     price={price}
                     category={selectedCategory}
-                    finalRating={finalRating}
                     latitude={locationResultLatitude}
                     longitude={locationResultLongitude}
                 />
