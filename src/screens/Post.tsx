@@ -3,37 +3,38 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, } from 'react-native';
 import { Button, AirbnbRating} from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
+//@ts-ignore
 import firebase from '../../firebase'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
 
-export default function Post() {
+interface Props {}
+
+const Post: React.FC<Props> = () => {
     useEffect(() => {
         permit();
     }, [])
 
     let finalRating = 0
-    const [locationResultLatitude, setResultLatitude] = useState()
-    const [locationResultLongitude, setResultLongitude] = useState()
-    const [locationResult, permitResult] = useState(null)
-    const [selectedCategory, selectItem] = useState()
+    const [locationResultLatitude, setResultLatitude] = useState<number>()
+    const [locationResultLongitude, setResultLongitude] = useState<number>()
+    const [locationResult, permitResult] = useState<string>()
+    const [selectedCategory, selectItem] = useState<string>()
 
-    const ratingCompleted = (rating) => {
+    const ratingCompleted = (rating: number) => {
         finalRating = rating
-        console.log(finalRating)
     }
-    const selectCategory = (text) => {
+    const selectCategory = (text: string) => {
         selectItem(text)
-        console.log(text)
     }
     const inputResult = () => {
         permitResult(locationResult)
     }
-    const setLatitude = (latitude) => {
+    const setLatitude = (latitude: number) => {
         setResultLatitude(latitude)
     }
-    const setLongitude = (longitude) => {
+    const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
 
@@ -52,7 +53,7 @@ export default function Post() {
         .then(function() {
             console.log('success')
         })
-        .catch(function(error) {
+        .catch(function(error: any) {
             console.log(error)
         })
     }
@@ -64,30 +65,24 @@ export default function Post() {
         if (locationResult.status !== 'granted') {
             alert('noo')
         } else if (locationResult.status === 'granted') {
-            alert('ok')
             let location = await Location.getCurrentPositionAsync({});
             console.log('good')
-            setLatitude(JSON.stringify(location.coords.latitude))
-            setLongitude(JSON.stringify(location.coords.longitude))
-            console.log(locationResultLatitude)
-            console.log(locationResultLongitude);
+            setLatitude(Number(JSON.stringify(location.coords.latitude)))
+            setLongitude(Number(JSON.stringify(location.coords.longitude)))
         }
     }
-    const [shopName, changeShop] = useState()
-    const [favoriteMenu, changeFavorite] = useState()
-    const [price, changePrice] = useState()
+    const [shopName, changeShop] = useState<string>('')
+    const [favoriteMenu, changeFavorite] = useState<string>('')
+    const [price, changePrice] = useState<string>('')
 
-    const changeShopName = (text) => {
+    const changeShopName = (text: string) => {
         changeShop(text)
-        console.log(shopName)
     }
-    const changeFavoriteMenu = (text) => {
+    const changeFavoriteMenu = (text: string) => {
         changeFavorite(text)
-        console.log(favoriteMenu)
     }
-    const changeMenuPrice = (price) => {
+    const changeMenuPrice = (price: string) => {
         changePrice(price)
-        console.log(price)
     }
 
     return (
@@ -110,15 +105,14 @@ export default function Post() {
         <View style={{alignContent: 'center', marginHorizontal: 60 }}>
             <Dropdown
                 label='カテゴリー'
-                data={[{
-                value: '居酒屋',
-                }, {
-                value: 'カフェ',
-                }, {
-                value: 'ランチ',
-                }, {
-                value: 'ディナー',
-                }]}
+                data={
+                    [
+                        {value: '居酒屋',},
+                        {value: 'カフェ',}, 
+                        {value: 'ランチ',}, 
+                        {value: 'ディナー',}
+                    ]
+                }
                 value={selectedCategory}
                 onChangeText={selectCategory}
             />
@@ -141,6 +135,8 @@ export default function Post() {
         </View>
     );
 }
+
+export default Post
 
 const styles = StyleSheet.create({
 container: {
