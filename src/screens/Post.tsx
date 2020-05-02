@@ -1,13 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, } from 'react-native';
+import { StyleSheet, View, TextInput } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 //@ts-ignore
 import firebase from '../../firebase'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
-import ShareButton from '../components/ShareButton'
+import ShareButton from '../components/ShareButton';
+import apiKey from '../api/api_key';
 
 interface InputTextProps {
     onChangeText: any
@@ -66,13 +67,36 @@ const Post: React.FC<InputTextProps>= () => {
     const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
+
+    const [destination, setDestination] =useState('')
+
+    const callApi = async (text: string) => {
+        setDestination(text);
+        const key = apiKey
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
+                        &input=${destination}&location=34.7263212, 137.7176678
+                        &language=ja&radius=2000`;
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();  
+            console.log(json)           
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={styles.container}>
+            <TextInput 
+                placeholder="enter destinatin" 
+                value={destination}
+                onChangeText={callApi}
+
+            />
+
             <InputText 
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
-                // onChangeText={(text :string) => changeShop(text)}
             />
             <InputText 
                 holderName='おすすめのメニュー'
