@@ -9,14 +9,25 @@ import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
 import ShareButton from '../components/ShareButton'
 
-const Post = () => {
-    const [shopName, changeShop] = useState<string>('')
-    const [favoriteMenu, changeFavorite] = useState<string>('')
-    const [price, changePrice] = useState<string>('')
-    const [locationResultLatitude, setResultLatitude] = useState<number>(0)
-    const [locationResultLongitude, setResultLongitude] = useState<number>(0)
-    const [locationResult, permitResult] = useState<string>('')
-    const [selectedCategory, selectItem] = useState<string>('')
+interface InputTextProps {
+    onChangeText: any
+    shopName: string
+    favoriteMenu: string
+    price: string
+    locationResultLatitude: number
+    locationResultLongitude: number
+    locationResult: string
+    selectedCategory: string
+}
+
+const Post: React.FC<InputTextProps>= () => {
+    const [shopName, changeShop] = useState('')
+    const [favoriteMenu, changeFavorite] = useState('')
+    const [price, changePrice] = useState('')
+    const [locationResultLatitude, setResultLatitude] = useState(0)
+    const [locationResultLongitude, setResultLongitude] = useState(0)
+    const [locationResult, permitResult] = useState('')
+    const [selectedCategory, selectItem] = useState('')
 
     useEffect(() => {
         (async function () {
@@ -55,13 +66,13 @@ const Post = () => {
     const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
-    
     return (
         <View style={styles.container}>
             <InputText 
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
+                // onChangeText={(text :string) => changeShop(text)}
             />
             <InputText 
                 holderName='おすすめのメニュー'
