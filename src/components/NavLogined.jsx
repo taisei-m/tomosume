@@ -1,20 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import Top from './Top';
+import Top from '../screens/Top';
 import Search from './Search';
-import Post from './Post';
-import Profile from './Profile';
-import followTabList from './followTabList';
+import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import ProfileStack from './ProfileStack';
+import ProfileStack from '../Routes/ProfileStack';
 
 const Tab1 = createBottomTabNavigator();
 
 export default Tab = () => {
   return (
     <Tab1.Navigator
-    initialRouteName = "Top"
+    initialRouteName = "Profile"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
@@ -41,9 +38,6 @@ export default Tab = () => {
       <Tab1.Screen name="Search" component={Search} />
       <Tab1.Screen name="Post" component={Post} />
       <Tab1.Screen name="Profile" component={ProfileStack} />
-      
-      {/* <Tab1.Screen name="Profile" component={Profile} />
-      <Tab1.Screen name="ProfollowTabListfile" component={followTabList} /> */}
     </Tab1.Navigator>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Profile from './Profile';
-import followTabList from './followTabList';
+import Profile from '../screens/Profile';
+import followTabList from '../screens/followTabList';
 
 const ProfileNav = createStackNavigator();
 
@@ -20,4 +20,4 @@ export default ProfileStack = () => {
         />
     </ProfileNav.Navigator>
     )
-    };
+};
