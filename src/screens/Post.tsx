@@ -1,22 +1,34 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, } from 'react-native';
+import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 //@ts-ignore
 import firebase from '../../firebase'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
-import ShareButton from '../components/ShareButton'
+import ShareButton from '../components/ShareButton';
+import apiKey from '../api/api_key';
 
-const Post = () => {
-    const [shopName, changeShop] = useState<string>('')
-    const [favoriteMenu, changeFavorite] = useState<string>('')
-    const [price, changePrice] = useState<string>('')
-    const [locationResultLatitude, setResultLatitude] = useState<number>(0)
-    const [locationResultLongitude, setResultLongitude] = useState<number>(0)
-    const [locationResult, permitResult] = useState<string>('')
-    const [selectedCategory, selectItem] = useState<string>('')
+interface InputTextProps {
+    onChangeText: any
+    shopName: string
+    favoriteMenu: string
+    price: string
+    locationResultLatitude: number
+    locationResultLongitude: number
+    locationResult: string
+    selectedCategory: string
+}
+
+const Post: React.FC<InputTextProps>= () => {
+    const [shopName, changeShop] = useState('')
+    const [favoriteMenu, changeFavorite] = useState('')
+    const [price, changePrice] = useState('')
+    const [locationResultLatitude, setResultLatitude] = useState(0)
+    const [locationResultLongitude, setResultLongitude] = useState(0)
+    const [locationResult, permitResult] = useState('')
+    const [selectedCategory, selectItem] = useState('')
 
     useEffect(() => {
         (async function () {
@@ -55,9 +67,48 @@ const Post = () => {
     const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
-    
+    const [destination, setDestination] =useState('')
+    const [predictions, setPredictions] = useState<string[]>()
+    const setArray = (des) => {
+        setPredictions(des)
+    }
+    const callApi = async (text: string) => {
+        setDestination(text);
+        const key = apiKey
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
+                        &input=${destination}&location=34.7263212, 137.7176678
+                        &language=ja&radius=2000`;
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();  
+            console.log(json)
+            setArray(json.predictions)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={styles.container}>
+            <TextInput 
+                style={styles.input}
+                placeholder="enter destinatin" 
+                value={destination}
+                onChangeText={callApi}
+            />
+            <FlatList
+            data={predictions}
+            renderItem={({ item }) => 
+            <TouchableOpacity
+                onPress={() => console.log(item.id)}
+            >
+                <Text style={styles.suggestion} key={item.id}>
+                    {item.description}
+                </Text>
+            </TouchableOpacity>
+            }
+            >
+            </FlatList>
+
             <InputText 
                 holderName='店名'
                 value={shopName}
@@ -132,4 +183,21 @@ inputText:{
 inputShopName: {
     width: 30
 },
+input: {
+    backgroundColor: 'white',
+    height: 40,
+    padding: 5,
+    fontSize: 18,
+    borderWidth: 0.5,
+    marginRight: 5,
+    marginLeft: 5
+},
+suggestion: {
+    backgroundColor: 'white',
+    padding: 5,
+    fontSize: 18,
+    borderWidth: 0.5,
+    marginRight: 5,
+    marginLeft: 5
+}
 })
