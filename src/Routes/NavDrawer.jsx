@@ -3,6 +3,7 @@ import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from '../components/CreateAccount';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // function HomeScreen() {
 //    console.log("yoiyoi")
@@ -27,7 +28,8 @@ function NotificationsScreen() {
 
 export default function NavDrawer() {
    console.log("nanndeyanen")
-   const Drawer = createDrawerNavigator();
+   const Drawer = createBottomTabNavigator();
+
    console.log("nanndeyanen222")
 
 
