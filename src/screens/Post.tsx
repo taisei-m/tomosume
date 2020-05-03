@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 //@ts-ignore
 import firebase from '../../firebase'
@@ -67,9 +67,11 @@ const Post: React.FC<InputTextProps>= () => {
     const setLongitude = (longitude: number) => {
         setResultLongitude(longitude)
     }
-
     const [destination, setDestination] =useState('')
-
+    const [predictions, setPredictions] = useState<string[]>()
+    const setArray = (des) => {
+        setPredictions(des)
+    }
     const callApi = async (text: string) => {
         setDestination(text);
         const key = apiKey
@@ -79,7 +81,8 @@ const Post: React.FC<InputTextProps>= () => {
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();  
-            console.log(json)           
+            console.log(json)
+            setArray(json.predictions)
         } catch (error) {
             console.log(error)
         }
@@ -87,11 +90,24 @@ const Post: React.FC<InputTextProps>= () => {
     return (
         <View style={styles.container}>
             <TextInput 
+                style={styles.input}
                 placeholder="enter destinatin" 
                 value={destination}
                 onChangeText={callApi}
-
             />
+            <FlatList
+            data={predictions}
+            renderItem={({ item }) => 
+            <TouchableOpacity
+                onPress={() => console.log(item.id)}
+            >
+                <Text style={styles.suggestion} key={item.id}>
+                    {item.description}
+                </Text>
+            </TouchableOpacity>
+            }
+            >
+            </FlatList>
 
             <InputText 
                 holderName='店名'
@@ -167,4 +183,21 @@ inputText:{
 inputShopName: {
     width: 30
 },
+input: {
+    backgroundColor: 'white',
+    height: 40,
+    padding: 5,
+    fontSize: 18,
+    borderWidth: 0.5,
+    marginRight: 5,
+    marginLeft: 5
+},
+suggestion: {
+    backgroundColor: 'white',
+    padding: 5,
+    fontSize: 18,
+    borderWidth: 0.5,
+    marginRight: 5,
+    marginLeft: 5
+}
 })
