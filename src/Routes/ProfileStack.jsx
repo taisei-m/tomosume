@@ -9,14 +9,24 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 
 
-
 const ProfileNavStack = createStackNavigator();
 
 const ProfileStack = (props) => {
+    let navigation = props.navigation;
+    React.useEffect(( ) => {
+        const unsubscribe = navigation.addListener('tabPress', e => {
+        //   e.preventDefault();
+          navigation.navigate('ProfileTop')
+        });
+
+        return unsubscribe;
+      }, [navigation]);
+
+
     return (
     <ProfileNavStack.Navigator>
         <ProfileNavStack.Screen 
-                name="Profile"
+                name="ProfileTop"
                 component={Profile}
                 options={{
                     headerShown: true,
@@ -28,7 +38,7 @@ const ProfileStack = (props) => {
                             // color={color}
                             onPress={() => {
                                 console.log("sss");
-                                props.navigation.navigate('drawer')
+                                props.navigation.navigate('idealDrawer')
                             }}
                         />
                     )
@@ -40,7 +50,7 @@ const ProfileStack = (props) => {
             options={{ headerShown: false }}
         />
         <ProfileNavStack.Screen
-            name="drawer"
+            name="idealDrawer"
             component={NavDrawer}
             options={{ headerShown: true }}
         />
