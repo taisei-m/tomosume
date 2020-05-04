@@ -4,7 +4,7 @@ import Profile from '../screens/Profile';
 import followTabList from '../screens/followTabList';
 import { StyleSheet, Button, View, SafeAreaView, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import NavDrawer from '../Routes/NavDrawer'
+import NavDrawerMenu from './NavDrawerMenu'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 
@@ -13,10 +13,20 @@ import GlobalStateContainer from '../containers/GlobalState';
 const ProfileNavStack = createStackNavigator();
 
 const ProfileStack = (props) => {
+    var navigation = props.navigation
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('tabPress', e => {
+            // e.preventDefault();
+            props.navigation.navigate('Profile')
+        });
+        return unsubscribe;
+      }, [navigation]);
+        
+
     return (
-    <ProfileNavStack.Navigator>
+        <ProfileNavStack.Navigator>
         <ProfileNavStack.Screen 
-                name="Profile"
+                name="ProfileTop"
                 component={Profile}
                 options={{
                     headerShown: true,
@@ -27,8 +37,7 @@ const ProfileStack = (props) => {
                             style={{ marginLeft: 10 }}
                             // color={color}
                             onPress={() => {
-                                console.log("sss");
-                                props.navigation.navigate('drawer')
+                                props.navigation.navigate('idealDrawer')
                             }}
                         />
                     )
@@ -40,8 +49,8 @@ const ProfileStack = (props) => {
             options={{ headerShown: false }}
         />
         <ProfileNavStack.Screen
-            name="drawer"
-            component={NavDrawer}
+            name="idealDrawer"
+            component={NavDrawerMenu}
             options={{ headerShown: true }}
         />
     </ProfileNavStack.Navigator>
