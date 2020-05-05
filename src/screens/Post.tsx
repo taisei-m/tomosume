@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
 //@ts-ignore
 import firebase from '../../firebase'
@@ -10,8 +11,10 @@ import InputText from '../components/InputText';
 import ShareButton from '../components/ShareButton';
 import apiKey from '../api/api_key';
 
+
 interface InputTextProps {
     onChangeText: any
+    onKeyPress: any
     shopName: string
     favoriteMenu: string
     price: string
@@ -72,12 +75,12 @@ const Post: React.FC<InputTextProps>= () => {
     const setArray = (des) => {
         setPredictions(des)
     }
-    const callApi = async (text: string) => {
-        setDestination(text);
+
+    const callApi = async () => {
         const key = apiKey
         const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
                         &input=${destination}&location=34.7263212, 137.7176678
-                        &language=ja&radius=2000`;
+                        &language=ja&radius=5000`;
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();  
@@ -87,13 +90,40 @@ const Post: React.FC<InputTextProps>= () => {
             console.log(error)
         }
     }
+    const change = (text: string) => {
+        setDestination(text);
+    }
+
+    const geoCode = async () => {
+        const key = apiKey;
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=日本、静岡県浜松市中区和合町１９３−１４ さわやか浜松和合店&key=${key}`;
+
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();
+            console.log(json.results[0].geometry.location.lat)
+            console.log(json.results[0].geometry.location.lng)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={styles.container}>
+            <Button
+                onPress={geoCode}
+            >
+                geocode
+            </Button>
+            <Button
+                onPress={callApi}
+            >
+                search
+            </Button>
             <TextInput 
                 style={styles.input}
                 placeholder="enter destinatin" 
                 value={destination}
-                onChangeText={callApi}
+                onChangeText={change}
             />
             <FlatList
             data={predictions}
