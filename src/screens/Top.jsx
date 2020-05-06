@@ -9,7 +9,7 @@ function getData() {
     useEffect(() => {
         firebase
         .firestore()
-        .collection('postShopData')
+        .collection('postData')
         .onSnapshot((snapshot) => {
             const tempShopData = snapshot.docs.map((doc) => ({
             id: doc.id,
