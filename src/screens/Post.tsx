@@ -3,14 +3,12 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
+import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase'
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 import InputText from '../components/InputText';
 import ShareButton from '../components/ShareButton';
 import apiKey from '../api/api_key';
-
 
 interface InputTextProps {
     onChangeText: any
@@ -25,138 +23,125 @@ interface InputTextProps {
 }
 
 const Post: React.FC<InputTextProps>= () => {
-    const [shopName, changeShop] = useState('')
-    const [favoriteMenu, changeFavorite] = useState('')
-    const [price, changePrice] = useState('')
-    const [locationResultLatitude, setResultLatitude] = useState(0)
-    const [locationResultLongitude, setResultLongitude] = useState(0)
-    const [locationResult, permitResult] = useState('')
-    const [selectedCategory, selectItem] = useState('')
+    const [shopName, changeShop] = useState('');
+    const [favoriteMenu, changeFavorite] = useState('');
+    const [price, changePrice] = useState('');
+    const [selectedCategory, selectItem] = useState('');
+    const [address, setAddress] = useState<string>('');
+    const [destination, setDestination] =useState('');
+    const [predictions, setPredictions] = useState<string[]>();
+    const [showResult, setResult] = useState<boolean>(false);
 
-    useEffect(() => {
-        (async function () {
-            let locationResult = await Permissions.askAsync(Permissions.LOCATION);
-            inputResult()
-            console.log(locationResult.status)
-            if (locationResult.status !== 'granted') {
-                alert('noo')
-            } else if (locationResult.status === 'granted') {
-                let location = await Location.getCurrentPositionAsync({});
-                console.log('good')
-                alert('ok')
-                setLatitude(Number(JSON.stringify(location.coords.latitude)))
-                setLongitude(Number(JSON.stringify(location.coords.longitude)))
-            }
-        }());
-    }, [])
-    const changeShopName = (text: string) => {
+    const changeShopName = (text: string, address: string) => {
+        setAddress(address)
         changeShop(text)
     }
-    const changeFavoriteMenu = (text: string) => {
-        changeFavorite(text)
-    }
-    const changeMenuPrice = (price: string) => {
-        changePrice(price)
-    }
-    const selectCategory = (text: string) => {
-        selectItem(text)
-    }
-    const inputResult = () => {
-        permitResult(locationResult)
-    }
-    const setLatitude = (latitude: number) => {
-        setResultLatitude(latitude)
-    }
-    const setLongitude = (longitude: number) => {
-        setResultLongitude(longitude)
-    }
-    const [destination, setDestination] =useState('')
-    const [predictions, setPredictions] = useState<string[]>()
-    const setArray = (des) => {
-        setPredictions(des)
-    }
-
     const callApi = async () => {
         const key = apiKey
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
-                        &input=${destination}&location=34.7263212, 137.7176678
-                        &language=ja&radius=5000`;
-        try {
-            const result = await fetch(apiUrl);
-            const json = await result.json();  
-            console.log(json)
-            setArray(json.predictions)
-        } catch (error) {
-            console.log(error)
+        if (destination == '') {
+            alert('店名を入力してください')
+        } else {
+            const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
+            &input=${destination}&location=34.7263212, 137.7176678
+            &language=ja&radius=5000`;
+            try {
+                const result = await fetch(apiUrl);
+                const json = await result.json();  
+                setResult(true)
+                setPredictions(json.predictions)
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
     const change = (text: string) => {
         setDestination(text);
     }
-
-    const geoCode = async () => {
-        const key = apiKey;
-        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=日本、静岡県浜松市中区和合町１９３−１４ さわやか浜松和合店&key=${key}`;
-
-        try {
-            const result = await fetch(apiUrl);
-            const json = await result.json();
-            console.log(json.results[0].geometry.location.lat)
-            console.log(json.results[0].geometry.location.lng)
-        } catch (error) {
-            console.log(error)
-        }
+    const close = () => {
+        setResult(false)
+        change('')
     }
     return (
         <View style={styles.container}>
-            <Button
-                onPress={geoCode}
-            >
-                geocode
-            </Button>
-            <Button
-                onPress={callApi}
-            >
-                search
-            </Button>
+            <Text style={styles.itemName}>
+                店名検索
+            </Text>
+            <View style={{ flexDirection: 'row', marginHorizontal: 60}}>
             <TextInput 
                 style={styles.input}
-                placeholder="enter destinatin" 
+                placeholder="例）新宿　吉野家" 
                 value={destination}
                 onChangeText={change}
             />
+            <Button 
+                icon={
+                    <Icon
+                    name="search"
+                    size={20}
+                    color="black"
+                    />
+                }
+                buttonStyle={styles.searchButton}
+                type="clear"
+                titleStyle={{fontSize: 15, color: 'grey'}}
+                onPress={callApi}                
+            >
+            </Button>
+            </View>
+            {
+                showResult ? 
+            <View>
             <FlatList
-            data={predictions}
-            renderItem={({ item }) => 
-            <TouchableOpacity
-                onPress={() => console.log(item.id)}
-            >
-                <Text style={styles.suggestion} key={item.id}>
-                    {item.description}
-                </Text>
-            </TouchableOpacity>
-            }
-            >
+                data={predictions}
+                renderItem={({ item }) => 
+                <TouchableOpacity
+                    onPress={() => changeShopName(item.structured_formatting.main_text, item.description)}
+                >
+                    <Text style={styles.suggestion} key={item.id}>
+                        {item.description}
+                    </Text>
+                </TouchableOpacity>
+                }
+                >
             </FlatList>
-
+            <Button
+                title={'close'}
+                type='outline'
+                buttonStyle={styles.closeButton}
+                onPress={close}
+            />
+            </View>
+            : null
+            }
+            <Text style={styles.itemName}>
+                店名
+            </Text>
             <InputText 
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
             />
+            <Text style={styles.itemName}>
+                おすすめのメニュー
+            </Text>
             <InputText 
-                holderName='おすすめのメニュー'
+                holderName='おすすめのメニューを入力して下さい'
                 value={favoriteMenu}
-                change={changeFavoriteMenu}
+                change={changeFavorite}
             />
+            <Text style={styles.itemName}>
+                値段
+            </Text>
             <InputText 
-                holderName='価格'
+                holderName='価格を入力して下さい'
                 value={price}
-                change={changeMenuPrice}
+                change={changePrice}
             />
+            <Text style={styles.itemName}>
+                カテゴリー
+            </Text>
             <View style={{alignContent: 'center', marginHorizontal: 60 }}>
                 <Dropdown
-                    label='カテゴリー'
                     data={
                         [
                             {value: '居酒屋',},
@@ -166,19 +151,18 @@ const Post: React.FC<InputTextProps>= () => {
                         ]
                     }
                     value={selectedCategory}
-                    onChangeText={selectCategory}
+                    onChangeText={selectItem}
                 />
             </View>
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
                 <ShareButton
                     buttonTitle='シェア'
-                    buttonType="outline"
+                    buttonType="solid"
                     shopName={shopName}
+                    address={address}
                     favoriteMenu={favoriteMenu}
                     price={price}
                     category={selectedCategory}
-                    latitude={locationResultLatitude}
-                    longitude={locationResultLongitude}
                 />
             </View>
         </View>
@@ -193,6 +177,11 @@ container: {
     backgroundColor: 'white',
     paddingTop: 30
 },
+itemName: {
+    marginLeft: 60,
+    color: '#4488D6',
+    marginTop: 20
+},
 inputView:{
     borderRadius:25,
     borderColor: 'black',
@@ -202,6 +191,14 @@ inputView:{
     color: 'black',
     alignContent: 'center',
     marginHorizontal: 40
+},
+searchButton: {
+    width: 50,
+    marginLeft: 5
+},
+closeButton: {
+    marginHorizontal: 20,
+    marginTop: 5
 },
 inputText:{
     height:50,
@@ -218,9 +215,8 @@ input: {
     height: 40,
     padding: 5,
     fontSize: 18,
-    borderWidth: 0.5,
-    marginRight: 5,
-    marginLeft: 5
+    borderBottomWidth: 0.5,
+    width: 250
 },
 suggestion: {
     backgroundColor: 'white',

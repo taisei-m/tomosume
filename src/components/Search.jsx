@@ -10,7 +10,7 @@ function useFirestore() {
   useEffect(() => {
     firebase
       .firestore()
-      .collection('postShopData')
+      .collection('postData')
       .onSnapshot((snapshot) => {
         const newLocationData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -29,9 +29,6 @@ export default TabScreen2 = () =>{
 
     return (
       <View style={styles.container}>
-        <SearchBar
-          placeholder="Type Here..."
-        />
         <MapView style={styles.mapStyle}
         initialRegion={{
           latitude,
@@ -59,7 +56,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-
   },
   mapStyle: {
     width: '100%',
