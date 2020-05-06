@@ -7,15 +7,14 @@ export default class GlobalContainer extends Container {
       // userToken - The token for the user. If it's non-null, we assume the user is logged in, otherwise not.
       isSplash: true,
       isSignout: "",
-      userData: undefined
+      userData: undefined,
+      itemId: ""
    }
-
    setUserData = (user) => {
       this.setState({
          userData: user
       })
    }
-
    endSplash = (result) => {
       this.setState({
          isSplash: false
@@ -24,7 +23,6 @@ export default class GlobalContainer extends Container {
          isSignout: result
       })
    }
-
    login = (user) => {
       this.setState({
          isSignout: "false"
@@ -33,17 +31,19 @@ export default class GlobalContainer extends Container {
          userData: user
       })
    }
-
    signup = () => {
       this.state({
          userToken: "どこでメソッド呼ぼうかな"
       })
    }
-   
    logout = () => {
       this.setState({
          isSignout: "true"
       })
    }
-
- }
+   setItemId = (id) => {
+      this.setState({
+         itemId: id
+      })
+   }
+}

@@ -3,9 +3,11 @@ import { View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
 import { Avatar, Card, } from 'react-native-elements'
 
 interface ItemProps {
-    title: string,
-    category: string,
-    favorite: string,
+    id: number
+    title: string
+    address: string
+    category: string
+    favorite: string
     price: number
 }
 
@@ -13,7 +15,7 @@ const Item = (props: ItemProps) => {
     return (
         <View style={styles.listItem}>
             <Card containerStyle={{borderRadius: 25}}>
-                <TouchableOpacity  onPress={() => console.log('good')}>
+                <TouchableOpacity  onPress={() => console.log(props.id)}>
                     <View style={styles.userInfomation}>   
                         <Avatar rounded icon={{ name: 'home' }}/>
                         <Text style={styles.userName}>okuse</Text>
@@ -22,6 +24,8 @@ const Item = (props: ItemProps) => {
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>Shop Name</Text>
                             <Text style={styles.shopName}>{props.title}</Text>
+                            <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>Shop Address</Text>
+                            <Text style={styles.shopAddress}>{props.address}</Text>
                             <View style={{flexDirection: 'row', marginTop: 10,}}>
                                 <View style={styles.favorite}>
                                     <Text style={styles.itemName}>Favorite Menu</Text>
@@ -70,7 +74,13 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     },
     shopName: {
-        fontSize: 25,
+        fontSize: 18,
+        marginLeft: 5,
+        marginTop: 10,
+        fontWeight: '700'
+    },
+    shopAddress: {
+        fontSize: 15,
         marginLeft: 5,
         marginTop: 10,
         fontWeight: '700'
