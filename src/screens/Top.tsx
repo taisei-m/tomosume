@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-
 //@ts-ignore
 import firebase from '../../firebase';
 import Item from '../components/Item';
@@ -15,7 +14,7 @@ const getData = (): object | undefined => {
     useEffect(() => {
         firebase
         .firestore()
-        .collection('postShopData')
+        .collection('postData')
         .onSnapshot((snapshot) => {
             const tempShopData = snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -32,13 +31,17 @@ const Top = () => {
     return(
         <View style={styles.container}>
             <FlatList
+            style={styles.list}
             data={shopData}
             renderItem={
                 ({ item }) => <Item 
+                                id={item.id}
                                 title={item.shopName} 
                                 category={item.category} 
+                                address={item.address}
                                 price={item.price} 
-                                favorite={item.favoriteMenu}/>
+                                favorite={item.favoriteMenu}
+                                />
                 }
             keyExtractor={item => item.id}
             />
@@ -55,39 +58,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
     },
-    listItem: {
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    userInfomation: {
-        flexDirection: 'row',
-        marginBottom: 10
-    },
-    userName: {
-        fontSize: 18,
-        paddingTop: 5,
-        paddingLeft: 10
-    },
-    shopName: {
-        fontSize: 25,
-        marginLeft: 10
-    },
-    favoriteMenu: {
-        margin: 10
-    },
-    rating: {
-        marginLeft: 10
-    },
-    ratingText: {
-        marginLeft: 5,
-        marginTop: 2
-    },
-    tinyLogo: {
-        width: 80,
-        height: 80,
-    },
-    logo: {
-        width: 66,
-        height: 58,
+    list: {
+        marginTop: 30
     },
 });
