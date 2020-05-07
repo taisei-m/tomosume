@@ -19,6 +19,7 @@
     "babel-preset-react-native": "4.0.1",
     "base-64": "0.1.0",
     "expo": "~37.0.3",
+    "expo-linear-gradient": "8.1.0",
     "expo-location": "~8.1.0",
     "expo-permissions": "~8.1.0",
     "firebase": "7.9.0",

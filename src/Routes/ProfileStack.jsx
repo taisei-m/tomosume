@@ -18,10 +18,8 @@ const ProfileStack = (props) => {
         //   e.preventDefault();
           navigation.navigate('ProfileTop')
         });
-
         return unsubscribe;
       }, [navigation]);
-
 
     return (
     <ProfileNavStack.Navigator>
@@ -29,7 +27,7 @@ const ProfileStack = (props) => {
                 name="ProfileTop"
                 component={Profile}
                 options={{
-                    headerShown: true,
+                    headerShown: false,
                     headerLeft: () => (
                         <Ionicons
                             name={'md-menu'}
