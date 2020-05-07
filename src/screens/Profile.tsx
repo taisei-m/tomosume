@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, AsyncStorage} from 'react-native';
-import {　Rating } from 'react-native-elements';
-import firebase from '../../firebase';
+import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, AsyncStorage, ImageBackground} from 'react-native';
+import {Card} from 'react-native-elements'
 import { Subscribe } from 'unstated';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/FontAwesome';
+//@ts-ignore
+import firebase from '../../firebase';
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
+import Item from '../components/Item';
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
   useEffect(() => {
     firebase
       .firestore()
-      .collection('postShopData')
+      .collection('postData')
       .onSnapshot((snapshot) => {
         const tempShopData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -21,25 +25,6 @@ function getData() {
       })
   }, [])
   return postedData
-}
-
-function Item({ title, context, rating }) {
-  return (
-    <View style={styles.listItem}>
-    <TouchableOpacity style={styles.item} onPress={() => console.log('good')}>
-      <Text style={styles.shopName}>{title}</Text>
-      <Text style={styles.favoriteMenu}>おすすめメニュー：{context}</Text>
-      <View>   
-        <Rating
-          style={styles.rating}
-          ratingCount={5}
-          startingValue={rating}
-          imageSize={35}
-          />
-      </View>
-    </TouchableOpacity>
-    </View>
-  );
 }
 
 const Profile =  (props) => {
@@ -64,8 +49,6 @@ const Profile =  (props) => {
       console.log(error); 
     }); 
   } 
-
-
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -73,6 +56,9 @@ const Profile =  (props) => {
     } else {
       changeStatus('follow')
     }
+  }
+  const setting = () => {
+    props.navigation.navigate('idealDrawer')
   }
   function toFollowList() {
     props.navigation.navigate('followTabList')
@@ -82,12 +68,53 @@ const Profile =  (props) => {
   }
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-        style = {styles.userIcon}
-      />
-      <Text style={styles.userName}>yuya okuse</Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 20}}>
+      <LinearGradient
+                        colors={['#323eff','#06acff', '#00d4ff']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.LinearGradientView}
+                    >
+          <View style={{flexDirection: 'row'}}>
+          <View>
+          </View>
+      </View>
+        </LinearGradient>
+        <Card
+              containerStyle={{
+                width: 380,
+                height: 160,
+                borderRadius: 10,
+                marginHorizontal: 15,
+                position: 'absolute',
+                top: 80
+              }}
+            >
+            </Card>
+            <Image
+            source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
+            style = {styles.userIcon}
+          />
+            <TouchableOpacity
+            style={{position: 'absolute', top: 50, left: 360}}
+            onPress={setting}
+            >
+              <Icon
+                name="bars"
+                size={30}
+                color="#f5f5f5"
+              />
+            </TouchableOpacity>
+          <Text style={styles.userName}>奥瀬雄哉</Text>
+          <View 
+            style={{
+            flexDirection: 'row', 
+            justifyContent: 'space-around', 
+            borderRadius: 15,
+            width: 250,
+            padding: 10,
+            marginLeft: 80,
+          }}
+          >
         <ProfileNumber 
           number={100}
           itemName='post'
@@ -96,7 +123,7 @@ const Profile =  (props) => {
           number={100}
           itemName="follow"
           press={toFollowList}
-          centerClass={{marginRight: 50, marginLeft: 50, width: 50, height: 50,}}
+          centerClass={{width: 50, height: 50, marginHorizontal: 50}}
         />
         <ProfileNumber 
           number={100}
@@ -121,30 +148,23 @@ const Profile =  (props) => {
           {followStatus}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={
-          pressStatus
-          ? styles.followButton
-          : styles.unFollowButton
-          }
-        onPress={logout}
-      >
-        <Text>
-          ログアウト
-        </Text>
-      </TouchableOpacity>
       <SafeAreaView style={styles.list}>
         <FlatList
           data={shopData}
-          renderItem={({ item }) => <Item title={item.shopName} context={item.favoriteMenu} rating={item.ratingValue}/>}
+          renderItem={
+            ({ item }) => <Item 
+                            title={item.shopName} 
+                            address={item.address}
+                            category={item.category} 
+                            price={item.price} 
+                            favorite={item.favoriteMenu}/>
+            }
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
     </View>
   );
 }
-
-
 const ProfileWrapper = ({ navigation }) => {
   return (
       <Subscribe to={[GlobalStateContainer]}>
@@ -159,21 +179,30 @@ export default ProfileWrapper;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#F4F8FB',
+  },
+  LinearGradientView: {
+    height: 170,
+    width: '100%',
+    borderRadius: 25
   },
   userName: {
+    color: 'black',
+    fontSize: 18,
     fontWeight: '700',
-    fontSize: 24,
-    marginTop: 20,
+    position: 'absolute',
+    top: 150,
+    left: 170,
   },
   userIcon: {
-    width: 80,
-    height: 80, 
-    borderRadius: 80/ 2, 
-    marginTop: 300
+    width: 90,
+    height: 90, 
+    marginTop:50,
+    borderRadius: 90/ 2, 
+    borderColor: 'white',
+    borderWidth: 2,
+    position: 'absolute',
+    left: 160
   },
   listItem: {
     margin: 15,
@@ -193,26 +222,26 @@ const styles = StyleSheet.create({
     color: '#818181'
   },
   followButton: {
-    width:"30%",
+    width:"50%",
     backgroundColor:"white",
-    borderRadius:25,
-    height:25,
+    borderRadius:15,
+    height:35,
     alignItems:"center",
     justifyContent:"center",
-    marginTop: 20,
     borderColor: '#5E9CFE',
-    borderWidth: 1
+    borderWidth: 1,
+    marginLeft: 105
   },
   unFollowButton: {
-    width:"30%",
+    width:"50%",
     backgroundColor:"#5E9CFE",
-    borderRadius:25,
-    height:25,
+    borderRadius:15,
+    height : 35,
     alignItems:"center",
     justifyContent:"center",
-    marginTop: 20,
-    borderColor: '#5E9CFE',
-    borderWidth: 1
+    borderColor: '#F4F8FB',
+    borderWidth: 1,
+    marginLeft: 105
   },
   followButtonText: {
     color: '#5E9CFE'
@@ -221,23 +250,6 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   list: {
-    marginTop: 10,
-    marginBottom: 250,
+    marginBottom: 550,
   },
-  item: {
-    backgroundColor: 'white',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-  context: {
-    marginTop: 10
-  },
-  rating: {
-    paddingVertical: 10,
-    backgroundColor: 'white',
-  }
 })
