@@ -63,6 +63,10 @@ const Post: React.FC<InputTextProps>= () => {
     }
     return (
         <View style={styles.container}>
+            <View style={{marginTop: 70}}>
+            <Text
+                style={styles.title}
+            >投稿フォーム</Text>
             <Text style={styles.itemName}>
                 店名検索
             </Text>
@@ -156,7 +160,7 @@ const Post: React.FC<InputTextProps>= () => {
             </View>
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
                 <ShareButton
-                    buttonTitle='シェア'
+                    buttonTitle='投稿する'
                     buttonType="solid"
                     shopName={shopName}
                     address={address}
@@ -164,6 +168,7 @@ const Post: React.FC<InputTextProps>= () => {
                     price={price}
                     category={selectedCategory}
                 />
+            </View>
             </View>
         </View>
     );
@@ -177,9 +182,14 @@ container: {
     backgroundColor: 'white',
     paddingTop: 30
 },
+title: {
+    textAlign: 'center',
+    fontSize: 30,
+    marginBottom: 10
+},
 itemName: {
     marginLeft: 60,
-    color: '#4488D6',
+    color: '#5E9CFE',
     marginTop: 20
 },
 inputView:{
