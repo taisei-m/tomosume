@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, AsyncStorage, ImageBackground} from 'react-native';
-import {Card} from 'react-native-elements'
+import {
+        StyleSheet, 
+        Text, 
+        Image, 
+        View, 
+        TouchableOpacity, 
+        SafeAreaView, 
+        FlatList, 
+        AsyncStorage, 
+        ImageBackground
+        } from 'react-native';
+import { Card } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -35,7 +45,6 @@ const Profile =  (props) => {
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
-
   const logout = () => {  
     firebase.auth().signOut().then(function() {
     // Sign-out successful.
