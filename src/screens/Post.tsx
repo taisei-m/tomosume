@@ -63,6 +63,10 @@ const Post: React.FC<InputTextProps>= () => {
     }
     return (
         <View style={styles.container}>
+            <View style={{marginTop: 70}}>
+            <Text
+                style={styles.title}
+            >投稿フォーム</Text>
             <Text style={styles.itemName}>
                 店名検索
             </Text>
@@ -120,7 +124,28 @@ const Post: React.FC<InputTextProps>= () => {
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
+                canEdit={false}
             />
+            <Text style={styles.itemName}>
+                カテゴリー
+            </Text>
+            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
+                <Dropdown
+                    data={
+                        [
+                            {value: '居酒屋',},
+                            {value: 'カフェ',}, 
+                            {value: '中華',}, 
+                            {value: 'ラーメン'},
+                            {value: 'ランチ'},
+                            {value: 'ディナー'},
+                            {value: 'その他'},
+                        ]
+                    }
+                    value={selectedCategory}
+                    onChangeText={selectItem}
+                />
+            </View>
             <Text style={styles.itemName}>
                 おすすめのメニュー
             </Text>
@@ -137,26 +162,9 @@ const Post: React.FC<InputTextProps>= () => {
                 value={price}
                 change={changePrice}
             />
-            <Text style={styles.itemName}>
-                カテゴリー
-            </Text>
-            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-                <Dropdown
-                    data={
-                        [
-                            {value: '居酒屋',},
-                            {value: 'カフェ',}, 
-                            {value: 'ランチ',}, 
-                            {value: 'ディナー',}
-                        ]
-                    }
-                    value={selectedCategory}
-                    onChangeText={selectItem}
-                />
-            </View>
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
                 <ShareButton
-                    buttonTitle='シェア'
+                    buttonTitle='投稿する'
                     buttonType="solid"
                     shopName={shopName}
                     address={address}
@@ -164,6 +172,7 @@ const Post: React.FC<InputTextProps>= () => {
                     price={price}
                     category={selectedCategory}
                 />
+            </View>
             </View>
         </View>
     );
@@ -177,9 +186,14 @@ container: {
     backgroundColor: 'white',
     paddingTop: 30
 },
+title: {
+    textAlign: 'center',
+    fontSize: 30,
+    marginBottom: 10
+},
 itemName: {
     marginLeft: 60,
-    color: '#4488D6',
+    color: '#5E9CFE',
     marginTop: 20
 },
 inputView:{
