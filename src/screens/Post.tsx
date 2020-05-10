@@ -124,7 +124,28 @@ const Post: React.FC<InputTextProps>= () => {
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
+                canEdit={false}
             />
+            <Text style={styles.itemName}>
+                カテゴリー
+            </Text>
+            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
+                <Dropdown
+                    data={
+                        [
+                            {value: '居酒屋',},
+                            {value: 'カフェ',}, 
+                            {value: '中華',}, 
+                            {value: 'ラーメン'},
+                            {value: 'ランチ'},
+                            {value: 'ディナー'},
+                            {value: 'その他'},
+                        ]
+                    }
+                    value={selectedCategory}
+                    onChangeText={selectItem}
+                />
+            </View>
             <Text style={styles.itemName}>
                 おすすめのメニュー
             </Text>
@@ -141,23 +162,6 @@ const Post: React.FC<InputTextProps>= () => {
                 value={price}
                 change={changePrice}
             />
-            <Text style={styles.itemName}>
-                カテゴリー
-            </Text>
-            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-                <Dropdown
-                    data={
-                        [
-                            {value: '居酒屋',},
-                            {value: 'カフェ',}, 
-                            {value: 'ランチ',}, 
-                            {value: 'ディナー',}
-                        ]
-                    }
-                    value={selectedCategory}
-                    onChangeText={selectItem}
-                />
-            </View>
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
                 <ShareButton
                     buttonTitle='投稿する'

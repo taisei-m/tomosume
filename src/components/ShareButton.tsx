@@ -1,11 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-// import { useState } from 'react';
 import { Button } from 'react-native-elements';
 //@ts-ignore
 import firebase from '../../firebase';
 import apiKey from '../api/api_key';
-
 
 interface ShareButtonProps {
     shopName: string
@@ -15,12 +13,9 @@ interface ShareButtonProps {
     category: string,
     buttonTitle: string,
     buttonType?: string,
+    canPress: boolean
 }
 const ShareButton = (props: ShareButtonProps) => {
-    // const [complete, setComplete] = useState<boolean>(true)
-    // if (props.shopName != null && props.address != null && props.favoriteMenu != null && props.price != null && props.category != null) {
-    //     setComplete(false)
-    // }
     const postShopData = firebase.firestore().collection('postData')
     const key = apiKey;
     const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${props.address}&key=${key}`;
@@ -69,7 +64,6 @@ const ShareButton = (props: ShareButtonProps) => {
                 buttonStyle={{borderRadius: 20}}
                 title={props.buttonTitle}
                 type={props.buttonType}
-                // disabled={complete}
                 onPress={share}
             />
         </>
