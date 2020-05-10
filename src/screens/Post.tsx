@@ -47,6 +47,7 @@ const Post: React.FC<InputTextProps>= () => {
             try {
                 const result = await fetch(apiUrl);
                 const json = await result.json();  
+                console.log(json)
                 setResult(true)
                 setPredictions(json.predictions)
             } catch (error) {
@@ -114,7 +115,7 @@ const Post: React.FC<InputTextProps>= () => {
             : null
             }
             <Text style={styles.itemName}>
-                店名
+                店名（読み取り専用）
             </Text>
             <InputText 
                 holderName='店名'
@@ -144,10 +145,13 @@ const Post: React.FC<InputTextProps>= () => {
                 <Dropdown
                     data={
                         [
-                            {value: '居酒屋',},
-                            {value: 'カフェ',}, 
-                            {value: 'ランチ',}, 
-                            {value: 'ディナー',}
+                            {value: '居酒屋'},
+                            {value: 'カフェ'}, 
+                            {value: 'ラーメン'},
+                            {value: '中華料理'}, 
+                            {value: 'ランチ'},
+                            {value: 'ディナー'},
+                            {value: 'その他'},
                         ]
                     }
                     value={selectedCategory}
@@ -227,3 +231,5 @@ suggestion: {
     marginLeft: 5
 }
 })
+
+//ChIJUdNf03veGmARWgnQGmH1Hyo
