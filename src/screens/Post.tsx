@@ -14,12 +14,15 @@ interface InputTextProps {
     onChangeText: any
     onKeyPress: any
     shopName: string
+    address: string
     favoriteMenu: string
     price: string
+    predictions: string[]
     locationResultLatitude: number
     locationResultLongitude: number
     locationResult: string
     selectedCategory: string
+    showResult: boolean
 }
 
 const Post: React.FC<InputTextProps>= () => {
@@ -27,10 +30,10 @@ const Post: React.FC<InputTextProps>= () => {
     const [favoriteMenu, changeFavorite] = useState('');
     const [price, changePrice] = useState('');
     const [selectedCategory, selectItem] = useState('');
-    const [address, setAddress] = useState<string>('');
+    const [address, setAddress] = useState('');
     const [destination, setDestination] =useState('');
-    const [predictions, setPredictions] = useState<string[]>();
-    const [showResult, setResult] = useState<boolean>(false);
+    const [predictions, setPredictions] = useState([]);
+    const [showResult, setResult] = useState(false);
 
     const changeShopName = (text: string, address: string) => {
         setAddress(address)
@@ -99,7 +102,9 @@ const Post: React.FC<InputTextProps>= () => {
                 data={predictions}
                 renderItem={({ item }) => 
                 <TouchableOpacity
-                    onPress={() => changeShopName(item.structured_formatting.main_text, item.description)}
+                    onPress={
+                        () => changeShopName(item.structured_formatting.main_text, item.description)
+                    }
                 >
                     <Text style={styles.suggestion} key={item.id}>
                         {item.description}

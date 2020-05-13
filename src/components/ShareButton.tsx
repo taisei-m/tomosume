@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { Button } from 'react-native-elements';
 //@ts-ignore
 import firebase from '../../firebase';
@@ -13,7 +12,6 @@ interface ShareButtonProps {
     category: string,
     buttonTitle: string,
     buttonType?: string,
-    canPress: boolean
 }
 const ShareButton = (props: ShareButtonProps) => {
     const postShopData = firebase.firestore().collection('postData')
@@ -27,12 +25,8 @@ const ShareButton = (props: ShareButtonProps) => {
         const json = await result.json();
         let set = (function setLocationData () {
             return new Promise((resolve) => {
-                console.log(json.results[0].geometry.location.lat)
-                console.log(json.results[0].geometry.location.lng)
                 latitude = json.results[0].geometry.location.lat
                 longitude = json.results[0].geometry.location.lng
-                console.log(latitude)
-                console.log(longitude)
                 resolve();
             });
         })();
@@ -58,6 +52,7 @@ const ShareButton = (props: ShareButtonProps) => {
         console.log(error)
     }
 }
+
     return(
         <>
             <Button
