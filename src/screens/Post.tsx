@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase'
 import InputText from '../components/InputText';
-import ShareButton from '../components/ShareButton';
 import apiKey from '../api/api_key';
 
 interface InputTextProps {
@@ -57,6 +56,46 @@ const Post: React.FC<InputTextProps>= () => {
             }
         }
     }
+
+    const share = async() => {
+        const postShopData = firebase.firestore().collection('postData')
+        const key = apiKey;
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+        let latitude = 0
+        let longitude = 0
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();
+            let set = (function setLocationData () {
+                return new Promise((resolve) => {
+                    latitude = json.results[0].geometry.location.lat
+                    longitude = json.results[0].geometry.location.lng
+                    resolve();
+                });
+            })();
+            Promise.all([set]).then(function() {
+                postShopData.add({
+                    shopName: shopName,
+                    address: address,
+                    favoriteMenu: favoriteMenu,
+                    price: price,
+                    category: selectedCategory,
+                    createdAt: new Date(),
+                    latitude: latitude,
+                    longitude: longitude,
+                })
+                .then(function() {
+                    console.log('success')
+                })
+                .catch(function(error: any) {
+                    console.log(error)
+                })
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const change = (text: string) => {
         setDestination(text);
     }
@@ -168,7 +207,7 @@ const Post: React.FC<InputTextProps>= () => {
                 change={changePrice}
             />
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
-                <ShareButton
+                {/* <ShareButton
                     buttonTitle='投稿する'
                     buttonType="solid"
                     shopName={shopName}
@@ -176,6 +215,12 @@ const Post: React.FC<InputTextProps>= () => {
                     favoriteMenu={favoriteMenu}
                     price={price}
                     category={selectedCategory}
+                /> */}
+                <Button
+                    buttonStyle={{borderRadius: 20}}
+                    title='投稿する'
+                    type='solid'
+                    onPress={share}
                 />
             </View>
             </View>
