@@ -3,10 +3,11 @@ import { StyleSheet, Text, View} from 'react-native';
 
 interface ProfileNumberProps {
     number: number
-    press: any
+    press?: any
     itemName: string
     centerClass?: object
 }
+
 const ProfileNumber = (props: ProfileNumberProps) => {
     return(
         <View style={props.centerClass}>

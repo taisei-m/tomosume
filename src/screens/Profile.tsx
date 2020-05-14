@@ -13,9 +13,11 @@ import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase';
+import * as ImagePicker from 'expo-image-picker';
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
+
 
 function getData() {
   const [postedData, changePostedData] = useState([]);
@@ -39,6 +41,7 @@ const Profile = (props: any) => {
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
+  const [image, setImage] = useState<string>('')
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
@@ -59,75 +62,97 @@ const Profile = (props: any) => {
   const toFollowerList = () => {
     props.navigation.navigate('followTabList')
   }
+  const changeImage = async() => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+      console.log('======================')
+      console.log(image);
+      console.log('======================')
+    } catch (E) {
+      console.log(E);
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', justifyContent: 'center',}}>
-      <View>
-      <View style={{alignItems: 'center', marginTop: 50}}>
-      <Image
-          source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-          style = {styles.userIcon}
-        />
-      </View>
-      <View style={{alignItems: 'center', marginTop: 10}}>
-        <Text style={styles.userName}>奥瀬雄哉</Text>
-      </View>
-      </View>
-
-      <View style={{marginLeft: 30}}>
-        <View 
-          style={{
-            justifyContent: 'center', 
-            flexDirection: 'row',
-            marginTop: 70,
-          }}
-        >
-          <ProfileNumber 
-            number={100}
-            itemName='post'
-          />
-          <ProfileNumber
-            number={100}
-            itemName="follow"
-            press={toFollowList}
-            centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-          />
-          <ProfileNumber 
-            number={100}
-            itemName="follower"
-            press={toFollowerList}
-          />
+        <View>
+          <View style={{alignItems: 'center', marginTop: 50}}>
+            <TouchableOpacity
+              onPress={changeImage}
+            >
+              <Image
+                source={{ uri: image }}
+                style = {styles.userIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{alignItems: 'center', marginTop: 10}}>
+            <Text style={styles.userName}>奥瀬雄哉</Text>
+          </View>
         </View>
-      <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
-        <TouchableOpacity
-          style={
-            pressStatus
-            ? styles.followButton
-            : styles.unFollowButton
-            }
-          onPress={follow}
-        >
-          <Text 
-            style={
-              pressStatus
-              ? styles.followButtonText
-              : styles.unfollowButtonText
-              }>
-            {followStatus}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-        onPress={setting}
-        style={{marginLeft: 10}}
-      >
-        <Icon
-          name="bars"
-          size={30}
-          color="#000"
-        />
-      </TouchableOpacity>
-      </View>
-      </View>
+
+        <View style={{marginLeft: 30}}>
+          <View 
+            style={{
+              justifyContent: 'center', 
+              flexDirection: 'row',
+              marginTop: 70,
+            }}
+          >
+            <ProfileNumber 
+              number={100}
+              itemName='post'
+            />
+            <ProfileNumber
+              number={100}
+              itemName="follow"
+              press={toFollowList}
+              centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+            />
+            <ProfileNumber 
+              number={100}
+              itemName="follower"
+              press={toFollowerList}
+            />
+          </View>
+          <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={
+                pressStatus
+                ? styles.followButton
+                : styles.unFollowButton
+                }
+              onPress={follow}
+            >
+              <Text 
+                style={
+                  pressStatus
+                  ? styles.followButtonText
+                  : styles.unfollowButtonText
+                  }>
+                {followStatus}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={setting}
+              style={{marginLeft: 10}}
+            >
+              <Icon
+                name="bars"
+                size={30}
+                color="#000"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
       <SafeAreaView style={styles.list}>
         <FlatList
@@ -162,7 +187,6 @@ export default ProfileWrapper;
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#F4F8FB',
     backgroundColor: '#fff'
   },
   userName: {
@@ -221,7 +245,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   list: {
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 350
   },
 })
