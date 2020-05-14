@@ -161,7 +161,7 @@ const Post: React.FC<InputTextProps>= () => {
             : null
             }
             <Text style={styles.itemName}>
-                店名
+                店名 (必須)
             </Text>
             <InputText 
                 holderName='店名'
@@ -170,7 +170,7 @@ const Post: React.FC<InputTextProps>= () => {
                 canEdit={false}
             />
             <Text style={styles.itemName}>
-                カテゴリー
+                カテゴリー (必須)
             </Text>
             <View style={{alignContent: 'center', marginHorizontal: 60 }}>
                 <Dropdown
