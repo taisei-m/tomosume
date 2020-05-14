@@ -18,7 +18,6 @@ import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
-
 function getData() {
   const [postedData, changePostedData] = useState([]);
   useEffect(() => {
@@ -69,17 +68,29 @@ const Profile = (props: any) => {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
-      });
+      })
       if (!result.cancelled) {
+        console.log(result)
         setImage(result.uri);
+        uploadImage(image, 'test-image')
+        .then(() => {
+          alert('success')
+        })
+        .catch(e => {
+          alert(e)
+        })
       }
-      console.log('======================')
-      console.log(image);
-      console.log('======================')
     } catch (E) {
       console.log(E);
     }
   }
+
+  const uploadImage = async (uri:string, imageName:string) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    var storageRef = firebase.storage().ref('user/icon/' + imageName);
+    return storageRef.put(blob);
+}
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', justifyContent: 'center',}}>
