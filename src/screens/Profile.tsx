@@ -8,7 +8,6 @@ import {
         SafeAreaView, 
         FlatList, 
         AsyncStorage, 
-        ImageBackground
         } from 'react-native';
 import { Card } from 'react-native-elements'
 import { Subscribe } from 'unstated';
@@ -37,7 +36,7 @@ function getData() {
   return postedData
 }
 
-const Profile =  (props) => {
+const Profile = (props: any) => {
   console.log(props)
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
@@ -45,19 +44,6 @@ const Profile =  (props) => {
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
-  const logout = () => {  
-    firebase.auth().signOut().then(function() {
-    // Sign-out successful.
-      console.log("Sign-out successful and call global.logout")
-      AsyncStorage.setItem('Authenticated', 'false', () => {
-        props.globalState.logout();
-      });
-    })
-    .catch(function(error) {
-    // An error happened.
-      console.log(error); 
-    }); 
-  } 
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -78,44 +64,40 @@ const Profile =  (props) => {
   return (
     <View style={styles.container}>
       <LinearGradient
-                        colors={['#323eff','#06acff', '#00d4ff']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={styles.LinearGradientView}
-                    >
-          <View style={{flexDirection: 'row'}}>
-          <View>
-          </View>
-      </View>
-        </LinearGradient>
-        <Card
-              containerStyle={{
-                width: 380,
-                height: 160,
-                borderRadius: 10,
-                marginHorizontal: 15,
-                position: 'absolute',
-                top: 80
-              }}
-            >
-            </Card>
-            <Image
-            source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-            style = {styles.userIcon}
-          />
-            <TouchableOpacity
-            style={{position: 'absolute', top: 50, left: 360}}
-            onPress={setting}
-            >
-              <Icon
-                name="bars"
-                size={30}
-                color="#f5f5f5"
-              />
-            </TouchableOpacity>
-          <Text style={styles.userName}>奥瀬雄哉</Text>
-          <View 
-            style={{
+        colors={['#323eff','#06acff', '#00d4ff']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.LinearGradientView}
+      >
+      </LinearGradient>
+      <Card
+        containerStyle={{
+          width: 380,
+          height: 160,
+          borderRadius: 10,
+          marginHorizontal: 15,
+          position: 'absolute',
+          top: 80
+        }}
+      >
+      </Card>
+      <Image
+        source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
+        style = {styles.userIcon}
+      />
+      <TouchableOpacity
+        style={{position: 'absolute', top: 50, left: 360}}
+        onPress={setting}
+      >
+        <Icon
+          name="bars"
+          size={30}
+          color="#f5f5f5"
+        />
+      </TouchableOpacity>
+      <Text style={styles.userName}>奥瀬雄哉</Text>
+        <View 
+          style={{
             flexDirection: 'row', 
             justifyContent: 'space-around', 
             borderRadius: 15,
@@ -123,23 +105,23 @@ const Profile =  (props) => {
             padding: 10,
             marginLeft: 80,
           }}
-          >
-        <ProfileNumber 
-          number={100}
-          itemName='post'
-        />
-        <ProfileNumber
-          number={100}
-          itemName="follow"
-          press={toFollowList}
-          centerClass={{width: 50, height: 50, marginHorizontal: 50}}
-        />
-        <ProfileNumber 
-          number={100}
-          itemName="follower"
-          prass={toFollowerList}
-        />
-      </View>
+        >
+          <ProfileNumber 
+            number={100}
+            itemName='post'
+          />
+          <ProfileNumber
+            number={100}
+            itemName="follow"
+            press={toFollowList}
+            centerClass={{width: 50, height: 50, marginHorizontal: 50}}
+          />
+          <ProfileNumber 
+            number={100}
+            itemName="follower"
+            prass={toFollowerList}
+          />
+        </View>
       <TouchableOpacity
         style={
           pressStatus
@@ -161,13 +143,14 @@ const Profile =  (props) => {
         <FlatList
           data={shopData}
           renderItem={
-            ({ item }) => <Item 
-                            title={item.shopName} 
-                            address={item.address}
-                            category={item.category} 
-                            price={item.price} 
-                            favorite={item.favoriteMenu}/>
-            }
+            ({ item }) => 
+              <Item 
+                title={item.shopName} 
+                address={item.address}
+                category={item.category} 
+                price={item.price} 
+                favorite={item.favoriteMenu}/>
+          }
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
