@@ -4,7 +4,7 @@ import Profile from '../screens/Profile';
 import followTabList from '../screens/followTabList';
 import { StyleSheet, Button, View, SafeAreaView, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import NavDrawer from '../Routes/NavDrawer'
+import Setting from '../screens/Setting'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 
@@ -49,7 +49,7 @@ const ProfileStack = (props) => {
         />
         <ProfileNavStack.Screen
             name="idealDrawer"
-            component={NavDrawer}
+            component={Setting}
             options={{ headerShown: true }}
         />
     </ProfileNavStack.Navigator>

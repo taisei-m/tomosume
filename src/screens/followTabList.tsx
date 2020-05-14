@@ -158,9 +158,6 @@ export default function TabViewExample() {
     );
 }
 const styles = StyleSheet.create({
-    scene: {
-        flex: 1,
-    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -217,6 +214,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingHorizontal: 18,
         paddingVertical: 12,
+        paddingTop: 50
     },
     
 });

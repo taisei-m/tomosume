@@ -9,16 +9,16 @@ import SplashScreen from '../components/Splash'
 
 const Index = (props) => {
   console.log("index//////////////////////////////////////////////////////");
-  console.log(props.globalState.state);
+  // console.log(props.globalState.state);
   const [globalState, setGlobalState] = useState(props.globalState);
   const [isSplash, setIisSplash] = useState(props.globalState.state.isSplash);
   const [isSignout, setIsSignout] = useState(props.globalState.state.isSignout);
   const [user, setUser] = useState(props.globalState.state.user);
   const Stack = createStackNavigator();
   
-  console.log("check how you are")
-  console.log("global.isSplash = " + props.globalState.state.isSplash)
-  console.log("global.isSignout = " + props.globalState.state.isSignout)
+  // console.log("check how you are")
+  // console.log("global.isSplash = " + props.globalState.state.isSplash)
+  // console.log("global.isSignout = " + props.globalState.state.isSignout)
 
   if(props.globalState.state.isSplash==false&&props.globalState.state.isSignout!=""){ 
     console.log("to Nav");
