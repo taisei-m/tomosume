@@ -9,9 +9,7 @@ import {
         FlatList, 
         AsyncStorage, 
         } from 'react-native';
-import { Card } from 'react-native-elements'
 import { Subscribe } from 'unstated';
-import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase';
@@ -63,47 +61,25 @@ const Profile = (props: any) => {
   }
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#323eff','#06acff', '#00d4ff']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.LinearGradientView}
-      >
-      </LinearGradient>
-      <Card
-        containerStyle={{
-          width: 380,
-          height: 160,
-          borderRadius: 10,
-          marginHorizontal: 15,
-          position: 'absolute',
-          top: 80
-        }}
-      >
-      </Card>
+      <View style={{flexDirection: 'row', justifyContent: 'center',}}>
+      <View>
+      <View style={{alignItems: 'center', marginTop: 50}}>
       <Image
-        source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
-        style = {styles.userIcon}
-      />
-      <TouchableOpacity
-        style={{position: 'absolute', top: 50, left: 360}}
-        onPress={setting}
-      >
-        <Icon
-          name="bars"
-          size={30}
-          color="#f5f5f5"
+          source={{ uri: 'file:///Users/oxyu8/Downloads/okuse_yuya.jpg'}}
+          style = {styles.userIcon}
         />
-      </TouchableOpacity>
-      <Text style={styles.userName}>奥瀬雄哉</Text>
+      </View>
+      <View style={{alignItems: 'center', marginTop: 10}}>
+        <Text style={styles.userName}>奥瀬雄哉</Text>
+      </View>
+      </View>
+
+      <View style={{marginLeft: 30}}>
         <View 
           style={{
-            flexDirection: 'row', 
-            justifyContent: 'space-around', 
-            borderRadius: 15,
-            width: 250,
-            padding: 10,
-            marginLeft: 80,
+            justifyContent: 'center', 
+            flexDirection: 'row',
+            marginTop: 70,
           }}
         >
           <ProfileNumber 
@@ -114,33 +90,48 @@ const Profile = (props: any) => {
             number={100}
             itemName="follow"
             press={toFollowList}
-            centerClass={{width: 50, height: 50, marginHorizontal: 50}}
+            centerClass={{width: 50, height: 50, marginHorizontal: 30}}
           />
           <ProfileNumber 
             number={100}
             itemName="follower"
-            prass={toFollowerList}
+            press={toFollowerList}
           />
         </View>
-      <TouchableOpacity
-        style={
-          pressStatus
-          ? styles.followButton
-          : styles.unFollowButton
-          }
-        onPress={follow}
-      >
-        <Text 
+      <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+        <TouchableOpacity
           style={
             pressStatus
-            ? styles.followButtonText
-            : styles.unfollowButtonText
-            }>
-          {followStatus}
-        </Text>
+            ? styles.followButton
+            : styles.unFollowButton
+            }
+          onPress={follow}
+        >
+          <Text 
+            style={
+              pressStatus
+              ? styles.followButtonText
+              : styles.unfollowButtonText
+              }>
+            {followStatus}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        onPress={setting}
+        style={{marginLeft: 10}}
+      >
+        <Icon
+          name="bars"
+          size={30}
+          color="#000"
+        />
       </TouchableOpacity>
+      </View>
+      </View>
+      </View>
       <SafeAreaView style={styles.list}>
         <FlatList
+          style={styles.flatlist}
           data={shopData}
           renderItem={
             ({ item }) => 
@@ -171,30 +162,20 @@ export default ProfileWrapper;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F4F8FB',
-  },
-  LinearGradientView: {
-    height: 170,
-    width: '100%',
-    borderRadius: 25
+    // backgroundColor: '#F4F8FB',
+    backgroundColor: '#fff'
   },
   userName: {
     color: 'black',
     fontSize: 18,
     fontWeight: '700',
-    position: 'absolute',
-    top: 150,
-    left: 170,
   },
   userIcon: {
     width: 90,
     height: 90, 
-    marginTop:50,
     borderRadius: 90/ 2, 
     borderColor: 'white',
     borderWidth: 2,
-    position: 'absolute',
-    left: 160
   },
   listItem: {
     margin: 15,
@@ -214,7 +195,7 @@ const styles = StyleSheet.create({
     color: '#818181'
   },
   followButton: {
-    width:"50%",
+    width: 160,
     backgroundColor:"white",
     borderRadius:15,
     height:35,
@@ -222,10 +203,9 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     borderColor: '#5E9CFE',
     borderWidth: 1,
-    marginLeft: 105
   },
   unFollowButton: {
-    width:"50%",
+    width: 160,
     backgroundColor:"#5E9CFE",
     borderRadius:15,
     height : 35,
@@ -233,7 +213,6 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     borderColor: '#F4F8FB',
     borderWidth: 1,
-    marginLeft: 105
   },
   followButtonText: {
     color: '#5E9CFE'
@@ -242,6 +221,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   list: {
-    marginBottom: 550,
+    marginTop: 30,
+    marginBottom: 350
   },
 })

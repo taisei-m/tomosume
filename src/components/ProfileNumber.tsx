@@ -1,7 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-export default ProfileNumber = (props) => {
+interface ProfileNumberProps {
+    number: number
+    press: any
+    itemName: string
+    centerClass?: object
+}
+const ProfileNumber = (props: ProfileNumberProps) => {
     return(
         <View style={props.centerClass}>
             <Text 
@@ -12,6 +18,8 @@ export default ProfileNumber = (props) => {
         </View>
     )
 }
+
+export default ProfileNumber
 
 const styles = StyleSheet.create({
     number: {
