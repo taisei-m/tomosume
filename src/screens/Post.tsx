@@ -7,19 +7,21 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase'
 import InputText from '../components/InputText';
-import ShareButton from '../components/ShareButton';
 import apiKey from '../api/api_key';
 
 interface InputTextProps {
     onChangeText: any
     onKeyPress: any
     shopName: string
+    address: string
     favoriteMenu: string
     price: string
+    predictions: string[]
     locationResultLatitude: number
     locationResultLongitude: number
     locationResult: string
     selectedCategory: string
+    showResult: boolean
 }
 
 const Post: React.FC<InputTextProps>= () => {
@@ -27,11 +29,18 @@ const Post: React.FC<InputTextProps>= () => {
     const [favoriteMenu, changeFavorite] = useState('');
     const [price, changePrice] = useState('');
     const [selectedCategory, selectItem] = useState('');
-    const [address, setAddress] = useState<string>('');
+    const [address, setAddress] = useState('');
     const [destination, setDestination] =useState('');
-    const [predictions, setPredictions] = useState<string[]>();
-    const [showResult, setResult] = useState<boolean>(false);
+    const [predictions, setPredictions] = useState([]);
+    const [showResult, setResult] = useState(false);
 
+    const change = (text: string) => {
+        setDestination(text);
+    }
+    const close = () => {
+        setResult(false)
+        change('')
+    }
     const changeShopName = (text: string, address: string) => {
         setAddress(address)
         changeShop(text)
@@ -55,15 +64,51 @@ const Post: React.FC<InputTextProps>= () => {
             }
         }
     }
-    const change = (text: string) => {
-        setDestination(text);
-    }
-    const close = () => {
-        setResult(false)
-        change('')
+
+    const share = async() => {
+        const postShopData = firebase.firestore().collection('postData')
+        const key = apiKey;
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+        let latitude = 0
+        let longitude = 0
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();
+            let set = (function setLocationData () {
+                return new Promise((resolve) => {
+                    latitude = json.results[0].geometry.location.lat
+                    longitude = json.results[0].geometry.location.lng
+                    resolve();
+                });
+            })();
+            Promise.all([set]).then(function() {
+                postShopData.add({
+                    shopName: shopName,
+                    address: address,
+                    favoriteMenu: favoriteMenu,
+                    price: price,
+                    category: selectedCategory,
+                    createdAt: new Date(),
+                    latitude: latitude,
+                    longitude: longitude,
+                })
+                .then(function() {
+                    console.log('success')
+                })
+                .catch(function(error: any) {
+                    console.log(error)
+                })
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
         <View style={styles.container}>
+            <View style={{marginTop: 70}}>
+            <Text
+                style={styles.title}
+            >投稿フォーム</Text>
             <Text style={styles.itemName}>
                 店名検索
             </Text>
@@ -96,7 +141,9 @@ const Post: React.FC<InputTextProps>= () => {
                 data={predictions}
                 renderItem={({ item }) => 
                 <TouchableOpacity
-                    onPress={() => changeShopName(item.structured_formatting.main_text, item.description)}
+                    onPress={
+                        () => changeShopName(item.structured_formatting.main_text, item.description)
+                    }
                 >
                     <Text style={styles.suggestion} key={item.id}>
                         {item.description}
@@ -115,13 +162,34 @@ const Post: React.FC<InputTextProps>= () => {
             : null
             }
             <Text style={styles.itemName}>
-                店名（読み取り専用）
+                店名 (必須)
             </Text>
             <InputText 
                 holderName='店名'
                 value={shopName}
                 change={changeShopName}
+                canEdit={false}
             />
+            <Text style={styles.itemName}>
+                カテゴリー (必須)
+            </Text>
+            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
+                <Dropdown
+                    data={
+                        [
+                            {value: '居酒屋',},
+                            {value: 'カフェ',}, 
+                            {value: '中華',}, 
+                            {value: 'ラーメン'},
+                            {value: 'ランチ'},
+                            {value: 'ディナー'},
+                            {value: 'その他'},
+                        ]
+                    }
+                    value={selectedCategory}
+                    onChangeText={selectItem}
+                />
+            </View>
             <Text style={styles.itemName}>
                 おすすめのメニュー
             </Text>
@@ -138,36 +206,15 @@ const Post: React.FC<InputTextProps>= () => {
                 value={price}
                 change={changePrice}
             />
-            <Text style={styles.itemName}>
-                カテゴリー
-            </Text>
-            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-                <Dropdown
-                    data={
-                        [
-                            {value: '居酒屋'},
-                            {value: 'カフェ'}, 
-                            {value: 'ラーメン'},
-                            {value: '中華料理'}, 
-                            {value: 'ランチ'},
-                            {value: 'ディナー'},
-                            {value: 'その他'},
-                        ]
-                    }
-                    value={selectedCategory}
-                    onChangeText={selectItem}
+            <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
+                <Button
+                    buttonStyle={{borderRadius: 20}}
+                    title='投稿する'
+                    type='solid'
+                    onPress={share}
+                    disabled={selectedCategory == '' || shopName == ''}
                 />
             </View>
-            <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
-                <ShareButton
-                    buttonTitle='シェア'
-                    buttonType="solid"
-                    shopName={shopName}
-                    address={address}
-                    favoriteMenu={favoriteMenu}
-                    price={price}
-                    category={selectedCategory}
-                />
             </View>
         </View>
     );
@@ -181,9 +228,14 @@ container: {
     backgroundColor: 'white',
     paddingTop: 30
 },
+title: {
+    textAlign: 'center',
+    fontSize: 30,
+    marginBottom: 10
+},
 itemName: {
     marginLeft: 60,
-    color: '#4488D6',
+    color: '#5E9CFE',
     marginTop: 20
 },
 inputView:{

@@ -5,12 +5,14 @@ interface InputTextProps{
     holderName: string,
     value: string,
     change: any
+    canEdit?: boolean
 }
 
 const InputText = (props: InputTextProps) => {
     return(
         <View style={styles.inputView} >
             <TextInput  
+                editable={props.canEdit}
                 placeholderTextColor="#818181"
                 style={styles.inputText}
                 placeholder={props.holderName}
