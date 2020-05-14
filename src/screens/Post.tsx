@@ -34,6 +34,13 @@ const Post: React.FC<InputTextProps>= () => {
     const [predictions, setPredictions] = useState([]);
     const [showResult, setResult] = useState(false);
 
+    const change = (text: string) => {
+        setDestination(text);
+    }
+    const close = () => {
+        setResult(false)
+        change('')
+    }
     const changeShopName = (text: string, address: string) => {
         setAddress(address)
         changeShop(text)
@@ -94,14 +101,6 @@ const Post: React.FC<InputTextProps>= () => {
         } catch (error) {
             console.log(error)
         }
-    }
-
-    const change = (text: string) => {
-        setDestination(text);
-    }
-    const close = () => {
-        setResult(false)
-        change('')
     }
     return (
         <View style={styles.container}>
@@ -207,20 +206,12 @@ const Post: React.FC<InputTextProps>= () => {
                 change={changePrice}
             />
             <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
-                {/* <ShareButton
-                    buttonTitle='投稿する'
-                    buttonType="solid"
-                    shopName={shopName}
-                    address={address}
-                    favoriteMenu={favoriteMenu}
-                    price={price}
-                    category={selectedCategory}
-                /> */}
                 <Button
                     buttonStyle={{borderRadius: 20}}
                     title='投稿する'
                     type='solid'
                     onPress={share}
+                    disabled={selectedCategory == '' || shopName == ''}
                 />
             </View>
             </View>
