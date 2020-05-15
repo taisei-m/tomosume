@@ -40,7 +40,9 @@ const Profile = (props: any) => {
   const shopData = getData()
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [image, setImage] = useState<string>('')
+  const [image, setImage] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
     })
@@ -75,6 +77,7 @@ const Profile = (props: any) => {
         uploadImage(image, 'test-image')
         .then(() => {
           alert('success')
+          setUserIcon()
         })
         .catch(e => {
           alert(e)
@@ -85,12 +88,29 @@ const Profile = (props: any) => {
     }
   }
 
-  const uploadImage = async (uri:string, imageName:string) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    var storageRef = firebase.storage().ref('user/icon/' + imageName);
-    return storageRef.put(blob);
+const uploadImage = async (uri:string, imageName:string) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  let storageRef = firebase.storage().ref('user/icon/' + imageName);
+      storageRef.put(blob).then(function () {
+        storageRef.getDownloadURL().then(function (url) {
+          setImageUrl(url)
+          console.log(url);
+        }).catch(function(error) {
+          console.log(error)
+        })
+      });
 }
+
+  const setUserIcon = () => {
+    firebase
+    .firestore()
+    .collection('userList')
+    .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+    .set({
+      iconUrl: imageUrl
+    },{ merge: true })
+  }
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', justifyContent: 'center',}}>
