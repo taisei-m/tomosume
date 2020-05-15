@@ -32,8 +32,11 @@ const Profile = (props: any) => {
     db.collection('postData').get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-          dataArray.push(doc.data())
+          let temp = doc.data()
+          temp.id = doc.id
+          dataArray.push(temp)
         })
+        console.log(dataArray)
         setShopData(dataArray)
       })
     db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
@@ -186,16 +189,17 @@ const uploadImage = async (uri:string, imageName:string) => {
       </View>
       <SafeAreaView style={styles.list}>
         <FlatList
-          style={styles.flatlist}
           data={shopData}
           renderItem={
             ({ item }) => 
               <Item 
+                id={item.id}
                 title={item.shopName} 
                 address={item.address}
                 category={item.category} 
                 price={item.price} 
-                favorite={item.favoriteMenu}/>
+                favorite={item.favoriteMenu}
+              />
           }
           keyExtractor={item => item.id}
         />
