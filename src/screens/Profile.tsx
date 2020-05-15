@@ -18,30 +18,29 @@ import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
-function getData() {
-  const [postedData, changePostedData] = useState([]);
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('postData')
-      .onSnapshot((snapshot) => {
-        const tempShopData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-        changePostedData(tempShopData)
-      })
-  }, [])
-  return postedData
-}
-
 const Profile = (props: any) => {
   console.log(props)
-  const shopData = getData()
+  const [shopData, setShopData] = useState('')
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
   const [image, setImage] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
+
+  useEffect(() => {
+    let dataArray: string[] = []
+    let db = firebase.firestore()
+    db.collection('postData').get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data())
+        })
+        setShopData(dataArray)
+      })
+    db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+      .get().then(function(doc) {
+        console.log(doc.data().iconUrl)
+      })
+  }, [])
 
   AsyncStorage.getItem('Authenticated', (err, result) => {
       console.log("Authenticated = " + result)
