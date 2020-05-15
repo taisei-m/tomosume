@@ -88,8 +88,15 @@ const Profile = (props: any) => {
   const uploadImage = async (uri:string, imageName:string) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    var storageRef = firebase.storage().ref('user/icon/' + imageName);
-    return storageRef.put(blob);
+    let storageRef = firebase.storage().ref('user/icon/' + imageName);
+    storageRef.put(blob).then(function () {
+      storageRef.getDownloadURL().then(function (url:string) {
+        var a = url
+        console.log(a)
+      }).catch(function(error) {
+        console.log(error)
+      })
+    });
 }
   return (
     <View style={styles.container}>
