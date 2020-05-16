@@ -12,7 +12,7 @@ export default CreateAccount = (props) => {
     const [navigation, setNavigation] = useState(props.navigation);
     console.log("CreateAccount////////////////////////////////////////")
     AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
+    //   console.log("Authenticated = " + result)
     })
 
     const emailInput = (text) => {
