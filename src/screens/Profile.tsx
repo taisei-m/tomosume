@@ -19,15 +19,19 @@ import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
 const Profile = (props: any) => {
-  console.log(props)
+  // console.log(props)
   const [shopData, setShopData] = useState('')
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [image, setImage] = useState<string>('');
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const [image, setImage] = useState('');
+  const [imageUrl, setImageUrl] = useState<string>();
 
   useEffect(() => {
     let dataArray: string[] = []
+    let user = firebase.auth().currentUser;
+    if (user != null) {
+      alert(user.uid)
+    }
     let db = firebase.firestore()
     db.collection('postData').get()
       .then(function(querySnapshot) {
@@ -36,17 +40,21 @@ const Profile = (props: any) => {
           temp.id = doc.id
           dataArray.push(temp)
         })
-        console.log(dataArray)
         setShopData(dataArray)
       })
     db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
       .get().then(function(doc) {
-        console.log(doc.data().iconUrl)
+        // console.log(doc.data().iconUrl)
+        if (doc.data().iconUrl != null) {
+          setImage(doc.data().iconUrl)
+        } else {
+          console.log('画像のURLがstoreにありません')
+        }
       })
   }, [])
 
   AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
+      // console.log("Authenticated = " + result)
     })
   const follow = () => {
     changePress(!pressStatus)
@@ -74,12 +82,11 @@ const Profile = (props: any) => {
         quality: 1,
       })
       if (!result.cancelled) {
-        console.log(result)
-        setImage(result.uri);
-        uploadImage(image, 'test-image')
+        console.log('result.uri')
+        console.log(result.uri)
+        uploadImage(result.uri, 'test-image')
         .then(() => {
           alert('success')
-          setUserIcon()
         })
         .catch(e => {
           alert(e)
@@ -91,28 +98,35 @@ const Profile = (props: any) => {
   }
 
 const uploadImage = async (uri:string, imageName:string) => {
+  console.log('==========start===========')
+  console.log('uri')
+  console.log(uri)
+  let imageUrl = ''
+  let storageRef = firebase.storage().ref('user/icon/' + imageName);
   const response = await fetch(uri);
   const blob = await response.blob();
-  let storageRef = firebase.storage().ref('user/icon/' + imageName);
       storageRef.put(blob).then(function () {
-        storageRef.getDownloadURL().then(function (url) {
-          setImageUrl(url)
-          console.log(url);
+        storageRef.getDownloadURL().then(function (url:string) {
+          console.log('url')
+          console.log(url)
+          imageUrl = url
+          console.log(imageUrl)
         }).catch(function(error) {
           console.log(error)
         })
-      });
+      })
+      .then(function() {
+        console.log('=========promise.all===========')
+        console.log(imageUrl)
+        firebase
+        .firestore()
+        .collection('userList')
+        .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+        .set({
+          iconUrl: imageUrl
+        },{ merge: true })  
+      })
 }
-
-  const setUserIcon = () => {
-    firebase
-    .firestore()
-    .collection('userList')
-    .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
-    .set({
-      iconUrl: imageUrl
-    },{ merge: true })
-  }
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', justifyContent: 'center',}}>
