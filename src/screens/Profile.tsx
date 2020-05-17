@@ -20,21 +20,20 @@ import Item from '../components/Item';
 
 const Profile = (props: any) => {
   // console.log(props)
-  const [shopData, setShopData] = useState('')
+  const [shopData, setShopData] = useState<string[]>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
   const [image, setImage] = useState('');
-  const [imageUrl, setImageUrl] = useState<string>();
 
   useEffect(() => {
     let dataArray: string[] = []
-    let user = firebase.auth().currentUser;
-    if (user != null) {
-      alert(user.uid)
-    }
+    // let user = firebase.auth().currentUser;
+    // if (user != null) {
+    //   alert(user.uid)
+    // }
     let db = firebase.firestore()
     db.collection('postData').get()
-      .then(function(querySnapshot) {
+      .then(function(querySnapshot:Array<any>) {
         querySnapshot.forEach(function(doc) {
           let temp = doc.data()
           temp.id = doc.id
@@ -42,6 +41,9 @@ const Profile = (props: any) => {
         })
         setShopData(dataArray)
       })
+  }, [])
+  useEffect(() => {
+    let db = firebase.firestore()
     db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
       .get().then(function(doc) {
         // console.log(doc.data().iconUrl)
@@ -67,7 +69,7 @@ const Profile = (props: any) => {
   const setting = () => {
     props.navigation.navigate('idealDrawer')
   }
-  function toFollowList() {
+  const toFollowList = () => {
     props.navigation.navigate('followTabList')
   }
   const toFollowerList = () => {
@@ -82,8 +84,6 @@ const Profile = (props: any) => {
         quality: 1,
       })
       if (!result.cancelled) {
-        console.log('result.uri')
-        console.log(result.uri)
         uploadImage(result.uri, 'test-image')
         .then(() => {
           alert('success')
@@ -98,34 +98,35 @@ const Profile = (props: any) => {
   }
 
 const uploadImage = async (uri:string, imageName:string) => {
-  console.log('==========start===========')
-  console.log('uri')
-  console.log(uri)
   let imageUrl = ''
   let storageRef = firebase.storage().ref('user/icon/' + imageName);
   const response = await fetch(uri);
   const blob = await response.blob();
-      storageRef.put(blob).then(function () {
-        storageRef.getDownloadURL().then(function (url:string) {
-          console.log('url')
-          console.log(url)
-          imageUrl = url
-          console.log(imageUrl)
-        }).catch(function(error) {
-          console.log(error)
-        })
-      })
-      .then(function() {
-        console.log('=========promise.all===========')
-        console.log(imageUrl)
-        firebase
-        .firestore()
-        .collection('userList')
-        .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
-        .set({
-          iconUrl: imageUrl
-        },{ merge: true })  
-      })
+  let putInStorage = new Promise(function(resolve) {
+    storageRef.put(blob)
+    resolve();
+  })
+  let downloadUrl = new Promise(function(resolve) {
+    storageRef.getDownloadURL().then(function (url:string) {
+      imageUrl = url
+      setImage(url)
+      resolve()
+    }).catch(function(error) {
+      console.log(error)
+    })
+  })  
+  Promise.all([
+    putInStorage,
+    downloadUrl
+  ]).then(function() {
+    firebase
+    .firestore()
+    .collection('userList')
+    .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+    .set({
+      iconUrl: imageUrl
+    },{ merge: true }) 
+  })
 }
   return (
     <View style={styles.container}>
