@@ -65,31 +65,43 @@ const Post: React.FC<InputTextProps>= () => {
     }
 
     const share = async() => {
-        const postShopData = firebase.firestore().collection('postData')
+        const postShopData = firebase.firestore().collection('shops')
         const key = apiKey;
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
         let latitude = 0
         let longitude = 0
+        let placeId = ''
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();
+            console.log(json)
             let set = (function setLocationData () {
                 return new Promise((resolve) => {
                     latitude = json.results[0].geometry.location.lat
                     longitude = json.results[0].geometry.location.lng
+                    placeId = json.results[0].place_id
                     resolve();
                 });
             })();
             Promise.all([set]).then(function() {
-                postShopData.add({
+                postShopData.doc(placeId).set({
                     shopName: shopName,
                     address: address,
-                    favoriteMenu: favoriteMenu,
-                    price: price,
-                    category: selectedCategory,
-                    createdAt: new Date(),
                     latitude: latitude,
                     longitude: longitude,
+                })
+                .then(function() {
+                    let key = placeId + '9jQ8HF4cuwaHxVsm8AayZj1WHBf1'
+                    postShopData.doc(placeId).collection('reviews').doc(key).set({
+                        shopId: placeId,
+                        user: '9jQ8HF4cuwaHxVsm8AayZj1WHBf1',
+                        shopAddress: address,
+                        shopName: shopName,
+                        favoriteMenu: favoriteMenu,
+                        price: price,
+                        category: selectedCategory,
+                        createdAt: new Date(),
+                    })
                 })
                 .then(function() {
                     console.log('success')

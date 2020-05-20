@@ -9,25 +9,24 @@ interface Data {
     favoriteMenu: string,
 }
 
-const getData = (): object | undefined => {
-    const [postedData, changePostedData] = useState<Data>();
+const Top = () => {
+    const [shopData, setShopData] = useState<string[]>([])
     useEffect(() => {
+        let dataArray: string[] = []
         firebase
         .firestore()
-        .collection('postData')
-        .onSnapshot((snapshot) => {
-            const tempShopData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-            }))
-            changePostedData(tempShopData)
+        .collectionGroup('reviews')
+        .orderBy('createdAt', 'desc')
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                let tmp = doc.data()
+                tmp.id = doc.id
+                dataArray.push(tmp)
+            })
+            setShopData(dataArray)
         })
     }, [])
-    return postedData
-}
-
-const Top = () => {
-    const shopData = getData()
     return(
         <View style={styles.container}>
             <FlatList
@@ -35,7 +34,7 @@ const Top = () => {
             data={shopData}
             renderItem={
                 ({ item }) => <Item 
-                                id={item.id}
+                                id={item.shopId}
                                 title={item.shopName} 
                                 category={item.category} 
                                 address={item.address}

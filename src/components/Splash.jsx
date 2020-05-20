@@ -9,11 +9,11 @@ import GlobalStateContainer from '../containers/GlobalState';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
-   console.log("Splash////////////////////////////////////////")
-   console.log(globalState.state)
+//    console.log("Splash////////////////////////////////////////")
+//    console.log(globalState.state)
 
    const endL = () =>{
-      console.log("push end splash>>>")
+    //   console.log("push end splash>>>")
       AsyncStorage.getItem('Authenticated', (err, result) => {
          let asyncAuth;
          
@@ -23,8 +23,8 @@ const Splash = (props) => {
             asyncAuth = "false";
          } else if(result){
             //////アプリ初回インストール後の起動移行の起動時
-            console.log('Authenticated result = ' + result)
-            console.log(result);
+            // console.log('Authenticated result = ' + result)
+            // console.log(result);
             if(result == "true"){
                //////認証済みの場合
                asyncAuth = "false";

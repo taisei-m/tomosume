@@ -10,11 +10,11 @@ const LoginScreen = (props) => {
     const [globalState, setGlobalState] = useState(props.globalState);
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
-    console.log("LoginScreen/////////////////////////////////////")
-    console.log(globalState.state);
+    // console.log("LoginScreen/////////////////////////////////////")
+    // console.log(globalState.state);
 
     AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
+    //   console.log("Authenticated = " + result)
     })
 
 
@@ -41,8 +41,8 @@ const LoginScreen = (props) => {
                 console.log(error)
                 return error;
             }).then((result) =>{
-                console.log("result/////////////////////////////////////////")
-                console.log(result)
+                // console.log("result/////////////////////////////////////////")
+                // console.log(result)
                 if(result.message){
                     alert(result.message);
                 } else if(result.user){

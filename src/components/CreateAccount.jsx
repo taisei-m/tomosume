@@ -10,9 +10,9 @@ export default CreateAccount = (props) => {
     const [password, setPass] = useState();
     const [confirmPassword, setConfPass] = useState();
     const [navigation, setNavigation] = useState(props.navigation);
-    console.log("CreateAccount////////////////////////////////////////")
+    // console.log("CreateAccount////////////////////////////////////////")
     AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
+    //   console.log("Authenticated = " + result)
     })
 
     const emailInput = (text) => {
@@ -45,7 +45,7 @@ export default CreateAccount = (props) => {
                     var user = firebase.auth().currentUser;
                     firebase.auth().languageCode = "ja";
 
-                    console.log("user = "+ user)
+                    // console.log("user = "+ user)
 
                     user.sendEmailVerification().then(function() {
                         alert("メールを送信しました。メールを確認して本登録をしてください");
