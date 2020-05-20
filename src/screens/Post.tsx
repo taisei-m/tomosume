@@ -56,6 +56,7 @@ const Post: React.FC<InputTextProps>= () => {
             try {
                 const result = await fetch(apiUrl);
                 const json = await result.json();  
+                console.log(json)
                 setResult(true)
                 setPredictions(json.predictions)
             } catch (error) {
@@ -294,3 +295,5 @@ suggestion: {
     marginLeft: 5
 }
 })
+
+//ChIJUdNf03veGmARWgnQGmH1Hyo

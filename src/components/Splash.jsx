@@ -19,7 +19,7 @@ const Splash = (props) => {
          
          if(err){
             //////アプリ初回インストール後の起動時
-            console.log('Authenticated err = ' + err)
+            // console.log('Authenticated err = ' + err)
             asyncAuth = "false";
          } else if(result){
             //////アプリ初回インストール後の起動移行の起動時
