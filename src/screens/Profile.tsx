@@ -18,31 +18,45 @@ import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
-function getData() {
-  const [postedData, changePostedData] = useState([]);
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('postData')
-      .onSnapshot((snapshot) => {
-        const tempShopData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-        changePostedData(tempShopData)
-      })
-  }, [])
-  return postedData
-}
-
 const Profile = (props: any) => {
-  console.log(props)
-  const shopData = getData()
+  // console.log(props)
+  const [shopData, setShopData] = useState<string[]>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [image, setImage] = useState<string>('')
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    let dataArray: string[] = []
+    // let user = firebase.auth().currentUser;
+    // if (user != null) {
+    //   alert(user.uid)
+    // }
+    let db = firebase.firestore()
+    db.collection('postData').get()
+      .then(function(querySnapshot:Array<any>) {
+        querySnapshot.forEach(function(doc) {
+          let temp = doc.data()
+          temp.id = doc.id
+          dataArray.push(temp)
+        })
+        setShopData(dataArray)
+      })
+  }, [])
+  useEffect(() => {
+    let db = firebase.firestore()
+    db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+      .get().then(function(doc) {
+        // console.log(doc.data().iconUrl)
+        if (doc.data().iconUrl != null) {
+          setImage(doc.data().iconUrl)
+        } else {
+          console.log('画像のURLがstoreにありません')
+        }
+      })
+  }, [])
+
   AsyncStorage.getItem('Authenticated', (err, result) => {
-      console.log("Authenticated = " + result)
+      // console.log("Authenticated = " + result)
     })
   const follow = () => {
     changePress(!pressStatus)
@@ -55,7 +69,7 @@ const Profile = (props: any) => {
   const setting = () => {
     props.navigation.navigate('idealDrawer')
   }
-  function toFollowList() {
+  const toFollowList = () => {
     props.navigation.navigate('followTabList')
   }
   const toFollowerList = () => {
@@ -70,9 +84,7 @@ const Profile = (props: any) => {
         quality: 1,
       })
       if (!result.cancelled) {
-        console.log(result)
-        setImage(result.uri);
-        uploadImage(image, 'test-image')
+        uploadImage(result.uri, 'test-image')
         .then(() => {
           alert('success')
         })
@@ -85,18 +97,37 @@ const Profile = (props: any) => {
     }
   }
 
-  const uploadImage = async (uri:string, imageName:string) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    let storageRef = firebase.storage().ref('user/icon/' + imageName);
-    storageRef.put(blob).then(function () {
-      storageRef.getDownloadURL().then(function (url:string) {
-        var a = url
-        console.log(a)
-      }).catch(function(error) {
-        console.log(error)
-      })
-    });
+
+const uploadImage = async (uri:string, imageName:string) => {
+  let imageUrl = ''
+  let storageRef = firebase.storage().ref('user/icon/' + imageName);
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  let putInStorage = new Promise(function(resolve) {
+    storageRef.put(blob)
+    resolve();
+  })
+  let downloadUrl = new Promise(function(resolve) {
+    storageRef.getDownloadURL().then(function (url:string) {
+      imageUrl = url
+      setImage(url)
+      resolve()
+    }).catch(function(error) {
+      console.log(error)
+    })
+  })  
+  Promise.all([
+    putInStorage,
+    downloadUrl
+  ]).then(function() {
+    firebase
+    .firestore()
+    .collection('userList')
+    .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+    .set({
+      iconUrl: imageUrl
+    },{ merge: true }) 
+  })
 }
   return (
     <View style={styles.container}>
@@ -174,16 +205,17 @@ const Profile = (props: any) => {
       </View>
       <SafeAreaView style={styles.list}>
         <FlatList
-          style={styles.flatlist}
           data={shopData}
           renderItem={
             ({ item }) => 
               <Item 
+                id={item.id}
                 title={item.shopName} 
                 address={item.address}
                 category={item.category} 
                 price={item.price} 
-                favorite={item.favoriteMenu}/>
+                favorite={item.favoriteMenu}
+              />
           }
           keyExtractor={item => item.id}
         />
