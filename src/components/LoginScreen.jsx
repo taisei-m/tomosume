@@ -41,7 +41,7 @@ const LoginScreen = (props) => {
                 console.log(error)
                 return error;
             }).then((result) =>{
-                console.log("result/////////////////////////////////////////")
+                // console.log("result/////////////////////////////////////////")
                 // console.log(result)
                 if(result.message){
                     alert(result.message);

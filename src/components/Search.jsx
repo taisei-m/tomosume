@@ -10,7 +10,7 @@ function useFirestore() {
   useEffect(() => {
     firebase
       .firestore()
-      .collection('postData')
+      .collection('shops')
       .onSnapshot((snapshot) => {
         const newLocationData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -36,9 +36,10 @@ export default TabScreen2 = () =>{
         }}>
           {locationData.map((location) => 
             <Marker
-            key={location.id}
+              key={location.id}
               title={location.shopName}
-              description={location.favoriteMenu}
+              description={location.address}
+              onPress={() => console.log(location.id)}
               coordinate={
                 {
                   latitude: location.latitude,

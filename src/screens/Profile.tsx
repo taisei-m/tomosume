@@ -97,6 +97,7 @@ const Profile = (props: any) => {
     }
   }
 
+
 const uploadImage = async (uri:string, imageName:string) => {
   let imageUrl = ''
   let storageRef = firebase.storage().ref('user/icon/' + imageName);

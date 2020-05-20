@@ -11,7 +11,7 @@ const ResetPassword = (props) => {
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
     console.log("ResetPassword/////////////////////////////////////")
-    console.log(globalState.state);
+    // console.log(globalState.state);
 
     
 
