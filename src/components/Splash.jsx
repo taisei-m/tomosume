@@ -22,11 +22,11 @@ const Splash = (props) => {
             // console.log('Authenticated err = ' + err)
             asyncAuth = "false";
          } else if(result){
-            //////アプリ初回インストール後の起動移行の起動時
-            // console.log('Authenticated result = ' + result)
-            // console.log(result);
+            //////アプリ初回インストール時の起動以降の起動時
+            console.log('Authenticated result = ' + result)
+
             if(result == "true"){
-               //////認証済みの場合
+               //////認証済みの場合：storageにtrueがある場合
                asyncAuth = "false";
                firebase.auth().onAuthStateChanged(function(user) {
                   if (user) {
@@ -37,8 +37,10 @@ const Splash = (props) => {
                      console.log("No user is signed in.");
                   }
                });
+               ///他のタブでも必要になるデータの取得
+               
             } else if(result == "false"){
-               //////未認証の場合
+               //////未認証の場合：storageにfalseがある場合
                asyncAuth = "true"
             } else {
                console.log("asyncAuthの取得でエラー");
@@ -46,7 +48,57 @@ const Splash = (props) => {
          }
          globalState.endSplash(asyncAuth);
       })
-   }
+    }
+
+    setTimeout(endL, 2000)
+    
+    
+
+        // const SplashFalse = () => {
+        //     console.log("SplashFalse>>>")
+        //     globalState.setSplashFalse();
+        // }
+        // setTimeout(SplashFalse, 3000);
+        
+        // const checkSignout = (() => {
+        //     console.log("checkSignout>>>")
+
+        //     AsyncStorage.getItem('Authenticated', (err, result) => {
+        //         let asyncAuth;
+                 
+        //         if (err) {
+        //             //////アプリ初回インストール後の起動時
+        //             // console.log('Authenticated err = ' + err)
+        //             asyncAuth = "false";
+        //         } else if (result) {
+        //             //////アプリ初回インストール時の起動以降の起動時
+        //             console.log('Authenticated result = ' + result)
+        
+        //             if (result == "true") {
+        //                 //////認証済みの場合：storageにtrueがある場合
+        //                 asyncAuth = "false";
+        //                 firebase.auth().onAuthStateChanged(function (user) {
+        //                     if (user) {
+        //                         // User is signed in.
+        //                         globalState.setUserData(user);
+        //                     } else {
+        //                         // No user is signed in.
+        //                         console.log("No user is signed in.");
+        //                     }
+        //                 });
+        //             } else if (result == "false") {
+        //                 //////未認証の場合：storageにfalseがある場合
+        //                 asyncAuth = "true"
+        //             } else {
+        //                 console.log("asyncAuthの取得でエラー");
+        //             }
+        //         }
+        //         globalState.setSignout(asyncAuth);
+        //     })
+        // })();
+
+
+    
 
    
    // AsyncStorage.getItem('Authenticated', (err, result) => {

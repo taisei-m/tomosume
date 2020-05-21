@@ -19,7 +19,6 @@ import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
 const Profile = (props: any) => {
-  // console.log(props)
   const [shopData, setShopData] = useState<string[]>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
@@ -58,6 +57,11 @@ const Profile = (props: any) => {
   AsyncStorage.getItem('Authenticated', (err, result) => {
       // console.log("Authenticated = " + result)
     })
+  console.log(props.globalState.state.isSignout)
+  console.log(props.globalState.state.isSplash)
+  console.log("user==========")
+  console.log(props.globalState.state.userData)
+  
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
@@ -68,6 +72,7 @@ const Profile = (props: any) => {
   }
   const setting = () => {
     props.navigation.navigate('idealDrawer')
+    console.log(props)
   }
   const toFollowList = () => {
     props.navigation.navigate('followTabList')

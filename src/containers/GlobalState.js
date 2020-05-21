@@ -23,6 +23,16 @@ export default class GlobalContainer extends Container {
          isSignout: result
       })
    }
+   setSplashFalse = () => {
+      this.setState({
+         isSplash: false
+      })
+   }
+   setSignout = (result) => {
+      this.setState({
+         isSignout: result
+      })
+   }
    login = (user) => {
       this.setState({
          isSignout: "false"
