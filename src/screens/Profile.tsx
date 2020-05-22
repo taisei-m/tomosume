@@ -19,36 +19,82 @@ import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
 const Profile = (props: any) => {
+  const [userName, setUserName] = useState<string>('')
+  const [followee, setFollowee] = useState<number>()
+  const [follower, setFollower] = useState<number>()
+  const [postNumber, setPostNumber] = useState<number>(0)
   const [shopData, setShopData] = useState<string[]>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
   const [image, setImage] = useState('');
 
   useEffect(() => {
+    let userId = props.globalState.state.userData.uid
     let dataArray: string[] = []
     let db = firebase.firestore()
-    db.collection('postData').get()
+    db.collectionGroup('reviews')
+    .where('user', '==', userId)
+    .orderBy('createdAt', 'desc')
+    .get()
       .then(function(querySnapshot:Array<any>) {
         querySnapshot.forEach(function(doc) {
           let temp = doc.data()
           temp.id = doc.id
           dataArray.push(temp)
         })
+        let lng = dataArray.length
+        setPostNumber(lng)
         setShopData(dataArray)
       })
   }, [])
   useEffect(() => {
     let db = firebase.firestore()
-    db.collection('userList').doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+    let userId = props.globalState.state.userData.uid
+    db.collection('userList').doc(userId)
       .get().then(function(doc) {
         // console.log(doc.data().iconUrl)
-        if (doc.data().iconUrl != null) {
+        if (doc.data().iconURL != 'test-url') {
           setImage(doc.data().iconUrl)
         } else {
-          console.log('画像のURLがstoreにありません')
+          setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
         }
       })
   }, [])
+  useEffect(() => {
+    let userId = props.globalState.state.userData.uid
+    firebase.firestore().collection('userList').doc(userId)
+    .get().then(function(doc) {
+      setUserName(doc.data().userName)
+    })
+  },[])
+  useEffect(() => {
+    let userId = props.globalState.state.userData.uid
+    let lengthArray:string[] = []
+    let db = firebase.firestore().collection('userList').doc(userId)
+    db.collection('followee')
+    .get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        lengthArray.push(doc.id)
+      })
+      let lng: number = lengthArray.length-1
+      setFollowee(lng)
+  })
+  },[])
+  useEffect(() => {
+    let userId = props.globalState.state.userData.uid
+    let lengthArray:string[] = []
+    let db = firebase.firestore().collection('userList').doc(userId)
+    db.collection('follower')
+    .get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        lengthArray.push(doc.id)
+      })
+      let lng: number = lengthArray.length-1
+      setFollower(lng)
+  })
+  },[])
 
   AsyncStorage.getItem('Authenticated', (err, result) => {
       // console.log("Authenticated = " + result)
@@ -148,7 +194,7 @@ const uploadImage = async (uri:string, imageName:string) => {
             </TouchableOpacity>
           </View>
           <View style={{alignItems: 'center', marginTop: 10}}>
-            <Text style={styles.userName}>奥瀬雄哉</Text>
+            <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
 
@@ -161,18 +207,18 @@ const uploadImage = async (uri:string, imageName:string) => {
             }}
           >
             <ProfileNumber 
-              number={100}
+              number={postNumber}
               itemName='post'
             />
             <ProfileNumber
-              number={100}
-              itemName="follow"
+              number={follower}
+              itemName="フォロー"
               press={toFollowList}
               centerClass={{width: 50, height: 50, marginHorizontal: 30}}
             />
             <ProfileNumber 
-              number={100}
-              itemName="follower"
+              number={followee}
+              itemName="フォロワー"
               press={toFollowerList}
             />
           </View>
