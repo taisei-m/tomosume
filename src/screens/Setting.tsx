@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, AsyncStorage } from 'react-native';
 import { Subscribe } from 'unstated';
 import { Button } from 'react-native-elements';
 
@@ -11,15 +11,15 @@ import GlobalStateContainer from '../containers/GlobalState';
 const Setting = (props) => {
 
 const logout = () => {  
-    // firebase.auth().signOut().then(function() {
-    //     console.log("Sign-out successful and call global.logout")
-    //     AsyncStorage.setItem('Authenticated', 'false', () => {
-    //     props.globalState.logout();
-    // });
-    // })
-    // .catch(function(error) {
-    //     console.log(error); 
-    // }); 
+    firebase.auth().signOut().then(function() {
+        console.log("Sign-out successful and call global.logout")
+        AsyncStorage.setItem('Authenticated', 'false', () => {
+        props.globalState.logout();
+    });
+    })
+    .catch(function(error) {
+        console.log(error); 
+    }); 
     alert('logout')
 } 
     return (
