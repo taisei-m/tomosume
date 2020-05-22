@@ -26,10 +26,6 @@ const Profile = (props: any) => {
 
   useEffect(() => {
     let dataArray: string[] = []
-    // let user = firebase.auth().currentUser;
-    // if (user != null) {
-    //   alert(user.uid)
-    // }
     let db = firebase.firestore()
     db.collection('postData').get()
       .then(function(querySnapshot:Array<any>) {
@@ -62,6 +58,13 @@ const Profile = (props: any) => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
       changeStatus('unfollow')
+      let userId = props.globalState.state.userData.uid
+      console.log(props.globalState.state.userData.uid)
+      let db = firebase.firestore()
+                .collection('userList')
+                .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+                .collection('following')
+      db.add()
     } else {
       changeStatus('follow')
     }

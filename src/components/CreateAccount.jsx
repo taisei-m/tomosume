@@ -23,30 +23,33 @@ export default CreateAccount = (props) => {
     }
 
     const signUp = () => {
-         if(email == null || email == "" ){
+        if (email == null || email == "" ){
             alert("emailを入力してください");
-        }
-        else if(password == null || email == ""){
+        } else if (password == null || email == ""){
             alert("passwordを入力してください");
-        }else if(password != confirmPassword){
+        } else if (password != confirmPassword){
             alert("パスワードが一致していません")
-        }
-        else{
+        } else {
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
                 // var errorCode = error.code;
                 // var errorMessage = error.message;
                 // console.log("errorCode: "+errorCode)
                 // console.log("errorMessage: "+errorMessage)
                 return error;
-            }).then((result) => {
-                if(result.message){
+            }).then(async(result) => {
+                if (result.message) {
                     alert(result.message);
-                }　else if(result.user) {
-                    var user = firebase.auth().currentUser;
+                }　else if (result.user) {
+                    let user = firebase.auth().currentUser;
+                    let db = firebase.firestore().collection('userList').doc(user.uid)
+                    db.set({
+                        userName: 'user-name',
+                        iconURL: 'test-url'
+                    })
+                    db.collection('follower').doc('first').set({})
+                    db.collection('followee').doc('first').set({})
                     firebase.auth().languageCode = "ja";
-
                     // console.log("user = "+ user)
-
                     user.sendEmailVerification().then(function() {
                         alert("メールを送信しました。メールを確認して本登録をしてください");
                         navigation.navigate('LoginScreen');

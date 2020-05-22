@@ -118,9 +118,6 @@ const Post: React.FC<InputTextProps>= () => {
     return (
         <View style={styles.container}>
             <View style={{marginTop: 70}}>
-            <Text
-                style={styles.title}
-            >投稿フォーム</Text>
             <Text style={styles.itemName}>
                 店名検索
             </Text>
@@ -238,12 +235,7 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 30
-},
-title: {
-    textAlign: 'center',
-    fontSize: 30,
-    marginBottom: 10
+    paddingTop: 0
 },
 itemName: {
     marginLeft: 60,
