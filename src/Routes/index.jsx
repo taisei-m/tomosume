@@ -16,9 +16,6 @@ const Index = (props) => {
   const [user, setUser] = useState(props.globalState.state.user);
   const Stack = createStackNavigator();
   
-  // console.log("check how you are")
-  // console.log("global.isSplash = " + props.globalState.state.isSplash)
-  // console.log("global.isSignout = " + props.globalState.state.isSignout)
   if (props.globalState.state.isSplash == true || props.globalState.state.isSignout=="") {
     return <SplashScreen />;
   }
@@ -38,10 +35,6 @@ const Index = (props) => {
             </Stack.Navigator>
           </NavigationContainer>
       )
-  // } else {
-  //   // console.log("to splash");
-  //   return <SplashScreen />;
-  // } 
 }
 
 

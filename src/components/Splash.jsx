@@ -6,130 +6,73 @@ import firebase from '../../firebase'
 import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
+import { resolveModuleName } from 'typescript';
+import { useEffect } from 'react';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
 //    console.log("Splash////////////////////////////////////////")
 //    console.log(globalState.state)
-
-   const endL = () =>{
-    //   console.log("push end splash>>>")
-      AsyncStorage.getItem('Authenticated', (err, result) => {
-         let asyncAuth;
-         
-         if(err){
-            //////アプリ初回インストール後の起動時
-            // console.log('Authenticated err = ' + err)
-            asyncAuth = "false";
-         } else if(result){
-            //////アプリ初回インストール時の起動以降の起動時
-            console.log('Authenticated result = ' + result)
-
-            if(result == "true"){
-               //////認証済みの場合：storageにtrueがある場合
-               asyncAuth = "false";
-               firebase.auth().onAuthStateChanged(function(user) {
-                  if (user) {
-                     // User is signed in.
-                     globalState.setUserData(user);
-                  } else {
-                     // No user is signed in.
-                     console.log("No user is signed in.");
-                  }
-               });
-               ///他のタブでも必要になるデータの取得
-               
-            } else if(result == "false"){
-               //////未認証の場合：storageにfalseがある場合
-               asyncAuth = "true"
-            } else {
-               console.log("asyncAuthの取得でエラー");
-            }
-         }
-         globalState.endSplash(asyncAuth);
-      })
-    }
-
-    setTimeout(endL, 2000)
-    
-    
-
-        // const SplashFalse = () => {
-        //     console.log("SplashFalse>>>")
-        //     globalState.setSplashFalse();
-        // }
-        // setTimeout(SplashFalse, 3000);
         
-        // const checkSignout = (() => {
-        //     console.log("checkSignout>>>")
+        //globalStateのisSplashをfalseにする
+        const SplashFalse = () => {
+            console.log("SplashFalse>>>")
+            globalState.setSplashFalse();
+        }
+    
+        //端末のAsyncStorageを見てそのアプリにこれまでログインしたことあるかどうかとログイン状態を見る。
+        //ログイン状態やったらユーザー情報firebaseから持ってきてglobalStateに入れる。
+        const checkSignout = async() => {
+            console.log("checkSignout>>>")
 
-        //     AsyncStorage.getItem('Authenticated', (err, result) => {
-        //         let asyncAuth;
+            AsyncStorage.getItem('Authenticated', (err, result) => {
+                let asyncAuth;
                  
-        //         if (err) {
-        //             //////アプリ初回インストール後の起動時
-        //             // console.log('Authenticated err = ' + err)
-        //             asyncAuth = "false";
-        //         } else if (result) {
-        //             //////アプリ初回インストール時の起動以降の起動時
-        //             console.log('Authenticated result = ' + result)
+                if (err) {
+                    //////アプリ初回インストール後の起動時
+                    // console.log('Authenticated err = ' + err)
+                    asyncAuth = "false";
+                } else if (result) {
+                    //////アプリ初回インストール時の起動以降の起動時
+                    console.log('Authenticated result = ' + result)
         
-        //             if (result == "true") {
-        //                 //////認証済みの場合：storageにtrueがある場合
-        //                 asyncAuth = "false";
-        //                 firebase.auth().onAuthStateChanged(function (user) {
-        //                     if (user) {
-        //                         // User is signed in.
-        //                         globalState.setUserData(user);
-        //                     } else {
-        //                         // No user is signed in.
-        //                         console.log("No user is signed in.");
-        //                     }
-        //                 });
-        //             } else if (result == "false") {
-        //                 //////未認証の場合：storageにfalseがある場合
-        //                 asyncAuth = "true"
-        //             } else {
-        //                 console.log("asyncAuthの取得でエラー");
-        //             }
-        //         }
-        //         globalState.setSignout(asyncAuth);
-        //     })
-        // })();
-
-
+                    if (result == "true") {
+                        //////認証済みの場合：storageにtrueがある場合
+                        asyncAuth = "false";
+                        firebase.auth().onAuthStateChanged(function (user) {
+                            if (user) {
+                                // User is signed in.
+                                globalState.setUserData(user);
+                            } else {
+                                // No user is signed in.
+                                console.log("No user is signed in.");
+                            }
+                        });
+                    } else if (result == "false") {
+                        //////未認証の場合：storageにfalseがある場合
+                        asyncAuth = "true"
+                    } else {
+                        console.log("asyncAuthの取得でエラー");
+                    }
+                }
+                globalState.setSignout(asyncAuth);
+                return;
+            })
+        };
     
+    useEffect(() => {
+        (async () => {
+            await checkSignout();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
+            setTimeout(SplashFalse, 1000);
+        })();
+    }, [])
 
-   
-   // AsyncStorage.getItem('Authenticated', (err, result) => {
-   //    console.log("err = " + err)
-   //    console.log("result = " + result);
-   //    if(result == "true"){
-   //      firebase.auth().onAuthStateChanged(function(user) {
-   //        if (user) {
-   //          // User is signed in.
-   //          globalState.setUser(user);
-   //        } else {
-   //          // No user is signed in.
-   //          console.log("No user is signed in.");
-   //        }
-   //      });
-   //    } else {
-   //      globalState.endLoading();
-   //    }
-   //  });
-   
+
     return (
         <View style={styles.container}>
-        <View>
-            <Text style={styles.newAccountTitle}>Splash</Text>
-        </View>
-        <TouchableOpacity
-            style={styles.signUpButton}
-            onPress={endL}
-        >
-            <Text style={styles.buttonText}> end Splash </Text>
-        </TouchableOpacity>
+            <View>
+                <Text style={styles.newAccountTitle}>Splash</Text>
+            </View>
         </View>
     );
 }
@@ -145,7 +88,9 @@ const SplashWrapper = () => {
   );
 }
 
+
 export default SplashWrapper;
+
 
 const styles = StyleSheet.create({
     container: {

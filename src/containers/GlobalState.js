@@ -15,14 +15,6 @@ export default class GlobalContainer extends Container {
          userData: user
       })
    }
-   endSplash = (result) => {
-      this.setState({
-         isSplash: false
-      }),
-      this.setState({
-         isSignout: result
-      })
-   }
    setSplashFalse = () => {
       this.setState({
          isSplash: false
