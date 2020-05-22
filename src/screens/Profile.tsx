@@ -52,7 +52,6 @@ const Profile = (props: any) => {
     let userId = props.globalState.state.userData.uid
     db.collection('userList').doc(userId)
       .get().then(function(doc) {
-        // console.log(doc.data().iconUrl)
         if (doc.data().iconURL != 'test-url') {
           setImage(doc.data().iconUrl)
         } else {

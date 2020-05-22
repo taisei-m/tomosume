@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
