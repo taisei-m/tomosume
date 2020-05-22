@@ -3,14 +3,24 @@ import { View, StyleSheet, FlatList } from 'react-native';
 //@ts-ignore
 import firebase from '../../firebase';
 import Item from '../components/Item';
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
+
 
 interface Data {
     shopName: string,
     favoriteMenu: string,
 }
 
-const Top = () => {
+const Top = (props) => {
     const [shopData, setShopData] = useState<string[]>([])
+
+    console.log("Top component ----------------------")
+    console.log("isSignout = " + props.globalState.state.isSignout)
+    console.log("isSplash = " + props.globalState.state.isSplash)
+    console.log("userData = " + props.globalState.state.userData)
+
+    
     useEffect(() => {
         let dataArray: string[] = []
         firebase
@@ -48,7 +58,18 @@ const Top = () => {
     )
 }
 
-export default Top
+const ProfileWrapper = ({ navigation }) => {
+    return (
+        <Subscribe to={[GlobalStateContainer]}>
+            {
+                globalState => <Top globalState={globalState} navigation = {navigation} />
+            }
+        </Subscribe>
+    );
+}
+
+export default ProfileWrapper
+
 
 const styles = StyleSheet.create({
     container: {

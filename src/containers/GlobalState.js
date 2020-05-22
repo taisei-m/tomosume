@@ -15,10 +15,12 @@ export default class GlobalContainer extends Container {
          userData: user
       })
    }
-   endSplash = (result) => {
+   setSplashFalse = () => {
       this.setState({
          isSplash: false
-      }),
+      })
+   }
+   setSignout = (result) => {
       this.setState({
          isSignout: result
       })
