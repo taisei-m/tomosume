@@ -6,20 +6,27 @@ import firebase from '../../firebase'
 import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 
 export default CreateAccount = (props) => {
+    const [username, setUsername] = useState();
     const [email, setEmail] = useState();
     const [password, setPass] = useState();
-    const [confirmPassword, setConfPass] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
     const [navigation, setNavigation] = useState(props.navigation);
     // console.log("CreateAccount////////////////////////////////////////")
     AsyncStorage.getItem('Authenticated', (err, result) => {
     //   console.log("Authenticated = " + result)
     })
 
+    const usernameInput = (text) => {
+        setUsername(text)
+    }
     const emailInput = (text) => {
         setEmail(text)
     }
     const passwordInput = (pass) => {
         setPass(pass)
+    }
+    const confirmPasswordInput = (pass) => {
+        setConfirmPassword(pass)
     }
 
     const signUp = () => {
@@ -27,6 +34,8 @@ export default CreateAccount = (props) => {
             alert("emailを入力してください");
         } else if (password == null || email == ""){
             alert("passwordを入力してください");
+        } else if (confirmPassword == null || email == ""){
+            alert("confirmPasswordを入力してください");
         } else if (password != confirmPassword){
             alert("パスワードが一致していません")
         } else {
@@ -44,15 +53,15 @@ export default CreateAccount = (props) => {
                     let db = firebase.firestore().collection('userList').doc(user.uid)
                     db.set({
                         userName: 'user-name',
-                        iconURL: 'test-url'
+                        iconURL: 'test-url',
+                        uid: user.uid
                     })
                     db.collection('follower').doc('first').set({})
                     db.collection('followee').doc('first').set({})
                     firebase.auth().languageCode = "ja";
                     // console.log("user = "+ user)
                     user.sendEmailVerification().then(function() {
-                        alert("メールを送信しました。メールを確認して本登録をしてください");
-                        navigation.navigate('LoginScreen');
+                        navigation.navigate('ResendEmail');
                     }).catch(function(error) {
                         cosole.log("error = " + error);
                         alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")
@@ -69,6 +78,15 @@ export default CreateAccount = (props) => {
         <View style={styles.container}>
         <View>
             <Text style={styles.newAccountTitle}>Create New Account</Text>
+        </View>
+        <View style={styles.inputView} >
+            <TextInput  
+                style={styles.inputText}
+                placeholder="usernme（ex. 奥瀬雄哉）"
+                placeholderTextColor="#818181"
+                value={username}
+                onChangeText={usernameInput}
+            />
         </View>
         <View style={styles.inputView} >
             <TextInput  
@@ -97,7 +115,7 @@ export default CreateAccount = (props) => {
                 placeholderTextColor="#818181"
                 value={confirmPassword}
                 secureTextEntry={true}
-                onChangeText={setConfPass}
+                onChangeText={confirmPasswordInput}
             />
         </View>
         <TouchableOpacity
