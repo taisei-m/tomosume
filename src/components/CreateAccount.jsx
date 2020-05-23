@@ -61,7 +61,6 @@ export default CreateAccount = (props) => {
                     firebase.auth().languageCode = "ja";
                     // console.log("user = "+ user)
                     user.sendEmailVerification().then(function() {
-                        alert("メールを送信しました。メールを確認して本登録をしてください");
                         navigation.navigate('ResendEmail');
                     }).catch(function(error) {
                         cosole.log("error = " + error);
