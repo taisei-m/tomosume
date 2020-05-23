@@ -62,7 +62,7 @@ export default CreateAccount = (props) => {
                     // console.log("user = "+ user)
                     user.sendEmailVerification().then(function() {
                         alert("メールを送信しました。メールを確認して本登録をしてください");
-                        navigation.navigate('LoginScreen');
+                        navigation.navigate('ResendEmail');
                     }).catch(function(error) {
                         cosole.log("error = " + error);
                         alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")

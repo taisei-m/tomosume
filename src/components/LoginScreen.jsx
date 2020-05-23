@@ -103,6 +103,14 @@ const LoginScreen = (props) => {
             >
                 <Text> Create Account </Text>
             </TouchableOpacity>
+            
+            
+            <TouchableOpacity
+                onPress={() => navigation.navigate('ResendEmail')}
+            >
+                <Text> ResendEmail </Text>
+            </TouchableOpacity>
+
         </View>
     );
 }
