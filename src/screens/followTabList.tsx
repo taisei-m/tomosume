@@ -1,11 +1,47 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Dimensions,FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-
+//@ts-ignore
+import firebase from '../../firebase'
 const FirstRoute = () => {
+    let userId = firebase.auth().currentUser.uid;
+    const [followeeArray, setFolloweeArray] = useState<string[]>();
     const [followStatus, changeStatus] = useState('follow')
     const [pressStatus, changePress] = useState(false)
+    useEffect(() => {
+        console.log('========')
+        let tmpArray: string[] = []
+        let followeeIdArray: string[] = []
+        let db = firebase.firestore().collection('userList').doc(userId)
+        db.collection('followee')
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                followeeIdArray.push(doc.id)
+            })
+            console.log(followeeIdArray)   
+            var val = "first"
+            var idx = followeeIdArray.indexOf(val);
+            if(idx >= 0){
+                followeeIdArray.splice(idx, 1); 
+            }   
+            console.log(followeeIdArray)      
+        })
+        .then(function() {
+            followeeIdArray.forEach(function( value ) {
+                console.log( value );
+                firebase.firestore().collection('userList').doc(value)
+                .get()
+                .then(function(doc) {
+                    let tmp = doc.data()
+                    tmp.id = doc.id
+                    tmpArray.push(tmp)
+                })
+                setFolloweeArray(tmpArray)
+            });
+        })
+    }, [])
     const follow = () => {
         changePress(!pressStatus)
         if(followStatus == 'follow') {
@@ -18,27 +54,16 @@ const FirstRoute = () => {
         <View style={styles.container}>
             <FlatList
                 style={{ marginTop: 10}}
-                data={[
-                    {key: 'Devin'},
-                    {key: 'Dan'},
-                    {key: 'Dominic'},
-                    {key: 'Jackson'},
-                    {key: 'James'},
-                    {key: 'Joel'},
-                    {key: 'John'},
-                    {key: 'Jillian'},
-                    {key: 'Jimmy'},
-                    {key: 'Julie'},
-                ]}
+                data={followeeArray}
                 renderItem={({item}) => 
                 <View style={styles.listItem}>
                     <Avatar 
                         size="medium"
                         rounded 
-                        icon={{ name: 'home' }}
+                        icon={{ name: item.iconURL }}
                     />
                     <Text style={styles.item}>
-                        {item.key}
+                        {item.userName}
                     </Text>
                     <TouchableOpacity
                         style={

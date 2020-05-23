@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
@@ -66,6 +66,7 @@ const Post: React.FC<InputTextProps>= () => {
     }
 
     const share = async() => {
+        let userId = firebase.auth().currentUser.uid
         const postShopData = firebase.firestore().collection('shops')
         const key = apiKey;
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
@@ -92,10 +93,10 @@ const Post: React.FC<InputTextProps>= () => {
                     longitude: longitude,
                 })
                 .then(function() {
-                    let key = placeId + '9jQ8HF4cuwaHxVsm8AayZj1WHBf1'
+                    let key = placeId + userId
                     postShopData.doc(placeId).collection('reviews').doc(key).set({
                         shopId: placeId,
-                        user: '9jQ8HF4cuwaHxVsm8AayZj1WHBf1',
+                        user: userId,
                         shopAddress: address,
                         shopName: shopName,
                         favoriteMenu: favoriteMenu,
