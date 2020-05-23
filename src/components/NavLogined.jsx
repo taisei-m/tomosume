@@ -1,7 +1,7 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Top from '../screens/Top';
-import Search from './Search';
+import Search from '../screens/Search';
 import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileStack from '../Routes/ProfileStack';

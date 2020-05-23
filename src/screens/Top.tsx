@@ -20,7 +20,6 @@ const Top = (props) => {
     console.log("isSplash = " + props.globalState.state.isSplash)
     console.log("userData = " + props.globalState.state.userData)
 
-    
     useEffect(() => {
         let dataArray: string[] = []
         firebase
