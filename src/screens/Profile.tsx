@@ -6,14 +6,14 @@ import {
         View, 
         TouchableOpacity, 
         SafeAreaView, 
-        FlatList, 
-        AsyncStorage, 
+        FlatList,  
         } from 'react-native';
 import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase';
 import * as ImagePicker from 'expo-image-picker';
+//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
@@ -51,7 +51,7 @@ const Profile = (props: any) => {
     let db = firebase.firestore()
     let userId = props.globalState.state.userData.uid
     db.collection('userList').doc(userId)
-      .get().then(function(doc) {
+      .get().then(function(doc:any) {
         if (doc.data().iconURL != 'test-url') {
           setImage(doc.data().iconUrl)
         } else {
@@ -72,8 +72,8 @@ const Profile = (props: any) => {
     let db = firebase.firestore().collection('userList').doc(userId)
     db.collection('followee')
     .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
+    .then(function(querySnapshot:any) {
+      querySnapshot.forEach(function(doc:any) {
         lengthArray.push(doc.id)
       })
       let lng: number = lengthArray.length-1
@@ -86,8 +86,8 @@ const Profile = (props: any) => {
     let db = firebase.firestore().collection('userList').doc(userId)
     db.collection('follower')
     .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
+    .then(function(querySnapshot:any) {
+      querySnapshot.forEach(function(doc:any) {
         lengthArray.push(doc.id)
       })
       let lng: number = lengthArray.length-1
@@ -95,10 +95,7 @@ const Profile = (props: any) => {
   })
   },[])
 
-  AsyncStorage.getItem('Authenticated', (err, result) => {
-      // console.log("Authenticated = " + result)
-    })
-    
+      
   const follow = () => {
     changePress(!pressStatus)
     if(followStatus == 'follow') {
