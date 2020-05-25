@@ -14,6 +14,8 @@ const LoginScreen = (props: any) => {
     const [validateTextEmail, setValidateTextEmail] = useState('');
     const [validateTextPassword, setValidateTextPassword] = useState('');
     const [signinErrorText, setSigninErrorText] = useState('');
+    const [emailErrorIsRed, setEmailErrorIsRed] = useState(Boolean);
+    const [passwordErrorIsRed, setPasswordErrorIsRed] = useState(Boolean);
     // console.log("LoginScreen/////////////////////////////////////")
     // console.log(globalState.state);
 
@@ -23,11 +25,17 @@ const LoginScreen = (props: any) => {
     const passwordInput = (pass) => {
         setPassword(pass)
     }
+    const emailErrorIsRedInput = (result: boolean) => {
+        setEmailErrorIsRed(result)
+    }
+    const passwordErrorIsRedInput = (result: boolean) => {
+        setPasswordErrorIsRed(result)
+    }
 
     const validateTextEmailInput = (result: boolean, blank: boolean) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '有効なメールアドレスを入力してください';
-        let blankText: string = 'メールアドレスは必須です';
+        let denyText: string = '*有効なメールアドレスを入力してください';
+        let blankText: string = '*メールアドレスは必須です';
         if (result) {
             setValidateTextEmail(allowText);
         } else {
@@ -40,8 +48,8 @@ const LoginScreen = (props: any) => {
     }
     const validateTextPasswordInput = (result: boolean, blank: boolean) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '半角英数字を含む6文字以上にしてください';
-        let blankText: string = 'パスワードは必須です';
+        let denyText: string = '*半角英数字を含む6文字以上にしてください';
+        let blankText: string = '*パスワードは必須です';
 
         if (result) {
             setValidateTextPassword(allowText);
@@ -75,15 +83,15 @@ const LoginScreen = (props: any) => {
         switch (errorCode) {
             case 'auth/wrong-password':
                 //default firebase error message: 'The password is invalid or the user does not have a password'
-                outputErrorText = '※パスワードが違います。もしくは設定されていません。'
+                outputErrorText = 'パスワードが違います。もしくは設定されていません。'
                 break;
             case 'auth/user-not-found':
                  //default firebase error message: 'There is no user record corresponding to this identifier. The user may have been deleted.'
-                outputErrorText = '※メールアドレスまたはパスワードが間違っています'
+                outputErrorText = 'メールアドレスまたはパスワードが間違っています'
                 break;
             case 'auth/network-request-failed':
                  //default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
-                outputErrorText = '※ネットワークエラー：インターネットに接続されていません'
+                outputErrorText = 'ネットワークエラー：インターネットに接続されていません'
                 break;
             case 'authentication mail-did not check':
                 outputErrorText = '認証エラー：アカウント作成時に送信された認証メールを確認してくだい';
@@ -125,12 +133,14 @@ const LoginScreen = (props: any) => {
             isEmailBlank = true;
         } else {
             isEmailBlank = false;
+            emailErrorIsRedInput(false);
         }
 
         if (password == "") {
             isPasswordBlank = true;
         } else {
             isPasswordBlank = false;
+            passwordErrorIsRedInput(false);
         }
         
         
@@ -138,14 +148,18 @@ const LoginScreen = (props: any) => {
         //メールアドレス
         if (approveEmailValidation == true) {
             validateTextEmailInput(true, isEmailBlank);
+            emailErrorIsRedInput(false);
         } else {
             validateTextEmailInput(false, isEmailBlank);
+            emailErrorIsRedInput(true);
         }
         //パスワード
         if (approvePasswordValidation == true) {
             validateTextPasswordInput(true, isPasswordBlank);
+            passwordErrorIsRedInput(false);
         } else {
             validateTextPasswordInput(false, isPasswordBlank);
+            passwordErrorIsRedInput(true);
         }
         
         //正規表現のvalidationも未入力のチェックも通ったらfirebaseにアクセス
@@ -192,6 +206,7 @@ const LoginScreen = (props: any) => {
             <View>
                 <Text style={styles.logo}>TomoSume</Text>
             </View>
+            {/* Emailの入力フォーム */}
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
@@ -201,14 +216,17 @@ const LoginScreen = (props: any) => {
                     onChangeText={emailInput}
                 />
             </View>
-
-            <View>
-                <Text>
+            <View >
+                <Text
+                    style={
+                        emailErrorIsRed
+                            ? styles.inputErrorMessage
+                            : styles.inputNotErrorMessage}
+                >
                     {validateTextEmail}
                 </Text>
             </View>
-         
-
+            {/* Passwordの入力フォーム */}
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
@@ -216,23 +234,24 @@ const LoginScreen = (props: any) => {
                     placeholderTextColor="#818181"
                     value={password}
                     onChangeText={passwordInput}
+                    autoCapitalize='none'
+
                 />
             </View>
-
             <View>
-                <Text>
+                <Text style={ passwordErrorIsRed ?styles.inputErrorMessage :styles.inputNotErrorMessage}>
                     {validateTextPassword}
                 </Text>
             </View>
-
+            {/* パスワード忘れたボタン */}
             <TouchableOpacity 
                 onPress={() => navigation.navigate('ResetPassword')}
             >
                 <Text style={styles.forgot}>Forgot Password?</Text>
             </TouchableOpacity>
-
+            {/* ボタンの上のエラーメッセージ */}
             <View>
-                <Text>
+                <Text style={styles.inputErrorMessage}>
                     {signinErrorText}
                 </Text>
             </View>
@@ -243,13 +262,13 @@ const LoginScreen = (props: any) => {
             >
                 <Text style={styles.buttonText}> Sign In </Text>
             </TouchableOpacity>
+            {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
                 onPress={() => navigation.navigate('CreateAccount')}
             >
                 <Text> Create Account </Text>
             </TouchableOpacity>
-            
-            
+                        
             <TouchableOpacity
                 onPress={() => navigation.navigate('ResendEmail')}
             >
@@ -283,26 +302,36 @@ const styles = StyleSheet.create({
     logo:{
         fontWeight:"bold",
         fontSize:50,
-        color:"black",
-        marginBottom:40
+        color: "black",
+        marginTop: "5%",
+        marginBottom:"20%",
     },
     inputView:{
         width:"80%",
         borderRadius:25,
         borderColor: 'black',
-        height:50,
-        marginBottom:20,
+        borderWidth: 1,
+        height: 50,
         justifyContent:"center",
-        padding:20
+        paddingLeft: '5%',
+        paddingRight: 20,
     },
     inputText:{
         height:50,
-        color:"black"
+        color: "black",
+    },
+    inputErrorMessage:{
+        marginBottom: "5%",
+        color: "red",
+    },
+    inputNotErrorMessage:{
+        marginBottom: "5%",
+        color: "#48D1CC",
     },
     forgot: {
-        margin: 20,
+        marginTop: "0%",
         color: '#818181',
-        marginBottom: 60
+        marginBottom: "13%",
     },
     button: {
         width:"80%",
@@ -310,7 +339,7 @@ const styles = StyleSheet.create({
         borderRadius:25,
         height:50,
         alignItems:"center",
-        justifyContent:"center",
+        justifyContent: "center",
         marginBottom:30
     },
     buttonText: {
