@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { Button } from 'react-native-elements';
 
 //@ts-ignore
-import firebase from '../../firebase';
+import firebase from '../../firebaseConfig';
 import GlobalStateContainer from '../containers/GlobalState';
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 //@ts-ignore
-import firebase from '../../firebase';
+import firebase from '../../firebaseConfig';
 import Item from '../components/Item';
 import { Subscribe } from 'unstated';
 //@ts-ignore
