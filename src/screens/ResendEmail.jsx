@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'rea
 import { Text, } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig';
 
 const ResendEmail = (props) => {
     const [navigation, setNavigation] = useState(props.navigation);
@@ -11,9 +11,6 @@ const ResendEmail = (props) => {
     const [titleText, setTitleText] = useState("確認メールを送信しました");
     const [contentText, setContentText] = useState("メールを確認して本登録をしてください。");
  
-    
-
-
     const emailInput = (text) => {
         setEmail(text)
     }
