@@ -4,13 +4,8 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import firebase from '../../firebase';
 import Item from '../components/Item';
 import { Subscribe } from 'unstated';
+//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
-
-
-interface Data {
-    shopName: string,
-    favoriteMenu: string,
-}
 
 const Top = (props) => {
     const [shopData, setShopData] = useState<string[]>([])

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-        StyleSheet, 
+import {StyleSheet, 
         Text, 
         Image, 
         View, 
@@ -14,14 +13,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
 import firebase from '../../firebase';
 import * as ImagePicker from 'expo-image-picker';
+//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
 const Profile = (props: any) => {
   const [userName, setUserName] = useState<string>('')
-  const [followee, setFollowee] = useState<number>()
-  const [follower, setFollower] = useState<number>()
+  const [followee, setFollowee] = useState<number>(0)
+  const [follower, setFollower] = useState<number>(0)
   const [postNumber, setPostNumber] = useState<number>(0)
   const [shopData, setShopData] = useState<string[]>([])
   const [followStatus, changeStatus] = useState('follow')
@@ -29,11 +29,12 @@ const Profile = (props: any) => {
   const [image, setImage] = useState('');
 
   useEffect(() => {
-    let userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.userData.uid
+    const ref = firebase.firestore().collection('userList').doc(userId)
     let dataArray: string[] = []
     let db = firebase.firestore()
     db.collectionGroup('reviews')
-    .where('user', '==', userId)
+    .where('user', '==', ref)
     .orderBy('createdAt', 'desc')
     .get()
       .then(function(querySnapshot:Array<any>) {
@@ -41,6 +42,7 @@ const Profile = (props: any) => {
           let temp = doc.data()
           temp.id = doc.id
           dataArray.push(temp)
+          console.log(dataArray)
         })
         let lng = dataArray.length
         setPostNumber(lng)
@@ -48,32 +50,32 @@ const Profile = (props: any) => {
       })
   }, [])
   useEffect(() => {
-    let db = firebase.firestore()
-    let userId = props.globalState.state.userData.uid
+    const db = firebase.firestore()
+    const userId = props.globalState.state.userData.uid
     db.collection('userList').doc(userId)
-      .get().then(function(doc) {
+      .get().then(function(doc:any) {
         if (doc.data().iconURL != 'test-url') {
-          setImage(doc.data().iconUrl)
+          setImage(doc.data().iconURL)
         } else {
           setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
         }
       })
   }, [])
   useEffect(() => {
-    let userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.userData.uid
     firebase.firestore().collection('userList').doc(userId)
-    .get().then(function(doc) {
+    .get().then(function(doc:any) {
       setUserName(doc.data().userName)
     })
   },[])
   useEffect(() => {
-    let userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.userData.uid
+    const db = firebase.firestore().collection('userList').doc(userId)
     let lengthArray:string[] = []
-    let db = firebase.firestore().collection('userList').doc(userId)
     db.collection('followee')
     .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
+    .then(function(querySnapshot:any) {
+      querySnapshot.forEach(function(doc:any) {
         lengthArray.push(doc.id)
       })
       let lng: number = lengthArray.length-1
@@ -81,13 +83,13 @@ const Profile = (props: any) => {
   })
   },[])
   useEffect(() => {
-    let userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.userData.uid    
+    const db = firebase.firestore().collection('userList').doc(userId)
     let lengthArray:string[] = []
-    let db = firebase.firestore().collection('userList').doc(userId)
     db.collection('follower')
     .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
+    .then(function(querySnapshot:any) {
+      querySnapshot.forEach(function(doc:any) {
         lengthArray.push(doc.id)
       })
       let lng: number = lengthArray.length-1
@@ -107,7 +109,7 @@ const Profile = (props: any) => {
       console.log(props.globalState.state.userData.uid)
       let db = firebase.firestore()
                 .collection('userList')
-                .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+                .doc(userId)
                 .collection('following')
       db.add()
     } else {
@@ -146,37 +148,31 @@ const Profile = (props: any) => {
     }
   }
 
-
 const uploadImage = async (uri:string, imageName:string) => {
   let imageUrl = ''
-  let storageRef = firebase.storage().ref('user/icon/' + imageName);
+  const userId = props.globalState.state.userData.uid
+  const storageRef = firebase.storage().ref('user/icon/' + imageName);
   const response = await fetch(uri);
   const blob = await response.blob();
-  let putInStorage = new Promise(function(resolve) {
+  await new Promise(function(resolve) {
     storageRef.put(blob)
+    console.log('1')
     resolve();
   })
-  let downloadUrl = new Promise(function(resolve) {
+  await new Promise(function(resolve) {
     storageRef.getDownloadURL().then(function (url:string) {
       imageUrl = url
       setImage(url)
+      console.log('2')
       resolve()
-    }).catch(function(error) {
-      console.log(error)
     })
   })  
-  Promise.all([
-    putInStorage,
-    downloadUrl
-  ]).then(function() {
-    firebase
-    .firestore()
-    .collection('userList')
-    .doc('9jQ8HF4cuwaHxVsm8AayZj1WHBf1')
+    console.log('3')
+    firebase.firestore().collection('userList').doc(userId)
     .set({
-      iconUrl: imageUrl
-    },{ merge: true }) 
-  })
+          iconURL: imageUrl
+          },{ merge: true }) 
+    console.log('4')
 }
   return (
     <View style={styles.container}>
