@@ -1,12 +1,8 @@
 import React, { useState, useEffect }from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Button ,FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View,　FlatList, } from 'react-native';
 import {Avatar, Icon} from 'react-native-elements'
-//@ts-ignore
-// import Modal, { SlideAnimation, ModalContent } from 'react-native-modals';
-// import firebase from '../../firebaseConfig'
 import firebase from 'firebase/app'
-// export const export defaultはタイポしてもimportされる
 import {db} from '../../firebaseConfig'
 
 type ReviewDocResponse = {
@@ -23,36 +19,38 @@ type ReviewDocResponse = {
   key: string
 }
 
+type ShopData = {
+  address: string
+  latitude: number
+  longitude: number
+  shopName: string
+  reviews: firebase.firestore.CollectionReference
+  id: string
+}
+
 type ReviewsDocResponse = ReviewDocResponse[]
+type ShopsData = ShopData[]
 
 const Search = () => {
-  const [locationData, changeLocationData] = useState<string[]>([''])
+  const [locationData, changeLocationData] = useState<ShopsData>([])
   const [latitude, changeLatitude] = useState<number>(34.7201152);
   const [longitude, changeLongitude] = useState<number>(137.7394095);
   const [visible, setVisible] = useState<boolean>(false)
   const [reviews, setReviews] = useState<ReviewsDocResponse>([])
 
   useEffect(() => {
-    let dataArray: string[] = []
-    firebase
-      .firestore()
-      .collection('shops')
+    let dataArray: ShopsData = []
+    db.collection('shops')
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            let tmp = doc.data()
+            let tmp = doc.data() as ShopData
             tmp.id = doc.id
             dataArray.push(tmp)
         })
         changeLocationData(dataArray)
     })
   },[])
-
-
-  const handlePress = async (id: string) => {
-    const _reviews = await getAllReviews(id)
-    setReviews(_reviews)
-  }
 
   const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
     let reviews: ReviewsDocResponse = []
@@ -67,6 +65,11 @@ const Search = () => {
       reviews.push(review)
     })
     return reviews
+  }
+
+  const handlePress = async (id: string) => {
+    const _reviews = await getAllReviews(id)
+    setReviews(_reviews)
   }
 
     return (
