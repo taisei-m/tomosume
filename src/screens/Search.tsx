@@ -1,12 +1,8 @@
 import React, { useState, useEffect }from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Button ,FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View,　FlatList, } from 'react-native';
 import {Avatar, Icon} from 'react-native-elements'
-//@ts-ignore
-// import Modal, { SlideAnimation, ModalContent } from 'react-native-modals';
-// import firebase from '../../firebaseConfig'
 import firebase from 'firebase/app'
-// export const export defaultはタイポしてもimportされる
 import {db} from '../../firebaseConfig'
 
 type ReviewDocResponse = {
