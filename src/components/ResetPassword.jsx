@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'rea
 import { Text, } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig'
 
 const ResetPassword = (props) => {
     const [navigation, setNavigation] = useState(props.navigation);

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
 import { Text, } from 'react-native-elements'
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig'
 import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';

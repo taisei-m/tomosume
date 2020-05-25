@@ -5,7 +5,7 @@ import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
 import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig'
 import InputText from '../components/InputText';
 import apiKey from '../api/api_key';
 

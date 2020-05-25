@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions,FlatList, Text, TouchableOpacity } from 'r
 import { Avatar,  } from 'react-native-elements'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 //@ts-ignore
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig'
 const FirstRoute = () => {
     let userId = firebase.auth().currentUser.uid;
     const [followeeArray, setFolloweeArray] = useState<string[]>();
