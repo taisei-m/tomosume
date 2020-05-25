@@ -66,7 +66,8 @@ const Post: React.FC<InputTextProps>= () => {
     }
 
     const share = async() => {
-        let userId = firebase.auth().currentUser.uid
+        const userId = firebase.auth().currentUser.uid
+        const ref = firebase.firestore().collection('userList').doc(userId)
         const postShopData = firebase.firestore().collection('shops')
         const key = apiKey;
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
@@ -96,7 +97,7 @@ const Post: React.FC<InputTextProps>= () => {
                     let key = placeId + userId
                     postShopData.doc(placeId).collection('reviews').doc(key).set({
                         shopId: placeId,
-                        user: userId,
+                        user: ref,
                         shopAddress: address,
                         shopName: shopName,
                         favoriteMenu: favoriteMenu,
