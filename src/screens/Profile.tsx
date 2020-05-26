@@ -45,14 +45,14 @@ type userDataDocResponse = {
 type userReviewsType = userReviewDocResponse[]
 
 const Profile = (props: any) => {
-  const [userName, setUserName] = useState<string>('')
+  const [userName, setUserName] = useState<string>()
   const [followee, setFollowee] = useState<number>(0)
   const [follower, setFollower] = useState<number>(0)
   const [postNumber, setPostNumber] = useState<number>(0)
   const [shopData, setShopData] = useState<userReviewsType>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState<string>();
 
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
@@ -71,13 +71,16 @@ const Profile = (props: any) => {
   }, [])
 
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid
-    db.collection('userList').doc(userId)
+    (async () => {
+      const userId = props.globalState.state.userData.uid
+      const userData = await db.collection('userList').doc(userId)
       .get().then(function(doc) {
         let userData = doc.data() as userDataDocResponse
-        userData.iconURL != 'test-url' ? setImage(userData.iconURL) : setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
+        return userData
       })
-  }, [])
+      userData.iconURL != 'test-url' ? setImage(userData.iconURL) : setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
+    })();
+  }, [image])
 
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
