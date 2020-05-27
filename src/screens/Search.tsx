@@ -95,7 +95,7 @@ const Search = () => {
               }
             />
           )}
-          <View style={{height: 140, width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopRightRadius: 25, borderTopLeftRadius: 25, paddingTop: 15, paddingHorizontal: 15}}>
+          {/* <View style={{height: 140, width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopRightRadius: 25, borderTopLeftRadius: 25, paddingTop: 15, paddingHorizontal: 15}}>
             {visible ?( 
             <FlatList
               horizontal
@@ -138,7 +138,7 @@ const Search = () => {
           />
           ): null
           }
-          </View>
+          </View> */}
         </MapView>
     </View>
   );
