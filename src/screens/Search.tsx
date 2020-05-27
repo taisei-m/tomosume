@@ -19,42 +19,45 @@ type ReviewDocResponse = {
   key: string
 }
 
-type ShopData = {
+type ShopDocResponse = {
   address: string
   latitude: number
   longitude: number
   shopName: string
   reviews: firebase.firestore.CollectionReference
-  id: string
+  id?: string
 }
 
 type ReviewsDocResponse = ReviewDocResponse[]
-type ShopsData = ShopData[]
+type ShopsArrayType= ShopDocResponse[]
 
 const Search = () => {
-  const [locationData, changeLocationData] = useState<ShopsData>([])
+  const [shopsData, setShopsData] = useState<ShopsArrayType>([])
   const [latitude, changeLatitude] = useState<number>(34.7201152);
   const [longitude, changeLongitude] = useState<number>(137.7394095);
-  const [visible, setVisible] = useState<boolean>(false)
+  // const [visible, setVisible] = useState<boolean>(false)
   const [reviews, setReviews] = useState<ReviewsDocResponse>([])
 
   useEffect(() => {
-    let dataArray: ShopsData = []
+    let shopsArray: ShopsArrayType = []
     db.collection('shops')
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            let tmp = doc.data() as ShopData
-            tmp.id = doc.id
-            dataArray.push(tmp)
+            let shopData = doc.data() as ShopDocResponse
+            shopData.id = doc.id
+            shopsArray.push(shopData)
         })
-        changeLocationData(dataArray)
+        setShopsData(shopsArray)
     })
   },[])
-
+  const handlePress = async (id: string) => {
+    const _reviews = await getAllReviews(id)
+    setReviews(_reviews)
+  }
   const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
     let reviews: ReviewsDocResponse = []
-    setVisible(!visible)
+    // setVisible(!visible)
     const querySnapshot = await db.collectionGroup('reviews').where('shopId', '==', id).orderBy('createdAt', 'desc').get()
     querySnapshot.forEach(async(doc) => {
       let review = doc.data() as ReviewDocResponse
@@ -67,11 +70,6 @@ const Search = () => {
     return reviews
   }
 
-  const handlePress = async (id: string) => {
-    const _reviews = await getAllReviews(id)
-    setReviews(_reviews)
-  }
-
     return (
       <View style={styles.container}>
         <MapView style={styles.mapStyle}
@@ -81,21 +79,21 @@ const Search = () => {
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}>
-          {locationData.map((location) => 
+          {shopsData.map((shopData) => 
             <Marker
-              key={location.id}
-              title={location.shopName}
-              description={location.address}
-              onPress={() => handlePress(location.id)}
+              key={shopData.id}
+              title={shopData.shopName}
+              description={shopData.address}
+              onPress={() => handlePress(shopData.id)}
               coordinate={
                 {
-                  latitude: location.latitude,
-                  longitude: location.longitude
+                  latitude: shopData.latitude,
+                  longitude: shopData.longitude
                 }
               }
             />
           )}
-          <View style={{height: 140, width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopRightRadius: 25, borderTopLeftRadius: 25, paddingTop: 15, paddingHorizontal: 15}}>
+          {/* <View style={{height: 140, width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopRightRadius: 25, borderTopLeftRadius: 25, paddingTop: 15, paddingHorizontal: 15}}>
             {visible ?( 
             <FlatList
               horizontal
@@ -138,7 +136,7 @@ const Search = () => {
           />
           ): null
           }
-          </View>
+          </View> */}
         </MapView>
     </View>
   );

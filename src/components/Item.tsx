@@ -3,12 +3,12 @@ import { View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
 import { Avatar, Card, } from 'react-native-elements'
 
 interface ItemProps {
-    id: number
+    id: string
     title: string
     address: string
     category: string
     favorite: string
-    price: number
+    price: string
 }
 
 const Item = (props: ItemProps) => {
@@ -16,10 +16,12 @@ const Item = (props: ItemProps) => {
         <View style={styles.listItem}>
             <Card containerStyle={{borderRadius: 25}}>
                 <TouchableOpacity  onPress={() => console.log(props.id)}>
-                    <View style={styles.userInfomation}>   
-                        <Avatar rounded icon={{ name: 'home' }}/>
-                        <Text style={styles.userName}>okuse</Text>
-                    </View>
+                    <TouchableOpacity>
+                        <View style={styles.userInfomation}> 
+                            <Avatar rounded icon={{ name: 'home' }}/>
+                            <Text style={styles.userName}>okuse</Text>
+                        </View>
+                    </TouchableOpacity>
                     <View style={{flexDirection: 'row'}}>
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>Shop Name</Text>
