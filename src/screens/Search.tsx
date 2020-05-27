@@ -53,8 +53,7 @@ const Search = () => {
   },[])
   const handlePress = async (id: string) => {
     const _reviews = await getAllReviews(id)
-    // setReviews(_reviews)
-    console.log(_reviews, 'reviews')
+    setReviews(_reviews)
   }
   const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
     let reviews: ReviewsDocResponse = []
@@ -67,7 +66,6 @@ const Search = () => {
       review.userName = profile.get('userName')
       review.iconURL = profile.get('iconURL')
       reviews.push(review)
-      console.log(reviews)
     })
     return reviews
   }
