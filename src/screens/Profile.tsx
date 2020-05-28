@@ -6,6 +6,7 @@ import {StyleSheet,
         TouchableOpacity, 
         SafeAreaView, 
         FlatList,  
+        AsyncStorage
         } from 'react-native';
 import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -79,7 +80,7 @@ const Profile = (props: any) => {
       })
       userData.iconURL != 'test-url' ? setImage(userData.iconURL) : setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
     })();
-  }, [image])
+  }, [])
 
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
