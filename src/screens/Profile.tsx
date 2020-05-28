@@ -5,8 +5,7 @@ import {StyleSheet,
         View, 
         TouchableOpacity, 
         SafeAreaView, 
-        FlatList, 
-        AsyncStorage, 
+        FlatList,  
         } from 'react-native';
 import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
