@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage, Button} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig'
@@ -332,37 +332,32 @@ const LoginScreen = (props: any) => {
                     Sign In
                 </Text>
             </TouchableOpacity> */}
-            
-            
-            
+            <View
+                style={{width: '80%'}}
+            >
                 <ButtonElem
                 title="testLogin"
                 type="solid"
-                buttonStyle={styles.button}
-                // disabledStyle={styles.disabledButtton}
-                titleStyle={styles.buttonText}
-                // disabledTitleStyle={styles.}
-                
+                buttonStyle={{borderRadius: 20}}
                 onPress={pushLogin}
                     // color="#841584"
                     disabled={signinButtonDisabled}
                     accessibilityLabel="Learn more about this purple button"
                     loading={false}
                     />
-
+            </View>
                 {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
                 onPress={() => navigation.navigate('CreateAccount')}
+                style={{marginVertical: 10}}
             >
-                <Text> Create Account </Text>
+                <Text style={styles.createAccountText}> Create Account </Text>
             </TouchableOpacity>
-                        
             <TouchableOpacity
                 onPress={() => navigation.navigate('ResendEmail')}
             >
-                <Text> ResendEmail </Text>
+                <Text style={styles.resendEmailText}> ResendEmail </Text>
             </TouchableOpacity>
-
         </View>
     );
 }
@@ -383,12 +378,6 @@ export default LoginScreenWrapper;
 const styles = StyleSheet.create({
     sigininButton: {
         width: "80%",
-        // backgroundColor: string;
-        // borderRadius: number;
-        // height: number;
-        // alignItems: "center";
-        // justifyContent: "center";
-        // marginBottom: number;
     },
     container: {
         flex: 1,
@@ -426,9 +415,14 @@ const styles = StyleSheet.create({
         color: "#48D1CC",
     },
     forgot: {
-        marginTop: "0%",
         color: '#818181',
-        marginBottom: "13%",
+        // marginBottom: "13%",
+    },
+    createAccountText: {
+        color: '#818181',
+    },
+    resendEmailText: {
+        color: '#818181',
     },
     button: {
         width:"80%",
@@ -439,12 +433,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: '10%',
         padding: 0
-    },
-    buttonText: {
-        color: 'white',
-        textAlign: 'center',
-        marginLeft: 'auto',
-        marginRight: 'auto'
     },
     icon: {
         marginRight: 10
