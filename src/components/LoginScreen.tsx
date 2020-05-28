@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
-import { Text, } from 'react-native-elements';
+import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage, Button} from 'react-native';
+import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebase'
 //@ts-ignore
@@ -9,21 +9,22 @@ import GlobalStateContainer from '../containers/GlobalState';
 const LoginScreen = (props: any) => {
     const [navigation, setNavigation] = useState(props.navigation);
     const [globalState, setGlobalState] = useState(props.globalState);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [emailAsRendered, setEmailAsRendered] = useState('');
+    const [passwordAsRendered, setPasswordAsRendered] = useState('');
     const [validateTextEmail, setValidateTextEmail] = useState('');
     const [validateTextPassword, setValidateTextPassword] = useState('');
     const [signinErrorText, setSigninErrorText] = useState('');
     const [emailErrorIsRed, setEmailErrorIsRed] = useState(Boolean);
     const [passwordErrorIsRed, setPasswordErrorIsRed] = useState(Boolean);
+    const [signinButtonDisabled, setSingnBunttonDisabled] = useState(true);
     // console.log("LoginScreen/////////////////////////////////////")
     // console.log(globalState.state);
 
-    const emailInput = (text) => {
-        setEmail(text)
+    const emailAsRenderedInput = (text) => {
+        setEmailAsRendered(text)
     }
-    const passwordInput = (pass) => {
-        setPassword(pass)
+    const passwordAsRenderedInput = (pass) => {
+        setPasswordAsRendered(pass)
     }
     const emailErrorIsRedInput = (result: boolean) => {
         setEmailErrorIsRed(result)
@@ -31,37 +32,55 @@ const LoginScreen = (props: any) => {
     const passwordErrorIsRedInput = (result: boolean) => {
         setPasswordErrorIsRed(result)
     }
+    const signinButtonDisabledInput = (result: boolean) => {
+        setSingnBunttonDisabled(result);
+    }
 
-    const validateTextEmailInput = (result: boolean, blank: boolean) => {
+
+
+    const validateTextEmailInput = (textType: string) => {
         let allowText: string = 'ok ✓';
         let denyText: string = '*有効なメールアドレスを入力してください';
-        let blankText: string = '*メールアドレスは必須です';
-        if (result) {
-            setValidateTextEmail(allowText);
-        } else {
-            if (blank) {
-                setValidateTextEmail(blankText);
-            } else  {
+        let blankText: string = '';
+        let fillblankText: string = '*メールアドレスは必須です';
+        
+        switch(textType){
+            case 'allow':
+                setValidateTextEmail(allowText);
+                break;
+            case 'deny':
                 setValidateTextEmail(denyText);
-            }
-        }
+                break;
+            case 'blank':
+                setValidateTextEmail(blankText);
+                break;
+            case 'fillBlank':
+                setValidateTextEmail(fillblankText)
+        }  
     }
-    const validateTextPasswordInput = (result: boolean, blank: boolean) => {
+
+    const validateTextPasswordInput = (textType: string) => {
         let allowText: string = 'ok ✓';
         let denyText: string = '*半角英数字を含む6文字以上にしてください';
-        let blankText: string = '*パスワードは必須です';
+        let blankText: string = '';
+        let fillblankText: string = '*パスワードは必須です'
 
-        if (result) {
-            setValidateTextPassword(allowText);
-        } else {
-            if (blank) {
-                setValidateTextPassword(blankText);
-            } else {
+        switch (textType) {
+            case 'allow':
+                setValidateTextPassword(allowText);
+                break;
+            case 'deny':
                 setValidateTextPassword(denyText);
-            }
+                break;
+            case 'blank':
+                setValidateTextPassword(blankText);
+                break;
+            case 'fillBlank':
+                setValidateTextPassword(fillblankText)
         }
     }
-    const signinErrorTextInputBlank = (errorCode: string) => {
+        
+    const signinErrorTextBlankInput = (errorCode: string) => {
         let outputErrorText: string = '';
 
         switch (errorCode) {
@@ -102,10 +121,36 @@ const LoginScreen = (props: any) => {
         }
         setSigninErrorText(outputErrorText);
     }
+
+
+    ////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
+    const inputedMail = (textInputed: string) => {
+        emailAsRenderedInput(textInputed);
+        let inputedPlace: string = 'email';
+        doValidate(textInputed, inputedPlace);
+    }
+    const inputedPassword = (textInputed: string) => {
+        passwordAsRenderedInput(textInputed);
+        let inputedPlace: string = 'password';
+        doValidate(textInputed, inputedPlace);
+    }
     
-    const login = () => {
+    ////ログイン関数
+    const doValidate = (textInputed: string, inputedPlace: string) => {
         console.log("pushed login--------------")
-        
+        let email: string = "";
+        let password: string = "";
+
+        if (inputedPlace == "email") {
+            //メールアドレスの欄ににゅうりょくされた場合
+            email = textInputed;
+            password = passwordAsRendered;
+        } else if (inputedPlace == "password") {
+            //パスワードの欄に入力された場合
+            email = emailAsRendered;
+            password = textInputed;
+        }
+
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
 
@@ -118,53 +163,78 @@ const LoginScreen = (props: any) => {
         console.log("checkPassword = " + approvePasswordValidation);
             
         //////入力欄の値に応じて入力方法のメッセージ(変更内容)を表示する
-        ////signinボタンの上に表示されるメッセージ
-        let blankErrorCode: string = '';
-        if (email == "") {
-            blankErrorCode = 'Email is blank';
-        } else if (password == "") {
-            blankErrorCode = 'Password is blank';
-        } else if (email !== "" && password !== "") {
-            blankErrorCode = 'None is blank';
-        }
-        signinErrorTextInputBlank(blankErrorCode);
-        //フォームに値があるかどうかの判別
+
+        ////フォームに値があるかどうかの判別
         if (email == "") {
             isEmailBlank = true;
         } else {
             isEmailBlank = false;
-            emailErrorIsRedInput(false);
         }
 
         if (password == "") {
             isPasswordBlank = true;
         } else {
             isPasswordBlank = false;
-            passwordErrorIsRedInput(false);
         }
-        
         
         ////フォーム(validate)の下に表示されるメッセージ
         //メールアドレス
-        if (approveEmailValidation == true) {
-            validateTextEmailInput(true, isEmailBlank);
+        if (approveEmailValidation) {
+            validateTextEmailInput('allow');
             emailErrorIsRedInput(false);
-        } else {
-            validateTextEmailInput(false, isEmailBlank);
-            emailErrorIsRedInput(true);
+        } else if (!approveEmailValidation) {
+            if (isEmailBlank) {
+                validateTextEmailInput('blank');
+                emailErrorIsRedInput(true);
+            } else if (!isEmailBlank) {
+                validateTextEmailInput('deny');
+                emailErrorIsRedInput(true);
+            }
         }
         //パスワード
-        if (approvePasswordValidation == true) {
-            validateTextPasswordInput(true, isPasswordBlank);
+        if (approvePasswordValidation) {
+            validateTextPasswordInput('allow');
             passwordErrorIsRedInput(false);
-        } else {
-            validateTextPasswordInput(false, isPasswordBlank);
-            passwordErrorIsRedInput(true);
+        } else if (!approvePasswordValidation) {
+            if (isPasswordBlank) {
+                validateTextPasswordInput('blank');
+                passwordErrorIsRedInput(true);
+            } else if (!isPasswordBlank) {
+                validateTextPasswordInput('deny');
+                passwordErrorIsRedInput(true);
+            }
         }
         
-        //正規表現のvalidationも未入力のチェックも通ったらfirebaseにアクセス
+        //signinボタンを表示するかどうか
         if (approveEmailValidation == true && approvePasswordValidation == true) {
-            firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+            if (isEmailBlank == false && isPasswordBlank == false) {
+                signinButtonDisabledInput(false);
+            }
+        } else {
+            signinButtonDisabledInput(true);
+        }
+    }
+
+    const pushLogin = () => {
+        console.log("testLogin---------------------------------------------")
+        
+        // //////未入力欄があるかどうかのチェック
+        // ///signinボタンの上に表示されるメッセージ
+        // let blankErrorCode: string = '';
+        // if (emailAsRendered == "") {
+        //     blankErrorCode = 'Email is blank';
+        //     validateTextEmailInput('fillBlank');
+        //     emailErrorIsRedInput(true);
+        // } else if (passwordAsRendered == "") {
+        //     blankErrorCode = 'Password is blank';
+        
+        // } else if (emailAsRendered !== "" && passwordAsRendered !== "") {
+        //     blankErrorCode = 'None is blank';
+        // }
+        // signinErrorTextBlankInput(blankErrorCode);
+
+
+            firebase.auth().signInWithEmailAndPassword(emailAsRendered, passwordAsRendered).catch(function (error) {
                 console.log(error.code)
                 console.log(error.message)
                 return error;
@@ -180,7 +250,7 @@ const LoginScreen = (props: any) => {
                 if (result.user) {
                     if (result.user.emailVerified == true) {
                         //////メール認証ができている場合
-                        console.log("メール認証済")
+                        console.log("メール認証済");
                         AsyncStorage.setItem('Authenticated', 'true');
                         globalState.login(result.user);
                     }
@@ -197,7 +267,7 @@ const LoginScreen = (props: any) => {
                 }
             })
         }
-    }
+    
     
     
         
@@ -212,8 +282,8 @@ const LoginScreen = (props: any) => {
                     style={styles.inputText}
                     placeholder="email"
                     placeholderTextColor="#818181"
-                    value={email}
-                    onChangeText={emailInput}
+                    value={emailAsRendered}
+                    onChangeText={inputedMail}
                 />
             </View>
             <View >
@@ -232,10 +302,9 @@ const LoginScreen = (props: any) => {
                     style={styles.inputText}
                     placeholder="password"
                     placeholderTextColor="#818181"
-                    value={password}
-                    onChangeText={passwordInput}
+                    value={passwordAsRendered}
+                    onChangeText={inputedPassword}
                     autoCapitalize='none'
-
                 />
             </View>
             <View>
@@ -256,13 +325,36 @@ const LoginScreen = (props: any) => {
                 </Text>
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={styles.button}
                 onPress={login}
-            >
-                <Text style={styles.buttonText}> Sign In </Text>
-            </TouchableOpacity>
-            {/* アカウント作成画面へ　ボタン */}
+                >
+                <Text
+                    style={styles.buttonText}
+                    disabled={false}
+                >
+                    Sign In
+                </Text>
+            </TouchableOpacity> */}
+            
+            
+            
+                <ButtonElem
+                title="testLogin"
+                type="solid"
+                buttonStyle={styles.button}
+                // disabledStyle={styles.disabledButtton}
+                titleStyle={styles.buttonText}
+                // disabledTitleStyle={styles.}
+                
+                onPress={pushLogin}
+                    // color="#841584"
+                    disabled={signinButtonDisabled}
+                    accessibilityLabel="Learn more about this purple button"
+                    loading={false}
+                    />
+
+                {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
                 onPress={() => navigation.navigate('CreateAccount')}
             >
@@ -293,6 +385,15 @@ export default LoginScreenWrapper;
 
 
 const styles = StyleSheet.create({
+    sigininButton: {
+        width: "80%",
+        // backgroundColor: string;
+        // borderRadius: number;
+        // height: number;
+        // alignItems: "center";
+        // justifyContent: "center";
+        // marginBottom: number;
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -340,10 +441,14 @@ const styles = StyleSheet.create({
         height:50,
         alignItems:"center",
         justifyContent: "center",
-        marginBottom:30
+        marginBottom: '10%',
+        padding: 0
     },
     buttonText: {
-        color: 'white'
+        color: 'white',
+        textAlign: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto'
     },
     icon: {
         marginRight: 10
