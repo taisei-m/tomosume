@@ -16,7 +16,7 @@ type ReviewDocResponse = {
   user: firebase.firestore.DocumentReference
   userName?: string
   iconURL?: string
-  key: string
+  key?: string
 }
 
 type ShopData = {
@@ -53,23 +53,53 @@ const Search = () => {
   },[])
 
   const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
-    let reviews: ReviewsDocResponse = []
-    setVisible(!visible)
+    let reviewssss: ReviewsDocResponse = []
+    // setVisible(!visible)
+    // const querySnapshot =
     const querySnapshot = await db.collectionGroup('reviews').where('shopId', '==', id).orderBy('createdAt', 'desc').get()
-    querySnapshot.forEach(async(doc) => {
-      let review = doc.data() as ReviewDocResponse
-      review.key = doc.id
-      const profile = await (review.user).get()
-      review.userName = profile.get('userName')
-      review.iconURL = profile.get('iconURL')
-      reviews.push(review)
-    })
-    return reviews
+    // .then(querySnapshot => {
+        const queryDocsSnapshot = querySnapshot.docs
+        reviewssss = await Promise.all(queryDocsSnapshot.map(async (item) => {
+          let data = item.data()
+          data.key = item.id
+          const profile = await (data.user).get()
+          data.userName = profile.get('userName')
+          data.iconURL = profile.get('iconURL')
+          delete data.user
+          return data
+          // reviewssss.push(data)
+        }))
+      // const queryDocsSnapshot = querySnapshot.docs
+      // for (let i = 0; i < queryDocsSnapshot.length; i++) {
+      //   let data = queryDocsSnapshot[i].data()
+      //   const profile = (data.user).get()
+      //   data.userName = profile.get('userName')
+      //   data.iconURL = profile.get('iconURL')
+      //   delete data.user
+      //   reviewssss.push(data)
+      //   // console.log(reviewssss)
+      // }
+    // })
+    return reviewssss
+    // querySnapshot.forEach(async(doc): Promise<void> => {
+    //     let review = doc.data() as ReviewDocResponse
+    //     review.key = doc.id
+    //     const profile = await (review.user).get()
+    //     review.userName = profile.get('userName')
+    //     review.iconURL = profile.get('iconURL')
+    //     reviewssss.push(review)
+    // })
+    // return reviewssss
   }
 
   const handlePress = async (id: string) => {
+    let newArray = [];
     const _reviews = await getAllReviews(id)
+    console.log('=======================================')
+    console.log(_reviews, '_reviews')
+    // Object.assign(newArray, _reviews)
     setReviews(_reviews)
+    console.log(reviews,'review')
   }
 
     return (
@@ -81,7 +111,7 @@ const Search = () => {
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}>
-          {locationData.map((location) => 
+          {locationData.map((location) =>
             <Marker
               key={location.id}
               title={location.shopName}
@@ -96,19 +126,17 @@ const Search = () => {
             />
           )}
           {/* <View style={{height: 140, width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopRightRadius: 25, borderTopLeftRadius: 25, paddingTop: 15, paddingHorizontal: 15}}>
-            {visible ?( 
             <FlatList
               horizontal
               data={reviews}
-              renderItem={
-            ({ item }) => 
+              renderItem={({ item }) =>
               <View style={{marginRight: 30}}>
                 <View style={{flexDirection: 'row', marginBottom: 5}}>
                   <Avatar rounded source={{ uri: item.iconURL }}/>
                   <Text style={{fontSize: 18, marginTop: 5, marginLeft: 5}}>{item.userName}</Text>
                 </View>
                 <View style={{flexDirection: 'row', marginBottom: 5, marginLeft: 5}}>
-                  <Icon 
+                  <Icon
                     name='list'
                     color="#2774E8"
                     type='material'
@@ -117,30 +145,28 @@ const Search = () => {
                   <Text style={{marginTop: 2, marginLeft: 10}}>{item.category}</Text>
                 </View>
                 <View style={{flexDirection: 'row', marginBottom: 5, marginLeft: 5}}>
-                  <Icon 
+                  <Icon
                     name='favorite'
                     color="#2774E8"
                     size={20}
                     />
                   <Text style={{marginTop: 2, marginLeft: 10}}>{item.favoriteMenu}</Text>
                 </View>
-                <View style={{flexDirection: 'row', marginBottom: 5, marginLeft: 5}}>
-                  <Icon 
-                    name='attach-money'
-                    color="#2774E8"
-                    size={20}
-                    />
-                  <Text style={{marginTop: 2, marginLeft: 10}}>{item.price}</Text>
+                  <View style={{flexDirection: 'row', marginBottom: 5, marginLeft: 5}}>
+                    <Icon
+                      name='attach-money'
+                      color="#2774E8"
+                      size={20}
+                      />
+                    <Text style={{marginTop: 2, marginLeft: 10}}>{item.price}</Text>
                 </View>
               </View>
           }
           keyExtractor={item => item.key}
           />
-          ): null
-          }
           </View> */}
         </MapView>
-    </View>
+      </View>
   );
 }
 

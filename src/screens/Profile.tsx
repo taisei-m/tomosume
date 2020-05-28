@@ -10,7 +10,6 @@ import {StyleSheet,
         } from 'react-native';
 import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
-//@ts-ignore
 import firebase from '../../firebaseConfig';
 import * as ImagePicker from 'expo-image-picker';
 //@ts-ignore
