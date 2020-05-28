@@ -211,16 +211,15 @@ const uploadResult = async (uri:string, imageName:string): Promise<string> => {
             <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
-        
         <View style={{marginLeft: 30}}>
-          <View 
+          <View
             style={{
-              justifyContent: 'center', 
+              justifyContent: 'center',
               flexDirection: 'row',
               marginTop: 70,
             }}
           >
-            <ProfileNumber 
+            <ProfileNumber
               number={postNumber}
               itemName='post'
             />
@@ -236,11 +235,6 @@ const uploadResult = async (uri:string, imageName:string): Promise<string> => {
               press={toFollowerList}
             />
           </View>
-
-          <Text>
-            {image}
-          </Text>
-
           <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
             <TouchableOpacity
               style={
