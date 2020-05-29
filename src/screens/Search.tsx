@@ -33,7 +33,7 @@ type ShopData = {
 }
 
 type ReviewsDocResponse = ReviewDocResponse[]
-type ShopsData = ShopData[]
+type ShopsArrayType= ShopDocResponse[]
 
 const Search = () => {
 	const [locationData, changeLocationData] = useState<ShopsData>([])

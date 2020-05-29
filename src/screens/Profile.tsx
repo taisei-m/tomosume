@@ -5,94 +5,117 @@ import {StyleSheet,
         View, 
         TouchableOpacity, 
         SafeAreaView, 
-        FlatList, 
-        AsyncStorage, 
+        FlatList,  
+        AsyncStorage
         } from 'react-native';
 import { Subscribe } from 'unstated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from '../../firebaseConfig';
+import {db} from '../../firebaseConfig'
 import * as ImagePicker from 'expo-image-picker';
 //@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import Item from '../components/Item';
 
+type pickerResult = {
+  cancelled: boolean
+  height: number
+  type: string
+  uri: string
+  width: number
+}
+
+type userReviewDocResponse = {
+  category: string,
+  createdAt: firebase.firestore.Timestamp,
+  favoriteMenu: string,
+  price: string,
+  shopAddress: string,
+  shopId: string,
+  shopName: string
+  user: firebase.firestore.DocumentReference
+}
+
+type userDataDocResponse = {
+  userName: string
+  iconURL: string
+}
+
+type userReviewsType = userReviewDocResponse[]
+
 const Profile = (props: any) => {
-  const [userName, setUserName] = useState<string>('')
+  const [userName, setUserName] = useState<string>()
   const [followee, setFollowee] = useState<number>(0)
   const [follower, setFollower] = useState<number>(0)
   const [postNumber, setPostNumber] = useState<number>(0)
-  const [shopData, setShopData] = useState<string[]>([])
+  const [shopData, setShopData] = useState<userReviewsType>([])
   const [followStatus, changeStatus] = useState('follow')
   const [pressStatus, changePress] = useState(false)
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState<string>();
 
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
     const ref = firebase.firestore().collection('userList').doc(userId)
-    let dataArray: string[] = []
-    let db = firebase.firestore()
-    db.collectionGroup('reviews')
-    .where('user', '==', ref)
-    .orderBy('createdAt', 'desc')
-    .get()
-      .then(function(querySnapshot:Array<any>) {
+    let userReviews: userReviewsType = []
+    db.collectionGroup('reviews').where('user', '==', ref).orderBy('createdAt', 'desc').get()
+      .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-          let temp = doc.data()
-          temp.id = doc.id
-          dataArray.push(temp)
-          console.log(dataArray)
+          let userReview = doc.data() as userReviewDocResponse
+          userReviews.push(userReview)
         })
-        let lng = dataArray.length
-        setPostNumber(lng)
-        setShopData(dataArray)
+        let reviewNumber: number = userReviews.length
+        setPostNumber(reviewNumber)
+        setShopData(userReviews)
       })
   }, [])
+
   useEffect(() => {
-    const db = firebase.firestore()
-    const userId = props.globalState.state.userData.uid
-    db.collection('userList').doc(userId)
-      .get().then(function(doc:any) {
-        if (doc.data().iconURL != 'test-url') {
-          setImage(doc.data().iconURL)
-        } else {
-          setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
-        }
+    (async () => {
+      const userId = props.globalState.state.userData.uid
+      const userData = await db.collection('userList').doc(userId)
+      .get().then(function(doc) {
+        let userData = doc.data() as userDataDocResponse
+        return userData
       })
+      userData.iconURL != 'test-url' ? setImage(userData.iconURL) : setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
+    })();
   }, [])
+
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
     firebase.firestore().collection('userList').doc(userId)
-    .get().then(function(doc:any) {
-      setUserName(doc.data().userName)
+    .get().then(function(doc) {
+      let userData = doc.data() as userDataDocResponse
+      setUserName(userData.userName)
     })
   },[])
+
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
-    const db = firebase.firestore().collection('userList').doc(userId)
-    let lengthArray:string[] = []
-    db.collection('followee')
+    let followeeArray:string[] = []
+    db.collection('userList').doc(userId).collection('followee')
     .get()
-    .then(function(querySnapshot:any) {
-      querySnapshot.forEach(function(doc:any) {
-        lengthArray.push(doc.id)
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        followeeArray.push(doc.id)
       })
-      let lng: number = lengthArray.length-1
-      setFollowee(lng)
+      let followeeNumber: number = followeeArray.length-1
+      setFollowee(followeeNumber)
   })
+
   },[])
   useEffect(() => {
     const userId = props.globalState.state.userData.uid    
-    const db = firebase.firestore().collection('userList').doc(userId)
-    let lengthArray:string[] = []
-    db.collection('follower')
+    let followerArray:string[] = []
+    db.collection('userList').doc(userId).collection('follower')
     .get()
     .then(function(querySnapshot:any) {
       querySnapshot.forEach(function(doc:any) {
-        lengthArray.push(doc.id)
+        followerArray.push(doc.id)
       })
-      let lng: number = lengthArray.length-1
-      setFollower(lng)
+      let followerNumber: number = followerArray.length-1
+      setFollower(followerNumber)
   })
   },[])
 
@@ -100,21 +123,21 @@ const Profile = (props: any) => {
       // console.log("Authenticated = " + result)
     })
     
-  const follow = () => {
-    changePress(!pressStatus)
-    if(followStatus == 'follow') {
-      changeStatus('unfollow')
-      let userId = props.globalState.state.userData.uid
-      console.log(props.globalState.state.userData.uid)
-      let db = firebase.firestore()
-                .collection('userList')
-                .doc(userId)
-                .collection('following')
-      db.add()
-    } else {
-      changeStatus('follow')
-    }
-  }
+  // const follow = () => {
+  //   changePress(!pressStatus)
+  //   if(followStatus == 'follow') {
+  //     changeStatus('unfollow')
+  //     let userId = props.globalState.state.userData.uid
+  //     console.log(props.globalState.state.userData.uid)
+  //     let db = firebase.firestore()
+  //               .collection('userList')
+  //               .doc(userId)
+  //               .collection('following')
+  //     db.add()
+  //   } else {
+  //     changeStatus('follow')
+  //   }
+  // }
   const setting = () => {
     props.navigation.navigate('idealDrawer')
     console.log(props)
@@ -125,61 +148,58 @@ const Profile = (props: any) => {
   const toFollowerList = () => {
     props.navigation.navigate('followTabList')
   }
-  const changeImage = async() => {
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      })
-      if (!result.cancelled) {
-        uploadImage(result.uri, 'test-image')
-        .then(() => {
-          alert('success')
-        })
-        .catch(e => {
-          alert(e)
-        })
-      }
-    } catch (E) {
-      console.log(E);
-    }
+
+  const imagePick = async(): Promise<ImagePicker.ImagePickerResult> => {
+    let result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+    return result
   }
 
-const uploadImage = async (uri:string, imageName:string) => {
-  let imageUrl = ''
-  const userId = props.globalState.state.userData.uid
+  const changeIcon2 = async():Promise<string> => {
+      let result = await imagePick() as pickerResult
+      let data = ''
+      data = await uploadResult(result.uri, 'test-image7')
+      return data
+  }
+
+  const setIconToFirestore = (url:string):Promise<void> => {
+    console.log('3a')
+    const userId = props.globalState.state.userData.uid
+    return db.collection('userList').doc(userId)
+    .set({
+      iconURL: url
+    }, {merge: true})
+  }
+
+  const imageInput = (gotresult: string) =>{
+    setImage(gotresult);
+  }
+  const changeIcon = async() => {
+    const _result = await changeIcon2()
+    await setIconToFirestore(_result);
+    imageInput(_result);
+  }
+
+const uploadResult = async (uri:string, imageName:string): Promise<string> => {
   const storageRef = firebase.storage().ref('user/icon/' + imageName);
   const response = await fetch(uri);
   const blob = await response.blob();
-  await new Promise(function(resolve) {
-    storageRef.put(blob)
-    console.log('1')
-    resolve();
-  })
-  await new Promise(function(resolve) {
-    storageRef.getDownloadURL().then(function (url:string) {
-      imageUrl = url
-      setImage(url)
-      console.log('2')
-      resolve()
-    })
-  })  
-    console.log('3')
-    firebase.firestore().collection('userList').doc(userId)
-    .set({
-          iconURL: imageUrl
-          },{ merge: true }) 
-    console.log('4')
+  await storageRef.put(blob)
+  const url = await storageRef.getDownloadURL()
+  return url
 }
+
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', justifyContent: 'center',}}>
         <View>
           <View style={{alignItems: 'center', marginTop: 50}}>
             <TouchableOpacity
-              onPress={changeImage}
+              onPress={changeIcon}
             >
               <Image
                 source={{ uri: image }}
@@ -191,16 +211,15 @@ const uploadImage = async (uri:string, imageName:string) => {
             <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
-
         <View style={{marginLeft: 30}}>
-          <View 
+          <View
             style={{
-              justifyContent: 'center', 
+              justifyContent: 'center',
               flexDirection: 'row',
               marginTop: 70,
             }}
           >
-            <ProfileNumber 
+            <ProfileNumber
               number={postNumber}
               itemName='post'
             />
@@ -223,7 +242,7 @@ const uploadImage = async (uri:string, imageName:string) => {
                 ? styles.followButton
                 : styles.unFollowButton
                 }
-              onPress={follow}
+              // onPress={follow}
             >
               <Text 
                 style={
@@ -253,15 +272,15 @@ const uploadImage = async (uri:string, imageName:string) => {
           renderItem={
             ({ item }) => 
               <Item 
-                id={item.id}
+                id={item.shopId}
                 title={item.shopName} 
-                address={item.address}
+                address={item.shopAddress}
                 category={item.category} 
                 price={item.price} 
                 favorite={item.favoriteMenu}
               />
           }
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.shopId}
         />
       </SafeAreaView>
     </View>
