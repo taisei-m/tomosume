@@ -106,7 +106,10 @@ const Profile = (props: any) => {
 
   },[])
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid    
+    const userId = props.globalState.state.userData.uid
+    if (userId == 'undefined') {
+      logout()
+    }
     let followerArray:string[] = []
     db.collection('userList').doc(userId).collection('follower')
     .get()
@@ -118,7 +121,18 @@ const Profile = (props: any) => {
       setFollower(followerNumber)
   })
   },[])
-
+  const logout = () => { 
+    firebase.auth().signOut().then(function() {
+        console.log("Sign-out successful and call global.logout")
+        AsyncStorage.setItem('Authenticated', 'false', () => {
+        props.globalState.logout();
+    });
+    })
+    .catch(function(error) {
+        console.log(error); 
+    }); 
+    alert('logout')
+}
   AsyncStorage.getItem('Authenticated', (err, result) => {
       // console.log("Authenticated = " + result)
     })
