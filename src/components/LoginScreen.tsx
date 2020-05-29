@@ -21,10 +21,10 @@ const LoginScreen = (props: any) => {
     // console.log("LoginScreen/////////////////////////////////////")
     // console.log(globalState.state);
 
-    const emailAsRenderedInput = (text) => {
+    const emailAsRenderedInput = (text: string) => {
         setEmailAsRendered(text)
     }
-    const passwordAsRenderedInput = (pass) => {
+    const passwordAsRenderedInput = (pass: string) => {
         setPasswordAsRendered(pass)
     }
     const emailErrorIsRedInput = (result: boolean) => {
