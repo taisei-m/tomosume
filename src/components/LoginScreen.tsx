@@ -330,7 +330,7 @@ const LoginScreen = (props: any) => {
             </TouchableOpacity>
             {/* ボタンの上のエラーメッセージ */}
             <View>
-                <Text style={styles.inputErrorMessage}>
+                <Text style={styles.onButtonMessage}>
                     {signinErrorText}
                 </Text>
             </View>
@@ -341,7 +341,7 @@ const LoginScreen = (props: any) => {
                 <ButtonElem
                 title="testLogin"
                 type="solid"
-                buttonStyle={{borderRadius: 20}}
+                buttonStyle={styles.button}
                 onPress={pushLogin}
                     // color="#841584"
                     disabled={signinButtonDisabled}
@@ -418,24 +418,24 @@ const styles = StyleSheet.create({
         color: "#48D1CC",
     },
     forgot: {
-        color: '#818181',
-        // marginBottom: "13%",
+    	color: '#818181',
+      // marginBottom: "13%",
     },
     createAccountText: {
-        color: '#818181',
+    color: '#818181',	
     },
     resendEmailText: {
         color: '#818181',
     },
+	onButtonMessage: {
+		marginTop: '2%',
+		marginBottom: '4%',
+		color: 'red',
+	 },
     button: {
-        width:"80%",
-        backgroundColor:"#5E9CFE",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent: "center",
-        marginBottom: '10%',
-        padding: 0
+        borderRadius: 25,
+        borderColor: 'black',
+        height: 50,
     },
     icon: {
         marginRight: 10
