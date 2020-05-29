@@ -17,6 +17,7 @@ const LoginScreen = (props: any) => {
     const [emailErrorIsRed, setEmailErrorIsRed] = useState<boolean>();
     const [passwordErrorIsRed, setPasswordErrorIsRed] =useState<boolean>();
     const [signinButtonDisabled, setSingnBunttonDisabled] = useState<boolean>(true);
+    const [signinButtonIsloading, setSigninButtonIsloading] = useState<boolean>(false);
     // console.log("LoginScreen/////////////////////////////////////")
     // console.log(globalState.state);
 
@@ -34,6 +35,10 @@ const LoginScreen = (props: any) => {
     }
     const signinButtonDisabledInput = (result: boolean) => {
         setSingnBunttonDisabled(result);
+    }
+    const SigninButtonIsloadingInput = (result: boolean) => {
+        setSigninButtonIsloading(result);
+        
     }
 
 
@@ -79,23 +84,25 @@ const LoginScreen = (props: any) => {
                 setValidateTextPassword(fillblankText)
         }
     }
-        
-    const signinErrorTextBlankInput = (errorCode: string) => {
-        let outputErrorText: string = '';
 
-        switch (errorCode) {
-            case 'Email is blank':
-                    outputErrorText = 'メールアドレスが未入力です';
-                break;
-            case 'Password is blank':
-                outputErrorText = 'パスワードが未入力です';
-                break;
-            case 'None is blank':
-                    outputErrorText = '';
-                break;
-        }
-        setSigninErrorText(outputErrorText);
-    }
+    //新規登録で使うからコメントアウト残す   
+    // const signinErrorTextBlankInput = (errorCode: string) => {
+    //     let outputErrorText: string = '';
+
+    //     switch (errorCode) {
+    //         case 'Email is blank':
+    //                 outputErrorText = 'メールアドレスが未入力です';
+    //             break;
+    //         case 'Password is blank':
+    //             outputErrorText = 'パスワードが未入力です';
+    //             break;
+    //         case 'None is blank':
+    //                 outputErrorText = '';
+    //             break;
+    //     }
+    //     setSigninErrorText(outputErrorText);
+    // }
+
     const signinErrorTextInputFirebase = (errorCode: string, errorMessage: string) => {
         let outputErrorText: string = '';
 
@@ -113,7 +120,10 @@ const LoginScreen = (props: any) => {
                 outputErrorText = 'ネットワークエラー：インターネットに接続されていません'
                 break;
             case 'authentication mail-did not check':
-                outputErrorText = '認証エラー：アカウント作成時に送信された認証メールを確認してくだい';
+                outputErrorText = 'アカウント作成時に送信された認証メールを確認してくだい';
+                break;
+            case 'refresh':
+                outputErrorText = '';
                 break;
             default:
                 outputErrorText = errorMessage;
@@ -138,6 +148,10 @@ const LoginScreen = (props: any) => {
     ////ログイン関数
     const doValidate = (textInputed: string, inputedPlace: string) => {
         console.log("pushed login--------------")
+
+        //signinボタンの上のエラーメッセージを非表示にする
+        signinErrorTextInputFirebase("refrech", "");
+
         let email: string = "";
         let password: string = "";
 
@@ -218,6 +232,7 @@ const LoginScreen = (props: any) => {
     const pushLogin = () => {
         console.log("testLogin---------------------------------------------")
         
+        //↓新規登録で使う
         // //////未入力欄があるかどうかのチェック
         // ///signinボタンの上に表示されるメッセージ
         // let blankErrorCode: string = '';
@@ -232,7 +247,7 @@ const LoginScreen = (props: any) => {
         //     blankErrorCode = 'None is blank';
         // }
         // signinErrorTextBlankInput(blankErrorCode);
-
+        SigninButtonIsloadingInput(true);
 
             firebase.auth().signInWithEmailAndPassword(emailAsRendered, passwordAsRendered).catch(function (error) {
                 console.log(error.code)
@@ -256,15 +271,14 @@ const LoginScreen = (props: any) => {
                     }
                     else if (result.user.emailVerified == false) {
                         //////メールを登録したけどメール認証していない場合
+                        signinErrorTextInputFirebase('authentication mail-did not check', '');
                         console.log("メール未認証")
-                        let checkingAuthEmailErrorCode: string = 'authentication mail-did not check';
-                        let checkingAuthEmailErrorMessage: string = '';
-                        //fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
-                        signinErrorTextInputFirebase(checkingAuthEmailErrorCode, checkingAuthEmailErrorMessage);
+                        //認証メールを送る画面に飛ばす処理、ボタンの出現とか書くならここ
                     }
                 } else {
-                    console.log("予期せぬエラーが発生しました");
+                    console.log("認可されてないよ");
                 }
+                SigninButtonIsloadingInput(false);
             })
         }
     return (
@@ -321,17 +335,6 @@ const LoginScreen = (props: any) => {
                 </Text>
             </View>
 
-            {/* <TouchableOpacity
-                style={styles.button}
-                onPress={login}
-                >
-                <Text
-                    style={styles.buttonText}
-                    disabled={false}
-                >
-                    Sign In
-                </Text>
-            </TouchableOpacity> */}
             <View
                 style={{width: '80%'}}
             >
@@ -343,7 +346,7 @@ const LoginScreen = (props: any) => {
                     // color="#841584"
                     disabled={signinButtonDisabled}
                     accessibilityLabel="Learn more about this purple button"
-                    loading={false}
+                    loading={signinButtonIsloading}
                     />
             </View>
                 {/* アカウント作成画面へ　ボタン */}
