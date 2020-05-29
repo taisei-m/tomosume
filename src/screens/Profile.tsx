@@ -80,7 +80,7 @@ const Profile = (props: any) => {
       })
       userData.iconURL != 'test-url' ? setImage(userData.iconURL) : setImage('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
     })();
-  }, [image])
+  }, [])
 
   useEffect(() => {
     const userId = props.globalState.state.userData.uid
@@ -162,8 +162,7 @@ const Profile = (props: any) => {
   const changeIcon2 = async():Promise<string> => {
       let result = await imagePick() as pickerResult
       let data = ''
-      console.log(result.uri, '1')
-      data = await uploadResult(result.uri, 'test-image')
+      data = await uploadResult(result.uri, 'test-image7')
       return data
   }
 
@@ -176,23 +175,20 @@ const Profile = (props: any) => {
     }, {merge: true})
   }
 
+  const imageInput = (gotresult: string) =>{
+    setImage(gotresult);
+  }
   const changeIcon = async() => {
-    console.log('0')
     const _result = await changeIcon2()
-    console.log('2')
-    console.log(_result, '_result')
-    await setIconToFirestore(_result)
-    console.log('3b')
-    let newIcon = _result
-    setImage(newIcon)
-    console.log(image, '4')
+    await setIconToFirestore(_result);
+    imageInput(_result);
   }
 
 const uploadResult = async (uri:string, imageName:string): Promise<string> => {
   const storageRef = firebase.storage().ref('user/icon/' + imageName);
   const response = await fetch(uri);
   const blob = await response.blob();
-  storageRef.put(blob)
+  await storageRef.put(blob)
   const url = await storageRef.getDownloadURL()
   return url
 }
@@ -215,16 +211,15 @@ const uploadResult = async (uri:string, imageName:string): Promise<string> => {
             <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
-
         <View style={{marginLeft: 30}}>
-          <View 
+          <View
             style={{
-              justifyContent: 'center', 
+              justifyContent: 'center',
               flexDirection: 'row',
               marginTop: 70,
             }}
           >
-            <ProfileNumber 
+            <ProfileNumber
               number={postNumber}
               itemName='post'
             />

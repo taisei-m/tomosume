@@ -53,6 +53,7 @@ const Search = () => {
   },[])
   const handlePress = async (id: string) => {
     const _reviews = await getAllReviews(id)
+    console.log(_reviews)
     setReviews(_reviews)
   }
   const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
@@ -69,7 +70,6 @@ const Search = () => {
     })
     return reviews
   }
-
     return (
       <View style={styles.container}>
         <MapView style={styles.mapStyle}
