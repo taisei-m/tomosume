@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage, Button} from 'react-native';
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
-import firebase from '../../firebase'
+import firebase from '../../firebaseConfig'
 //@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 
