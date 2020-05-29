@@ -22,47 +22,66 @@ const Splash = (props) => {
     
         //端末のAsyncStorageを見てそのアプリにこれまでログインしたことあるかどうかとログイン状態を見る。
         //ログイン状態やったらユーザー情報firebaseから持ってきてglobalStateに入れる。
-        const checkSignout = async() => {
-            console.log("checkSignout>>>")
+        // const checkSignout = async() => {
+        //     console.log("checkSignout>>>")
 
-            AsyncStorage.getItem('Authenticated', (err, result) => {
-                let asyncAuth;
+        //     AsyncStorage.getItem('Authenticated', (err, result) => {
+        //         let asyncAuth;
                  
-                if (err) {
-                    //////アプリ初回インストール後の起動時
-                    // console.log('Authenticated err = ' + err)
-                    asyncAuth = "false";
-                } else if (result) {
-                    //////アプリ初回インストール時の起動以降の起動時
-                    console.log('Authenticated result = ' + result)
+        //         if (err) {
+        //             //////アプリ初回インストール後の起動時
+        //             // console.log('Authenticated err = ' + err)
+        //             asyncAuth = "false";
+        //         } else if (result) {
+        //             //////アプリ初回インストール時の起動以降の起動時
+        //             console.log('Authenticated result = ' + result)
         
-                    if (result == "true") {
-                        //////認証済みの場合：storageにtrueがある場合
-                        asyncAuth = "false";
-                        firebase.auth().onAuthStateChanged(function (user) {
-                            if (user) {
-                                // User is signed in.
-                                globalState.setUserData(user);
-                            } else {
-                                // No user is signed in.
-                                console.log("No user is signed in.");
-                            }
-                        });
-                    } else if (result == "false") {
-                        //////未認証の場合：storageにfalseがある場合
-                        asyncAuth = "true"
-                    } else {
-                        console.log("asyncAuthの取得でエラー");
-                    }
-                }
-                globalState.setSignout(asyncAuth);
-                return;
-            })
-        };
+        //             if (result == "true") {
+        //                 //////認証済みの場合：storageにtrueがある場合
+        //                 asyncAuth = "false";
+        //                 firebase.auth().onAuthStateChanged(function (user) {
+        //                     if (user) {
+        //                         // User is signed in.
+        //                         globalState.setUserData(user);
+        //                     } else {
+        //                         // No user is signed in.
+        //                         console.log("No user is signed in.");
+        //                     }
+        //                 });
+        //             } else if (result == "false") {
+        //                 //////未認証の場合：storageにfalseがある場合
+        //                 asyncAuth = "true"
+        //             } else {
+        //                 console.log("asyncAuthの取得でエラー");
+        //             }
+        //         }
+        //         globalState.setSignout(asyncAuth);
+        //         return;
+        //     })
+        // };
+    
+    const checkIsAuthed = async () => {
+        firebase.auth().onAuthStateChanged(function (user) {
+            console.log(user);
+            let isnotAuthed; 
+            if (user) {
+                // User is signed in.
+                globalState.setUserData(user);
+                isnotAuthed = "false";
+            } else {
+                // No user is signed in.
+                console.log("No user is signed in.");
+                isnotAuthed = "true";
+            }
+            globalState.setSignout(isnotAuthed);
+            return;
+        });
+    }
+    
     
     useEffect(() => {
         (async () => {
-            await checkSignout();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
+            await checkIsAuthed();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
             setTimeout(SplashFalse, 1000);
         })();
     }, [])
