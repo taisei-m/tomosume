@@ -98,103 +98,100 @@ const FriendProfile = (props: any) => {
 //   })
 //   },[])
 
-return (
-    <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: 'center',}}>
-        <View>
-          <View style={{alignItems: 'center', marginTop: 50}}>
-            <TouchableOpacity
-            >
-              <Image
-                source={{ uri: image }}
-                style = {styles.userIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={{alignItems: 'center', marginTop: 10}}>
-            <Text style={styles.userName}>{userName}</Text>
-          </View>
-        </View>
-        <View style={{marginLeft: 30}}>
-          <View
-            style={{
-              justifyContent: 'center',
-              flexDirection: 'row',
-              marginTop: 70,
-            }}
-          >
-            <ProfileNumber
-              number={postNumber}
-              itemName='post'
-            />
-            <ProfileNumber
-              number={follower}
-              itemName="フォロー"
-              centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-            />
-            <ProfileNumber
-              number={followee}
-              itemName="フォロワー"
-            />
-          </View>
-          <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
-            <TouchableOpacity
-              style={
-                pressStatus
-                ? styles.followButton
-                : styles.unFollowButton
+    return (
+        <View style={styles.container}>
+            <View style={{flexDirection: 'row', justifyContent: 'center',}}>
+                <View>
+                    <View style={{alignItems: 'center', marginTop: 50}}>
+                        <Image
+                            source={{ uri: image }}
+                            style = {styles.userIcon}
+                        />
+                    </View>
+                    <View style={{alignItems: 'center', marginTop: 10}}>
+                        <Text style={styles.userName}>{userName}</Text>
+                    </View>
+                </View>
+                <View style={{marginLeft: 30}}>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            marginTop: 70,
+                        }}
+                    >
+                        <ProfileNumber
+                        number={postNumber}
+                        itemName='post'
+                        />
+                        <ProfileNumber
+                        number={follower}
+                        itemName="フォロー"
+                        centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+                        />
+                        <ProfileNumber
+                        number={followee}
+                        itemName="フォロワー"
+                        />
+                    </View>
+                    <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+                        <TouchableOpacity
+                            style={
+                                pressStatus
+                                ? styles.followButton
+                                : styles.unFollowButton
+                                }
+                            // onPress={follow}
+                        >
+                            <Text
+                                style={
+                                pressStatus
+                                ? styles.followButtonText
+                                : styles.unfollowButtonText
+                                }>
+                                {followStatus}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{marginLeft: 10}}
+                        >
+                            <Icon
+                                name="bars"
+                                size={30}
+                                color="#000"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+            <SafeAreaView style={styles.list}>
+                <FlatList
+                data={shopData}
+                renderItem={
+                    ({ item }) => 
+                        <Item 
+                            id={item.shopId}
+                            title={item.shopName} 
+                            address={item.shopAddress}
+                            category={item.category} 
+                            price={item.price} 
+                            favorite={item.favoriteMenu}
+                        />
                 }
-              // onPress={follow}
-            >
-              <Text 
-                style={
-                  pressStatus
-                  ? styles.followButtonText
-                  : styles.unfollowButtonText
-                  }>
-                {followStatus}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{marginLeft: 10}}
-            >
-              <Icon
-                name="bars"
-                size={30}
-                color="#000"
-              />
-            </TouchableOpacity>
-          </View>
+                keyExtractor={item => item.shopId}
+                />
+            </SafeAreaView>
         </View>
-      </View>
-      <SafeAreaView style={styles.list}>
-        <FlatList
-          data={shopData}
-          renderItem={
-            ({ item }) => 
-              <Item 
-                id={item.shopId}
-                title={item.shopName} 
-                address={item.shopAddress}
-                category={item.category} 
-                price={item.price} 
-                favorite={item.favoriteMenu}
-              />
-          }
-          keyExtractor={item => item.shopId}
-        />
-      </SafeAreaView>
-    </View>
-  );
+    );
 }
 const FriendProfileWrapper = ({ navigation }) => {
-  return (
-      <Subscribe to={[GlobalStateContainer]}>
-          {
-              globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
-          }
-      </Subscribe>
-  );
+    return (
+        <Subscribe to={[GlobalStateContainer]}>
+            {
+                globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
+            }
+        </Subscribe>
+    );
 }
 
 export default FriendProfileWrapper;
