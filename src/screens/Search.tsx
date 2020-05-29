@@ -67,6 +67,7 @@ const Search = () => {
 					data.userName = profile.get('userName')
 					data.iconURL = profile.get('iconURL')
 					data.userId = profile.id
+					//// ここは削除する
 					delete data.user
 					return data
 				}))

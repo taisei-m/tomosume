@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
 import { Avatar, Card, } from 'react-native-elements'
 
 interface ItemProps {
-    id: number
+    id: string
     userName?: string,
     iconURL?: string
     title?: string
@@ -11,17 +11,21 @@ interface ItemProps {
     category: string
     favorite: string
     price: string
+    userId?: string
+    pressMethod: Function
 }
+
 
 const Item = (props: ItemProps) => {
     return (
         <View style={styles.listItem}>
             <Card containerStyle={{borderRadius: 25}}>
-                <TouchableOpacity  onPress={() => console.log(props.id)}>
+                <TouchableOpacity  onPress={() => props.pressMethod()}>
                     <View style={styles.userInfomation}>
                         <Avatar rounded source={{ uri: props.iconURL }}/>
                         <Text style={styles.userName}>{props.userName}</Text>
                     </View>
+                </TouchableOpacity>
                     <View style={{flexDirection: 'row'}}>
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>Shop Name</Text>
@@ -41,11 +45,9 @@ const Item = (props: ItemProps) => {
                                     <Text style={styles.itemName}>Category</Text>
                                     <Text style={styles.categoryName}>{props.category}</Text>
                                 </View>
-
                             </View>
                         </View>
                     </View>
-                </TouchableOpacity>
             </Card>
         </View>
     );

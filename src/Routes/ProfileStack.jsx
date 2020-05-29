@@ -2,7 +2,6 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Profile from '../screens/Profile';
 import followTabList from '../screens/followTabList';
-import { StyleSheet, Button, View, SafeAreaView, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Setting from '../screens/Setting'
 import { Subscribe } from 'unstated';
@@ -15,15 +14,14 @@ const ProfileStack = (props) => {
     let navigation = props.navigation;
     React.useEffect(( ) => {
         const unsubscribe = navigation.addListener('tabPress', e => {
-        //   e.preventDefault();
-          navigation.navigate('ProfileTop')
+            navigation.navigate('ProfileTop')
         });
         return unsubscribe;
-      }, [navigation]);
+    }, [navigation]);
 
     return (
     <ProfileNavStack.Navigator>
-        <ProfileNavStack.Screen 
+        <ProfileNavStack.Screen
                 name="ProfileTop"
                 component={Profile}
                 options={{
@@ -33,7 +31,6 @@ const ProfileStack = (props) => {
                             name={'md-menu'}
                             size={30}
                             style={{ marginLeft: 10 }}
-                            // color={color}
                             onPress={() => {
                                 console.log("sss");
                                 props.navigation.navigate('idealDrawer')
@@ -65,5 +62,5 @@ const ProfileStackWrapper = ({ navigation }) => {
         </Subscribe>
     );
 }
-  
+
 export default ProfileStackWrapper;
