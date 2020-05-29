@@ -432,10 +432,11 @@ const styles = StyleSheet.create({
 		marginBottom: '4%',
 		color: 'red',
 	 },
-    button: {
-        borderRadius: 25,
-        borderColor: 'black',
-        height: 50,
+	button: {
+		backgroundColor:"#5E9CFE",
+      borderRadius: 25,
+      borderColor: 'black',
+      height: 50,
     },
     icon: {
         marginRight: 10
