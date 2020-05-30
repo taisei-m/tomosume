@@ -134,7 +134,7 @@ const LoginScreen = (props: any) => {
 
 
     ////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
-    const inputedMail = (textInputed: string) => {
+    const inputedEmail = (textInputed: string) => {
         emailAsRenderedInput(textInputed);
         let inputedPlace: string = 'email';
         doValidate(textInputed, inputedPlace);
@@ -293,7 +293,7 @@ const LoginScreen = (props: any) => {
                     placeholder="email"
                     placeholderTextColor="#818181"
                     value={emailAsRendered}
-                    onChangeText={inputedMail}
+                    onChangeText={inputedEmail}
                 />
             </View>
             <View >
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
 		color: 'red',
 	 },
 	button: {
-		backgroundColor:"#5E9CFE",
+	  backgroundColor:"#5E9CFE",
       borderRadius: 25,
       borderColor: 'black',
       height: 50,

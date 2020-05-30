@@ -1,33 +1,67 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
-import { Text, } from 'react-native-elements'
+import { StyleSheet, View, TouchableOpacity, TextInput,} from 'react-native';
+import { Text,  Input, Icon} from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 
 export default CreateAccount = (props) => {
-    const [username, setUsername] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPass] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
-    const [navigation, setNavigation] = useState(props.navigation);
+    const [_navigation, setNavigation] = useState(props.navigation);
+    const [_username, setUsername] = useState<string>();
+    const [_email, setEmail] = useState<string>();
+    const [_password, setPassword] = useState<string>();
+    const [_isUnvisiblePassword, setIsUnvisiblePassword] = useState<boolean>(true);
+    const [_PaswordIconTypeVisible, setPasswordIconTypeVisible] = useState<string>('ios-eye-off')
+    //エラーメッセ―ジ
+    const [_usernameErrorMessage, setUsernameErrorMessage] = useState<string>();
+    const [_emailErrorMessage, setEmailErrorMessage] = useState<string>();
+    const [_passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
+    
     // console.log("CreateAccount////////////////////////////////////////")
-    AsyncStorage.getItem('Authenticated', (err, result) => {
-    //   console.log("Authenticated = " + result)
-    })
+    
+    //input関数
+    const usernameInput = (passedUsername: string) => {
+        setUsername(passedUsername);
+    }
+    const emailInput = (passedEmail: string) => {
+        setEmail(passedEmail);
+    }
+    const passwordInput = (passedPassword: string) => {
+        setPassword(passedPassword);
+    }
+   
+    //パスワードの表示/非表示に合わせてアイコンの切り替え
+    useEffect(
+        () => {
+            let visibleIconName: string = 'ios-eye';
+            let unVisibleIconName: string = 'ios-eye-off';
+            let unVisible: boolean = _isUnvisiblePassword;
+            let iconName: string;
+            if (unVisible) {
+                iconName = unVisibleIconName;
+            } else {
+                iconName = visibleIconName;
+            }
+            setPasswordIconTypeVisible(iconName);
+        }
+    ,[_isUnvisiblePassword])
+    
+    //アイコンが押されたら、表示/非表示を切り替える
+    const _isUnvisiblePasswordInput = () => {
+        setIsUnvisiblePassword(!_isUnvisiblePassword);
+    }
 
-    const usernameInput = (text) => {
-        setUsername(text)
+    //フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
+    const inputUsername = (inputedUsername: string) => {
+        usernameInput(inputedUsername);
     }
-    const emailInput = (text) => {
-        setEmail(text)
+    const inputEmail = (inputedEmail: string) => {
+        emailInput(inputedEmail);
     }
-    const passwordInput = (pass) => {
-        setPass(pass)
+    const inutPassword = (inputedPassword: string) => {
+        passwordInput(inputedPassword);
     }
-    const confirmPasswordInput = (pass) => {
-        setConfirmPassword(pass)
-    }
+    
 
     const signUp = () => {
         if (email == null || email == "" ){
@@ -80,42 +114,42 @@ export default CreateAccount = (props) => {
             <Text style={styles.newAccountTitle}>Create New Account</Text>
         </View>
         <View style={styles.inputView} >
-            <TextInput  
-                style={styles.inputText}
+            <Input  
+                inputStyle={styles.inputText}
                 placeholder="usernme（ex. 奥瀬雄哉）"
                 placeholderTextColor="#818181"
-                value={username}
-                onChangeText={usernameInput}
+                value={_username}
+                errorMessage={_usernameErrorMessage}
+                onChangeText={inputUsername}                
             />
         </View>
         <View style={styles.inputView} >
-            <TextInput  
-                style={styles.inputText}
+            <Input  
+                inputStyle={styles.inputText}
                 placeholder="email"
                 placeholderTextColor="#818181"
-                value={email}
-                onChangeText={emailInput}
+                value={_email}
+                errorMessage={_emailErrorMessage}
+                onChangeText={inputEmail}
             />
         </View>
         <View style={styles.inputView} >
-            <TextInput  
-                style={styles.inputText}
+            <Input
+                inputStyle={styles.inputText}
                 placeholder="password" 
                 placeholderTextColor="#818181"
-                value={password}
-                secureTextEntry={true}
-                onChangeText={passwordInput}
-                
-            />
-        </View>
-        <View style={styles.inputView} >
-            <TextInput  
-                style={styles.inputText}
-                placeholder="confirm-password" 
-                placeholderTextColor="#818181"
-                value={confirmPassword}
-                secureTextEntry={true}
-                onChangeText={confirmPasswordInput}
+                value={_password}
+                secureTextEntry={_isUnvisiblePassword}
+                errorMessage= {_passwordErrorMessage}
+                onChangeText={inutPassword}
+                rightIcon={
+                    <Icon
+                    name= {_PaswordIconTypeVisible}
+                    type='ionicon'
+                    color='#517fa4' 
+                    onPress={() => {_isUnvisiblePasswordInput()}}
+                    />                    
+                }
             />
         </View>
         <TouchableOpacity
@@ -159,27 +193,21 @@ const styles = StyleSheet.create({
         marginBottom:100
     },
     inputView:{
-        width:"80%",
-        borderRadius:25,
-        borderColor: 'black',
+        width:"85%",
         height:50,
         marginBottom:20,
         justifyContent:"center",
         padding:20,
-        color: 'black'
     },
     inputText:{
         height:50,
         color:"black",
-        borderColor: '#818181',
-        borderBottomWidth: 1,
-        padding: 5
+        paddingLeft: 5,
+        paddingRight: 0,
+        fontSize: 14,
     },
-    forgot: {
-        margin: 20,
-        color: '#818181',
-        marginBottom: 30
-    },
+    
+    
     signUpButton: {
         width:"70%",
         backgroundColor:"#5E9CFE",
