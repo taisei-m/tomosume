@@ -5,7 +5,6 @@ import Item from '../components/Item';
 import { Subscribe } from 'unstated';
 //@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
-import friendProfile from '../screens/friendProfile'
 
 type ReviewDocResponse = {
 	category: string,
@@ -85,7 +84,6 @@ const ProfileWrapper = ({ navigation }) => {
 }
 
 export default ProfileWrapper
-
 
 const styles = StyleSheet.create({
     container: {

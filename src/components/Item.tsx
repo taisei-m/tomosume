@@ -18,8 +18,8 @@ interface ItemProps {
 
 const Item = (props: ItemProps) => {
     return (
-        <View style={styles.listItem}>
-            <Card containerStyle={{borderRadius: 25}}>
+        <View>
+            <Card containerStyle={{borderRadius: 25, width: '90%'}}>
                 <TouchableOpacity  onPress={() => props.pressMethod()}>
                     <View style={styles.userInfomation}>
                         <Avatar rounded source={{ uri: props.iconURL }}/>
@@ -28,21 +28,21 @@ const Item = (props: ItemProps) => {
                 </TouchableOpacity>
                     <View style={{flexDirection: 'row'}}>
                         <View>
-                            <Text style={{ color: 'grey', marginLeft: 5}}>Shop Name</Text>
+                            <Text style={{ color: 'grey', marginLeft: 5}}>店名</Text>
                             <Text style={styles.shopName}>{props.title}</Text>
-                            <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>Shop Address</Text>
+                            <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>住所</Text>
                             <Text style={styles.shopAddress}>{props.address}</Text>
                             <View style={{flexDirection: 'row', marginTop: 10,}}>
                                 <View style={styles.favorite}>
-                                    <Text style={styles.itemName}>Favorite Menu</Text>
+                                    <Text style={styles.itemName}>おすすめのメニュー</Text>
                                     <Text style={styles.menuName}>{props.favorite}</Text>
                                 </View>
                                 <View style={styles.price}>
-                                    <Text style={styles.itemName}>Price</Text>
+                                    <Text style={styles.itemName}>値段</Text>
                                     <Text style={styles.menuName}>{props.price}</Text>
                                 </View>
                                 <View style={styles.category}>
-                                    <Text style={styles.itemName}>Category</Text>
+                                    <Text style={styles.itemName}>カテゴリー</Text>
                                     <Text style={styles.categoryName}>{props.category}</Text>
                                 </View>
                             </View>
@@ -63,10 +63,6 @@ const styles = StyleSheet.create({
     },
     card: {
         borderRadius: 10
-    },
-    listItem: {
-        marginTop: 10,
-        marginBottom: 10,
     },
     userInfomation: {
         flexDirection: 'row',
