@@ -14,52 +14,13 @@ const Splash = (props) => {
 //    console.log("Splash////////////////////////////////////////")
 //    console.log(globalState.state)
         
-        //globalStateのisSplashをfalseにする
-        const SplashFalse = () => {
-            console.log("SplashFalse>>>")
-            globalState.setSplashFalse();
-        }
+    //globalStateのisSplashをfalseにする関数
+    const SplashFalse = () => {
+        console.log("SplashFalse>>>")
+        globalState.setSplashFalse();
+    }
     
-        //端末のAsyncStorageを見てそのアプリにこれまでログインしたことあるかどうかとログイン状態を見る。
-        //ログイン状態やったらユーザー情報firebaseから持ってきてglobalStateに入れる。
-        // const checkSignout = async() => {
-        //     console.log("checkSignout>>>")
-
-        //     AsyncStorage.getItem('Authenticated', (err, result) => {
-        //         let asyncAuth;
-                 
-        //         if (err) {
-        //             //////アプリ初回インストール後の起動時
-        //             // console.log('Authenticated err = ' + err)
-        //             asyncAuth = "false";
-        //         } else if (result) {
-        //             //////アプリ初回インストール時の起動以降の起動時
-        //             console.log('Authenticated result = ' + result)
-        
-        //             if (result == "true") {
-        //                 //////認証済みの場合：storageにtrueがある場合
-        //                 asyncAuth = "false";
-        //                 firebase.auth().onAuthStateChanged(function (user) {
-        //                     if (user) {
-        //                         // User is signed in.
-        //                         globalState.setUserData(user);
-        //                     } else {
-        //                         // No user is signed in.
-        //                         console.log("No user is signed in.");
-        //                     }
-        //                 });
-        //             } else if (result == "false") {
-        //                 //////未認証の場合：storageにfalseがある場合
-        //                 asyncAuth = "true"
-        //             } else {
-        //                 console.log("asyncAuthの取得でエラー");
-        //             }
-        //         }
-        //         globalState.setSignout(asyncAuth);
-        //         return;
-        //     })
-        // };
-    
+    //認証状態の取得、状態に応じて画面遷移
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
             console.log(user);
@@ -74,7 +35,7 @@ const Splash = (props) => {
                 isnotAuthed = "true";
             }
             globalState.setSignout(isnotAuthed);
-            return;
+            // return;
         });
     }
     
