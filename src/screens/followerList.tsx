@@ -4,6 +4,8 @@ import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'
+import FollowButton from '../components/FollowButton'
+import Item from 'src/components/Item';
 
 
 type userProfileType = {
@@ -41,16 +43,6 @@ const FollowerList = (props) => {
             setFollowerList(followerUserList)
         })();
     }, [])
-    const follow = (id: string) => {
-        const userId = props.globalState.state.userData.uid
-        db.collection('userList').doc(userId).collection('follower').doc(id).set({})
-        db.collection('userList').doc(id).collection('followee').doc(userId).set({})
-        changeButtonColor()
-    }
-    //ボタンごとで色を変更できるようにする
-    const changeButtonColor = () => {
-        setHasFollowed(!_hasFollowed)
-    }
     return(
         <FlatList
             style={styles.container}
@@ -63,16 +55,9 @@ const FollowerList = (props) => {
                         containerStyle={{marginLeft: 20, marginTop: 9}}
                         source={{ uri: item.iconURL }}/>
                     <Text style={styles.text}>{item.userName}</Text>
-                    <TouchableOpacity
-                        style={
-                            _hasFollowed
-                            ?styles.followButton
-                            :styles.notFollowButton
-                        }
-                        onPress={() => {follow(item.uid)}}
-                        >
-                        <Text style={{color: 'white'}}>フォロー</Text>
-                    </TouchableOpacity>
+                    <FollowButton
+                        id={item.uid}
+                    />
                 </View>
             }
         />
@@ -109,30 +94,4 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginTop: 15
     },
-    followButton: {
-        width: 100,
-        backgroundColor:"#5E9CFE",
-        borderRadius:15,
-        height:30,
-        alignItems:"center",
-        justifyContent:"center",
-        borderColor: '#5E9CFE',
-        borderWidth: 1,
-        position: 'absolute',
-        top: 10,
-        right: 10
-    },
-    notFollowButton: {
-        width: 100,
-        backgroundColor:"grey",
-        borderRadius:15,
-        height:30,
-        alignItems:"center",
-        justifyContent:"center",
-        borderColor: '#5E9CFE',
-        borderWidth: 1,
-        position: 'absolute',
-        top: 10,
-        right: 10
-    }
 });
