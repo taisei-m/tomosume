@@ -1,36 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
-import { Avatar, Card, } from 'react-native-elements'
+import { View, StyleSheet, Text } from 'react-native';
+import { Card, } from 'react-native-elements'
 
 interface ItemProps {
-    id: string
-    userName?: string,
-    iconURL?: string
-    title?: string
-    address?: string
+    shopName: string
+    shopAddress: string
     category: string
     favorite: string
     price: string
-    userId?: string
-    pressMethod: Function
 }
 
 const Item = (props: ItemProps) => {
     return (
         <View>
-            <Card containerStyle={{borderRadius: 25, width: '90%'}}>
-                <TouchableOpacity  onPress={() => props.pressMethod(props.userId)}>
-                    <View style={styles.userInfomation}>
-                        <Avatar rounded source={{ uri: props.iconURL }}/>
-                        <Text style={styles.userName}>{props.userName}</Text>
-                    </View>
-                </TouchableOpacity>
+            <Card containerStyle={{borderRadius: 25}}>
                     <View style={{flexDirection: 'row'}}>
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>店名</Text>
-                            <Text style={styles.shopName}>{props.title}</Text>
+                            <Text style={styles.shopName}>{props.shopName}</Text>
                             <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>住所</Text>
-                            <Text style={styles.shopAddress}>{props.address}</Text>
+                            <Text style={styles.shopAddress}>{props.shopAddress}</Text>
                             <View style={{flexDirection: 'row', marginTop: 10,}}>
                                 <View style={styles.favorite}>
                                     <Text style={styles.itemName}>おすすめのメニュー</Text>
@@ -56,21 +45,11 @@ export default Item
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 10,
         backgroundColor: 'white',
         alignItems: 'center',
     },
     card: {
         borderRadius: 10
-    },
-    userInfomation: {
-        flexDirection: 'row',
-        marginBottom: 10
-    },
-    userName: {
-        fontSize: 18,
-        paddingTop: 5,
-        paddingLeft: 10
     },
     shopName: {
         fontSize: 18,
@@ -82,7 +61,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 5,
         marginTop: 10,
-        fontWeight: '700'
+        fontWeight: '700',
+        paddingHorizontal: 3
     },
     favorite: {
         borderRightWidth: 1,
@@ -93,7 +73,7 @@ const styles = StyleSheet.create({
     price: {
         borderRightWidth: 1,
         borderRightColor: 'grey',
-        paddingRight: 40,
+        paddingRight: 25,
         marginLeft: 10
     },
     category: {

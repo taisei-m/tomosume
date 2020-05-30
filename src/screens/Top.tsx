@@ -3,7 +3,6 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import {db} from '../../firebaseConfig'
 import Item from '../components/Item';
 import { Subscribe } from 'unstated';
-//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 
 type ReviewDocResponse = {
@@ -23,10 +22,8 @@ type ReviewDocResponse = {
 
 type ReviewsDocResponse = ReviewDocResponse[]
 
-
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
-
     useEffect(() => {
         (async () => {
             let reviewArray: ReviewsDocResponse = []
@@ -45,7 +42,8 @@ const Top = (props) => {
         })()
     }, [])
 
-    const toFriendProfile = () => {
+    const toFriendProfile = (id: string) => {
+        props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
     }
 

@@ -136,7 +136,7 @@ const Profile = (props: any) => {
   AsyncStorage.getItem('Authenticated', (err, result) => {
       // console.log("Authenticated = " + result)
     })
-    
+
   // const follow = () => {
   //   changePress(!pressStatus)
   //   if(followStatus == 'follow') {
