@@ -1,51 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import firebase from '../../firebaseConfig';
+import {db} from '../../firebaseConfig'
 import Item from '../components/Item';
 import { Subscribe } from 'unstated';
-//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 
+type ReviewDocResponse = {
+	category: string,
+	createdAt: firebase.firestore.Timestamp,
+	favoriteMenu: string,
+	price: string,
+	shopAddress: string,
+	shopId: string,
+	shopName: string
+	user: firebase.firestore.DocumentReference
+	userName?: string
+	iconURL?: string
+	key?: string
+	userId?: string
+}
+
+type ReviewsDocResponse = ReviewDocResponse[]
+
 const Top = (props) => {
-    const [shopData, setShopData] = useState<string[]>([])
-
-    console.log("Top component ----------------------")
-    console.log("isSignout = " + props.globalState.state.isSignout)
-    console.log("isSplash = " + props.globalState.state.isSplash)
-    console.log("userData = " + props.globalState.state.userData)
-
+    const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     useEffect(() => {
-        let dataArray: string[] = []
-        firebase
-        .firestore()
-        .collectionGroup('reviews')
-        .orderBy('createdAt', 'desc')
-        .get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                let tmp = doc.data()
-                tmp.id = doc.id
-                dataArray.push(tmp)
-            })
-            setShopData(dataArray)
-        })
+        (async () => {
+            let reviewArray: ReviewsDocResponse = []
+            const querySnapshot = await db.collectionGroup('reviews').orderBy('createdAt', 'desc').get()
+            const queryDocsSnapshot = querySnapshot.docs
+            reviewArray = await Promise.all(queryDocsSnapshot.map(async (item) => {
+                let review = item.data() as ReviewDocResponse
+                review.key = item.id
+                const profile = await (review.user).get()
+                review.userName = profile.get('userName')
+                review.iconURL = profile.get('iconURL')
+                review.userId = profile.id
+                return review
+            }))
+            setAllReviews(reviewArray)
+        })()
     }, [])
+
+    const toFriendProfile = (id: string) => {
+        props.globalState.setFriendId(id)
+        props.navigation.navigate('friendProfile')
+    }
+
     return(
         <View style={styles.container}>
             <FlatList
             style={styles.list}
-            data={shopData}
+            data={allReviews}
             renderItem={
-                ({ item }) => <Item 
+                ({ item }) => <Item
                                 id={item.shopId}
-                                title={item.shopName} 
-                                category={item.category} 
-                                address={item.address}
-                                price={item.price} 
+                                title={item.shopName}
+                                category={item.category}
+                                address={item.shopAddress}
+                                price={item.price}
                                 favorite={item.favoriteMenu}
+                                userName={item.userName}
+                                iconURL={item.iconURL}
+                                userId={item.userId}
+                                pressMethod={toFriendProfile}
                                 />
                 }
-            keyExtractor={item => item.id}
             />
         </View>
     )
@@ -62,7 +82,6 @@ const ProfileWrapper = ({ navigation }) => {
 }
 
 export default ProfileWrapper
-
 
 const styles = StyleSheet.create({
     container: {

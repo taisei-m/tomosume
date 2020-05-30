@@ -1,29 +1,28 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Profile from '../screens/Profile';
-import followTabList from '../screens/followTabList';
+import Top from '../screens/Top';
 import { Ionicons } from '@expo/vector-icons';
-import Setting from '../screens/Setting'
 import { Subscribe } from 'unstated';
+import friendProfile from '../screens/friendProfile'
+//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 
+const TopNavStack = createStackNavigator();
 
-const ProfileNavStack = createStackNavigator();
-
-const ProfileStack = (props) => {
+const TopStack = (props) => {
     let navigation = props.navigation;
     React.useEffect(( ) => {
         const unsubscribe = navigation.addListener('tabPress', e => {
-            navigation.navigate('ProfileTop')
+            navigation.navigate('Top')
         });
         return unsubscribe;
     }, [navigation]);
 
     return (
-    <ProfileNavStack.Navigator>
-        <ProfileNavStack.Screen
-                name="ProfileTop"
-                component={Profile}
+    <TopNavStack.Navigator>
+        <TopNavStack.Screen
+                name="Top"
+                component={Top}
                 options={{
                     headerShown: false,
                     headerLeft: () => (
@@ -39,28 +38,23 @@ const ProfileStack = (props) => {
                     )
                 }}
         />
-        <ProfileNavStack.Screen
-            name="followTabList"
-            component={followTabList}
-            options={{ headerShown: false }}
-        />
-        <ProfileNavStack.Screen
-            name="idealDrawer"
-            component={Setting}
+        <TopNavStack.Screen
+            name="friendProfile"
+            component={friendProfile}
             options={{ headerShown: true }}
         />
-    </ProfileNavStack.Navigator>
+    </TopNavStack.Navigator>
     )
 };
 
-const ProfileStackWrapper = ({ navigation }) => {
+const topStackWrapper = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalStateContainer]}>
             {
-                globalState => <ProfileStack globalState={globalState} navigation = {navigation} />
+                globalState => <TopStack globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
 }
 
-export default ProfileStackWrapper;
+export default topStackWrapper

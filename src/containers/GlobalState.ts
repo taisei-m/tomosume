@@ -2,13 +2,11 @@ import { Container } from "unstated";
 
 export default class GlobalContainer extends Container {
    state = {
-      // isLoading - We set this to true when we're trying to check if we already have a token saved in AsyncStorage
-      // isSignout - We set this to true when user is signing out, otherwise set it to false
-      // userToken - The token for the user. If it's non-null, we assume the user is logged in, otherwise not.
       isSplash: true,
       isSignout: "",
       userData: undefined,
-      itemId: ""
+      itemId: "",
+      friendId: '',
    }
    setUserData = (user) => {
       this.setState({
@@ -46,6 +44,11 @@ export default class GlobalContainer extends Container {
    setItemId = (id) => {
       this.setState({
          itemId: id
+      })
+   }
+   setFriendId = (id: string) => {
+      this.setState({
+         friendId: id
       })
    }
 }
