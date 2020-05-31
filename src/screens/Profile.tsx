@@ -45,6 +45,8 @@ type userDataDocResponse = {
 type userReviewsType = userReviewDocResponse[]
 
 const Profile = (props: any) => {
+  console.log('profile---------------------------------------------')
+  console.log(props.globalState.state.isSignout)
   const [userName, setUserName] = useState<string>()
   const [followee, setFollowee] = useState<number>(0)
   const [follower, setFollower] = useState<number>(0)

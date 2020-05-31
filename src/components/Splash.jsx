@@ -11,8 +11,9 @@ import { useEffect } from 'react';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
-//    console.log("Splash////////////////////////////////////////")
-//    console.log(globalState.state)
+    console.log("Splash////////////////////////////////////////")
+    console.log(props.globalState.state)
+   console.log(globalState.state)
         
     //globalStateのisSplashをfalseにする関数
     const SplashFalse = () => {
@@ -23,7 +24,6 @@ const Splash = (props) => {
     //認証状態の取得、状態に応じて画面遷移
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
-            console.log(user);
             let isnotAuthed; 
             if (user) {
                 // User is signed in.

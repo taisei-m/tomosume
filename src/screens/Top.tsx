@@ -23,6 +23,8 @@ type ReviewDocResponse = {
 type ReviewsDocResponse = ReviewDocResponse[]
 
 const Top = (props) => {
+    console.log('top============================')
+    console.log(props.globalState.state.isSignout)
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     useEffect(() => {
         (async () => {

@@ -6,6 +6,7 @@ import GlobalStateContainer from '../containers/GlobalState';
 import firebase from '../../firebaseConfig';
 
 const ResendEmail = (props) => {
+    console.log('resendEmail----------------------------------')
     const [navigation, setNavigation] = useState(props.navigation);
     const [globalState, setGlobalState] = useState(props.globalState);
     const [titleText, setTitleText] = useState("確認メールを送信しました");
@@ -29,9 +30,8 @@ const ResendEmail = (props) => {
         仮登録期間が一定数あってそれが過ぎると仮登録情報消されるとかあるんかな？
         */
 
-
+        console.log('do send email')
         let user = firebase.auth().currentUser;
-        console.log("user = " + user)
             
         user.sendEmailVerification().then(function() {
         // Email sent.
@@ -60,7 +60,7 @@ const ResendEmail = (props) => {
                 <Text style={styles.buttonText}> メールを再送信する </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('LoginScreen')}
+                onPress={() => { navigation.navigate('LoginScreen') }}
             >
                 <Text style={styles.buttonToLogin}> ログイン画面へ </Text>
             </TouchableOpacity>
