@@ -7,6 +7,8 @@ import {followButtonProps} from '../types/types'
 const FollowButton = (props: followButtonProps) => {
     // フォロー中であるかいないかを定義する変数
     const [_hasFollowd, setHasFollowed] = useState<boolean>(true)
+    // 友達のフォロー・フォロワーリストに自分が含まれている時、自分をフォローできないようにする
+    const [isYourId, setIsYourId] = useState<boolean>(true)
 
     useEffect(() => {
         if (props.isFollowExchange == true){
@@ -14,6 +16,9 @@ const FollowButton = (props: followButtonProps) => {
         } else {
             setHasFollowed(false)
         }
+    }, [])
+    useEffect(() => {
+        props.id == props.userId ? setIsYourId(true) : setIsYourId(false)
     }, [])
 
     const pressFollowButton = (id: string) => {
@@ -34,8 +39,8 @@ const FollowButton = (props: followButtonProps) => {
                 ? styles.followButton
                 : styles.notFollowButton
                 }
-            onPress={()=> {pressFollowButton(props.id)}
-        }
+            onPress={()=> {pressFollowButton(props.id)}}
+            disabled={isYourId}
         >
             {
                 _hasFollowd
