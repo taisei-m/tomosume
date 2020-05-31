@@ -12,12 +12,12 @@ const FollowerList = (props) => {
     const [_followerList, setFollowerList] = useState<followerListType>();
     useEffect(() => {
         (async () => {
-            const userId = props.globalState.state.userData.uid
+            const friendId = props.globalState.state.friendId
             let followerIdList: string[] = []
             let followerUserList: followerListType = []
             let followerProfileData: followerProfileType
             // フォローしているユーザのuidをfollowerIdListへ追加
-            const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
+            const querySnapshot = await db.collection('userList').doc(friendId).collection('follower').get()
             querySnapshot.forEach((data) => {
                 followerIdList.push(data.id)
             })
