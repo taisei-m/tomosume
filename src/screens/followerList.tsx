@@ -5,8 +5,6 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
-import Item from 'src/components/Item';
-
 
 type userProfileType = {
     userName: string

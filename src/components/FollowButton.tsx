@@ -4,17 +4,18 @@ import { Text,} from 'react-native-elements';
 
 type followButtonProps = {
     id: string
-    followed?: boolean
+    isfollowingMutually?: boolean
 }
 
 const FollowButton = (props: followButtonProps) => {
     const [_hasFollowd, setHasFollowed] = useState<boolean>(true)
 
     useEffect(() => {
-        if (props.followed != undefined){
-            setHasFollowed(props.followed)
-        } else {
+        console.log(props.isfollowingMutually)
+        if (props.isfollowingMutually == true){
             setHasFollowed(true)
+        } else {
+            setHasFollowed(false)
         }
     }, [])
 
