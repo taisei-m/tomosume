@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity,} from 'react-native';
 import { Text,} from 'react-native-elements';
-
-type followButtonProps = {
-    id: string
-    isfollowingMutually?: boolean
-}
+import {db} from '../../firebaseConfig'
+import {followButtonProps} from '../types/types'
 
 const FollowButton = (props: followButtonProps) => {
+    // フォロー中であるかいないかを定義する変数
     const [_hasFollowd, setHasFollowed] = useState<boolean>(true)
 
     useEffect(() => {
-        console.log(props.isfollowingMutually)
-        if (props.isfollowingMutually == true){
+        if (props.isFollowExchange == true){
             setHasFollowed(true)
         } else {
             setHasFollowed(false)
         }
     }, [])
 
-    const follow = (id: string) => {
-        console.log(id)
+    const pressFollowButton = (id: string) => {
+        // フォロー中であるかないかで場合分け
+        if(_hasFollowd) {
+            db.collection('userList').doc(props.userId).collection('follower').doc(id).delete()
+        } else {
+            db.collection('userList').doc(props.userId).collection('follower').doc(id).set({})
+        }
+        // ボタンの色を変更する
         setHasFollowed(!_hasFollowd)
     }
 
@@ -31,7 +34,7 @@ const FollowButton = (props: followButtonProps) => {
                 ? styles.followButton
                 : styles.notFollowButton
                 }
-            onPress={()=> {follow(props.id)}
+            onPress={()=> {pressFollowButton(props.id)}
         }
         >
             {

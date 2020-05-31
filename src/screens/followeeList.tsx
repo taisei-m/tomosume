@@ -1,70 +1,58 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import { View, StyleSheet,FlatList, Text, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, StyleSheet,FlatList, Text } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
-
-type userProfileType = {
-    userName: string
-    iconURL: string
-    uid: string
-    followingMutually?: boolean
-}
-
-type followerListType = userProfileType[]
+import {followeeProfileType} from '../types/types'
+import {followeeListType} from '../types/types'
 
 const FollowerList = (props) => {
-    const [_followeeList, setFolloweeList] = useState<followerListType>();
+    const [_followeeList, setFolloweeList] = useState<followeeListType>();
     useEffect(() => {
         (async () => {
             const userId = props.globalState.state.userData.uid
             let followeeIdList: string[] = []
-            let followeeUserList: followerListType = []
-            let userProfileData: userProfileType
+            let followeeUserList: followeeListType = []
+            let followeeProfileData: followeeProfileType
+            // 自分をフォローしているユーザのuidを取得してfolloweeIdListへ追加する
             const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get()
             querySnapshot.forEach((data) => {
                 followeeIdList.push(data.id)
             })
             //firstを削除しないとuidがundefinedというエラーが発生する
             followeeIdList = followeeIdList.filter(id => id != 'first')
+            // フォロワーのユーザデータのオブジェクトの配列を返す
             followeeUserList = await Promise.all(followeeIdList.map(async (item) => {
                 //awaitしないと先にreturnが実行される
                 await db.collection('userList').doc(item).get()
                 .then(function(doc) {
-                    userProfileData = doc.data() as userProfileType
+                    followeeProfileData = doc.data() as followeeProfileType
                 })
-                return userProfileData;
+                return followeeProfileData;
             }))
-            console.log(followeeUserList, 'result')
-            const newArray =  await checkFollowingMutually(followeeUserList)
-            //functional updates(高級関数)を使う方法の方がナイス
-            setFolloweeList(newArray)
-            // setFolloweeList( prevFollowerUserList => {
-            //     const newFolloweeUserList = followeeUserList;
-            //     checkFollowingMutually(newFolloweeUserList)
-            //     return newFolloweeUserList
-            // }
-            // )
+            // 相互フォローをしているかの真偽値を含むオブジェクトの配列
+            const checkedFollowExchangeArray =  await checkFollowExchange(followeeUserList)
+            setFolloweeList(checkedFollowExchangeArray)
         })();
     }, [])
     //相互フォローをしているかのチェックをする
-    const checkFollowingMutually = async(followeeList: followerListType): Promise<followerListType> => {
+    const checkFollowExchange = async(followeeList: followeeListType): Promise<followeeListType> => {
         const userId = props.globalState.state.userData.uid
-        const followeeUserArray: string[] = []
-        // console.log(followeeList)
+        const followerUserList: string[] = []
         const followerList = await db.collection('userList').doc(userId).collection('follower').get()
         followerList.forEach((data) => {
-            followeeUserArray.push(data.id)
+            followerUserList.push(data.id)
         })
+        //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
         followeeList.forEach((item) => {
             let followeeUserId = item.uid
-            let isfollowingMutually = followeeUserArray.includes(followeeUserId)
-            isfollowingMutually ? item.followingMutually = true : item.followingMutually = false
+            let isFollowExchange = followerUserList.includes(followeeUserId)
+        // 相互フォローの場合true, 相互フォローしていない場合falseを代入
+            isFollowExchange ? item.followExchange = true : item.followExchange = false
         })
         return followeeList
-        // console.log(followeeList)
     }
     return(
         <FlatList
@@ -80,7 +68,8 @@ const FollowerList = (props) => {
                     <Text style={styles.text}>{item.userName}</Text>
                     <FollowButton
                         id={item.uid}
-                        isfollowingMutually={item.followingMutually}
+                        isFollowExchange={item.followExchange}
+                        userId = {props.globalState.state.userData.uid}
                     />
                 </View>
             }

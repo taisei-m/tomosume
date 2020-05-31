@@ -10,8 +10,7 @@ import ProfileReviews from '../components/ProfileReviews';
 import {pickerResult} from '../types/types'
 import {userReviewDocResponse} from '../types/types'
 import {userDataDocResponse} from '../types/types'
-
-type userReviewsType = userReviewDocResponse[]
+import {userReviewsType} from '../types/types'
 
 const Profile = (props: any) => {
   const [userName, setUserName] = useState<string>()
