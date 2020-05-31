@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Profile from '../screens/Profile';
-import followTabList from '../screens/followTabList';
-import { Ionicons } from '@expo/vector-icons';
+import followerList from '../screens/followerList';
+import followeeList from '../screens/followeeList'
 import Setting from '../screens/Setting'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -26,26 +26,20 @@ const ProfileStack = (props) => {
                 component={Profile}
                 options={{
                     headerShown: false,
-                    headerLeft: () => (
-                        <Ionicons
-                            name={'md-menu'}
-                            size={30}
-                            style={{ marginLeft: 10 }}
-                            onPress={() => {
-                                console.log("sss");
-                                props.navigation.navigate('idealDrawer')
-                            }}
-                        />
-                    )
                 }}
         />
         <ProfileNavStack.Screen
-            name="followTabList"
-            component={followTabList}
-            options={{ headerShown: false }}
+            name="followerList"
+            component={followerList}
+            options={{ headerShown: true }}
         />
         <ProfileNavStack.Screen
-            name="idealDrawer"
+            name="followeeList"
+            component={followeeList}
+            options={{ headerShown: true }}
+        />
+        <ProfileNavStack.Screen
+            name="toSettingPage"
             component={Setting}
             options={{ headerShown: true }}
         />
