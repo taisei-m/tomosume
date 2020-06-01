@@ -1,17 +1,13 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput,} from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text,  Input, Icon, Button as ButtonElem} from 'react-native-elements'
 import firebase from '../../firebaseConfig'
-import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
-//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
-import { reduce } from 'lodash';
 
 
-CreateAccount = (props: any) => {
-    console.log('ca---------------------------------------------')
+const CreateAccount = (props: any) => {
     const [_navigation, setNavigation] = useState(props.navigation);
     const [_username, setUsername] = useState<string>('');
     const [_email, setEmail] = useState<string>('');
@@ -20,7 +16,6 @@ CreateAccount = (props: any) => {
     const [_passwordIconTypeVisible, setPasswordIconTypeVisible] = useState<string>('ios-eye-off');
     const [_signupButtonDisabled, setSignupButtonDisabled] = useState<boolean>(true);
     const [_signupButtonIsloading, setSignupButtonIsloading] = useState<boolean>(false);
-    
     //エラーメッセ―ジ
     const [_usernameErrorMessage, setUsernameErrorMessage] = useState<string>();
     const [_emailErrorMessage, setEmailErrorMessage] = useState<string>();
@@ -29,10 +24,10 @@ CreateAccount = (props: any) => {
     const [_emailErrorMessageIsRed, setEmailErrorMessageIsRed] = useState<boolean>();
     const [_passwordErrorMessageIsRed, setPasswordErrorMessageIsRed] = useState<boolean>();
     const [_signupErrorMessage, setSignupErrorMessage] = useState<string>();
-    
+
     const [_globalState, setGlobalState] = useState(props.globalState)
     // console.log("CreateAccount////////////////////////////////////////")
-    
+
     ////input関数
     const usernameInput = (passedUsername: string) => {
         setUsername(passedUsername);
@@ -76,7 +71,7 @@ CreateAccount = (props: any) => {
                 break;
                 case 'fillBlank':
                     errorMessage = fillblankText
-        }  
+        }
         setUsernameErrorMessage(errorMessage);
         setUsernameErrorMessageIsRed(errorMessageColorIsRed)
     }
@@ -102,7 +97,7 @@ CreateAccount = (props: any) => {
                 break;
             case 'fillBlank':
                 errorMessage = fillblankText
-        }  
+        }
         setEmailErrorMessage(errorMessage);
         setEmailErrorMessageIsRed(errorMessageColorIsRed)
     }
@@ -115,8 +110,8 @@ CreateAccount = (props: any) => {
         let errorMessageColorIsRed: boolean = true;
         switch (passedErrorMessageType) {
             case 'valid':
-                 errorMessage = allowText;
-                 errorMessageColorIsRed= false;
+                errorMessage = allowText;
+                errorMessageColorIsRed= false;
                 break;
             case 'invalid':
                 errorMessage = denyText;
@@ -148,8 +143,6 @@ CreateAccount = (props: any) => {
             setPasswordIconTypeVisible(iconName);
         }
     ,[_isUnvisiblePassword])
-    
-
     //フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
     const inputUsername = (inputedUsername: string) => {
         usernameInput(inputedUsername);
@@ -163,7 +156,7 @@ CreateAccount = (props: any) => {
         passwordInput(inputedPassword);
         autoValidation(inputedPassword, 'password');
     }
-    
+
     const autoValidation = (inputedText: string, inputedForm: string) => {
         let username: string = '';
         let email: string = '';
@@ -182,7 +175,6 @@ CreateAccount = (props: any) => {
             email = _email;
             password = inputedText;
         }
-
         //validation
         ////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
@@ -223,7 +215,7 @@ CreateAccount = (props: any) => {
             }
         }
         usernameErrorMessageInput(usernameValidationErrorMessageType);
-        
+
         let emailValidationErrorMessageType: string = '';
         if (isEmailValid){
             emailValidationErrorMessageType = 'valid';
@@ -235,7 +227,7 @@ CreateAccount = (props: any) => {
             }
         }
         emailErrorMessageInput(emailValidationErrorMessageType);
-        
+
         let passwordValidationErrorMessageType: string = '';
         if (isPasswordValid) {
             passwordValidationErrorMessageType = 'valid';
@@ -270,34 +262,29 @@ CreateAccount = (props: any) => {
                 alert(result.message);
             } else if (result.user) {
                 console.log('d')
-                let user = firebase.auth().currentUser;
-                _globalState.setUserData(user);
+                let user = result.user;
+                _globalState.setUserEmail(user.email);
 
-                // let db = firebase.firestore().collection('userList').doc(user.uid)
-                // db.set({
-                //     userName: _username,
-                //     iconURL: 'test-url',
-                //     uid: user.uid
-                // })
-                // db.collection('follower').doc('first').set({})
-                // db.collection('followee').doc('first').set({})
-                // firebase.auth().languageCode = "ja";
-            
+                let db = firebase.firestore().collection('userList').doc(user.uid)
+                db.set({
+                    userName: _username,
+                    iconURL: 'test-url',
+                    uid: user.uid
+                })
+                db.collection('follower').doc('first').set({})
+                db.collection('followee').doc('first').set({})
+                firebase.auth().languageCode = "ja";
                 let sentEmail: boolean = false;
                 //なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
                 await user.sendEmailVerification().then(function () {
                     //※errorがある場合でもthenの中身も実行される?
-                    console.log('then')
                     sentEmail = true;
-                }).catch(function (error) {
+                })
+                .catch(function (error) {
                     sentEmail = false;
-                    console.log('catch')
-                    console.log(error);
                 });
-                if (sentEmail == true) { 
-                    console.log('navigate to resendEmail')
-                    console.log(user.email)
-                    console.log(sentEmail)
+                //　ここは最終的には直したい
+                if (sentEmail == true) {
                     _navigation.navigate('ResendEmail');
                 }
             } else {
@@ -305,8 +292,6 @@ CreateAccount = (props: any) => {
             }
         })
     }
-    
-
 
     return (
         <View style={styles.container}>
@@ -314,7 +299,7 @@ CreateAccount = (props: any) => {
             <Text style={styles.newAccountTitle}>Create New Account</Text>
         </View>
         <View style={styles.inputView} >
-            <Input  
+            <Input
                 inputStyle={styles.inputText}
                 placeholder="usernme（ex. 奥瀬雄哉）"
                 placeholderTextColor="#818181"

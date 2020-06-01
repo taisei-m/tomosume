@@ -1,41 +1,31 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text, } from 'react-native-elements'
 import firebase from '../../firebaseConfig'
-import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-import { resolveModuleName } from 'typescript';
 import { useEffect } from 'react';
-import { result } from 'lodash';
 
 const Splash = (props) => {
-   const [globalState, setGlobalState] = useState(props.globalState);
-    console.log("Splash////////////////////////////////////////")
-    console.log(props.globalState.state)
-   console.log(globalState.state)
-        
+    const [globalState, setGlobalState] = useState(props.globalState);
     //globalStateのisSplashをfalseにする関数
     const SplashFalse = () => {
-        console.log("SplashFalse>>>")
         globalState.setSplashFalse();
     }
-    
     //認証状態の取得、状態に応じて画面遷移
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
-            let isnotAuthed; 
+            let isnotAuthed;
             let emailVerified;
             if (user) {
                 // User is signed in.
-
                 // アカウント作成するとfirebaseに認可される。
                 // resendEmailにnavigatorを使って遷移しようとするとnavigaotorの仕様上index.jsxから評価しなおす。
                 // index.jsx → Splash.jsx　が読まれここの部分が実行される。なのでここでメールを確認したかどうかを見てisSignoutに"true"を入れる。
                 emailVerified = user.emailVerified;
                 if (emailVerified == true){
-                    globalState.setUserData(user);
+                    globalState.setUid(user.uid);
                     isnotAuthed = "false";
                 } else if (emailVerified == false){
                     isnotAuthed = "true";
@@ -49,8 +39,7 @@ const Splash = (props) => {
             // return;
         });
     }
-    
-    
+
     useEffect(() => {
         (async () => {
             await checkIsAuthed();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
@@ -70,13 +59,13 @@ const Splash = (props) => {
 
 
 const SplashWrapper = () => {
-  return (
-      <Subscribe to={[GlobalStateContainer]}>
-          {
-              globalState => <Splash globalState={globalState} />
-          }
-      </Subscribe>
-  );
+    return (
+        <Subscribe to={[GlobalStateContainer]}>
+            {
+                globalState => <Splash globalState={globalState} />
+            }
+        </Subscribe>
+    );
 }
 
 

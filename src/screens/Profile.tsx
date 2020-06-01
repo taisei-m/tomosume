@@ -20,9 +20,8 @@ const Profile = (props: any) => {
 	const [allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [userIcon, setUserIcon] = useState<string>();
 
-
 	useEffect(() => {
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		const userFirestoreDocument = firebase.firestore().collection('userList').doc(userId)
 		let userReviews: userReviewsType = []
 		db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
@@ -38,7 +37,7 @@ const Profile = (props: any) => {
 	}, [])
 	useEffect(() => {
 		(async () => {
-			const userId = props.globalState.state.userData.uid
+			const userId = props.globalState.state.uid
 			const userProfileDocument = await db.collection('userList').doc(userId)
 			.get().then(function(doc) {
 			let userProfileData = doc.data() as userDataDocResponse
@@ -49,7 +48,7 @@ const Profile = (props: any) => {
 	}, [])
 
 	useEffect(() => {
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		firebase.firestore().collection('userList').doc(userId)
 		.get().then(function(doc) {
 			let userProfileData = doc.data() as userDataDocResponse
@@ -58,7 +57,7 @@ const Profile = (props: any) => {
 	},[])
 
 	useEffect(() => {
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		let followeeArray:string[] = []
 		db.collection('userList').doc(userId).collection('followee')
 		.get()
@@ -72,7 +71,7 @@ const Profile = (props: any) => {
 	//なんで俺any型使ってるの？？
 	},[])
 	useEffect(() => {
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		let followerArray:string[] = []
 		db.collection('userList').doc(userId).collection('follower')
 		.get()
@@ -127,7 +126,7 @@ const Profile = (props: any) => {
 	}
 	const setIconToFirestore = (url:string):Promise<void> => {
 		console.log('3a')
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		return db.collection('userList').doc(userId)
 		.set({
 			iconURL: url

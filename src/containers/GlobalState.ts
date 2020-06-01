@@ -3,52 +3,59 @@ import { Container } from "unstated";
 export default class GlobalContainer extends Container {
    state = {
       isSplash: true,
-      isSignout: "",
-      userData: undefined,
-      itemId: "",
+      isSighout: '',
+      uid: '',
+      itemId: '',
       friendId: '',
+      userEmail: ''
    }
-   setUserData = (user) => {
-      this.setState({
-         userData: user
-      })
-   }
-   setSplashFalse = () => {
+   //Splash.tsx
+   setSplashFalse = ():void => {
       this.setState({
          isSplash: false
       })
    }
-   setSignout = (result) => {
+   //Splash.tsx
+   setSignout = (result:string):void => {
       this.setState({
          isSignout: result
       })
    }
-   login = (user) => {
+   //LoginScreen.tsx
+   login = (uid: string):void => {
       this.setState({
          isSignout: "false"
       }),
       this.setState({
-         userData: user
+         uid: uid
       })
    }
-   signup = () => {
-      this.state({
-         userToken: "どこでメソッド呼ぼうかな"
-      })
-   }
-   logout = () => {
+   //Setting.tsx
+   logout = ():void => {
       this.setState({
          isSignout: "true"
       })
    }
-   setItemId = (id) => {
+   setItemId = (id: string): void => {
       this.setState({
          itemId: id
       })
    }
-   setFriendId = (id: string) => {
+   setFriendId = (id: string):void => {
       this.setState({
          friendId: id
+      })
+   }
+   //CreateAccount.tsx
+   setUserEmail = (userEmail: string): void => {
+      this.setState({
+         userEmail: userEmail
+      })
+   }
+   //Splash.tsx
+   setUid = (uid: string): void=> {
+      this.setState({
+         uid: uid
       })
    }
 }
