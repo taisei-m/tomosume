@@ -15,6 +15,12 @@ export default class GlobalContainer extends Container {
          isSplash: false
       })
    }
+   //Splash.tsx
+   setSignout = (result:boolean):void => {
+      this.setState({
+         isSignout: result
+      })
+   }
    //LoginScreen.tsx
    login = (uid: string):void => {
       this.setState({

@@ -7,14 +7,11 @@ import firebase from '../../firebaseConfig';
 import { convertCompilerOptionsFromJson } from 'typescript';
 
 const ResendEmail = (props) => {
-    console.log(props.globalState.state.userData.email)
-    console.log('resendEmail----------------------------------')
     const [_navigation, setNavigation] = useState(props.navigation);
     const [_email, setEmail] = useState<string>('');
     const [_titleText, setTitleText] = useState<string>('');
     const [_contentText, setContentText] = useState<string>("メールを確認して本登録をしてください。");
     const [_resendButtonIsloading, setResendButtonIsloading] = useState<boolean>(false);
-    
     const emailInput = (text: string) => {
         setEmail(text)
     }
@@ -24,7 +21,6 @@ const ResendEmail = (props) => {
             titleText = passedEmail + '\nへメールを送信しました';
         } else if (textType == '再送信') {
             titleText = _email + '\nへメールを再送信しました'
-            console.log('jjj')
         }
         setTitleText(titleText);
         resendButtonIsloadingInput(false);
@@ -32,8 +28,6 @@ const ResendEmail = (props) => {
     const resendButtonIsloadingInput = (result: boolean) => {
         setResendButtonIsloading(result);
     }
-    
-   
 
     useEffect(
         () => {
@@ -42,8 +36,7 @@ const ResendEmail = (props) => {
             let textType: string = '初期表示';
             titleTextInput(textType, email);
     }, [])
-     
-    
+
     const DoResendEmail = () => {
         resendButtonIsloadingInput(true);
         /*[改善の余地あり]
@@ -62,13 +55,12 @@ const ResendEmail = (props) => {
             やから両方に同じ処理書いた。今後わかったら改善してくれ。
         */
         let user = props.globalState.state.userData;
-        
         user.sendEmailVerification().then(function() {
             // Email sent.
             let textType: string = '再送信';
             let email: string = '';
             titleTextInput(textType, email);
-        }).catch(function(error) {
+        }).catch(function(error: never) {
         // An error happened.
             console.log(error);
             let textType: string = '再送信';
