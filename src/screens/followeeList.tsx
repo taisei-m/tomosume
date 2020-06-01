@@ -12,7 +12,7 @@ const FollowerList = (props) => {
     const [_followeeList, setFolloweeList] = useState<followeeListType>();
     useEffect(() => {
         (async () => {
-            const userId = props.globalState.state.userData.uid
+            const userId = props.globalState.state.uid
             let followeeIdList: string[] = []
             let followeeUserList: followeeListType = []
             let followeeProfileData: followeeProfileType
@@ -39,7 +39,7 @@ const FollowerList = (props) => {
     }, [])
     //相互フォローをしているかのチェックをする
     const checkFollowExchange = async(followeeList: followeeListType): Promise<followeeListType> => {
-        const userId = props.globalState.state.userData.uid
+        const userId = props.globalState.state.uid
         const followerUserList: string[] = []
         const followerList = await db.collection('userList').doc(userId).collection('follower').get()
         followerList.forEach((data) => {
@@ -69,7 +69,7 @@ const FollowerList = (props) => {
                     <FollowButton
                         id={item.uid}
                         isFollowExchange={item.followExchange}
-                        userId = {props.globalState.state.userData.uid}
+                        userId = {props.globalState.state.uid}
                     />
                 </View>
             }
