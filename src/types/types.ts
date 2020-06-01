@@ -30,6 +30,7 @@ export type followerProfileType = {
     userName: string
     iconURL: string
     uid: string
+    followExchange: boolean
 }
 
 export type followerListType = followerProfileType[]

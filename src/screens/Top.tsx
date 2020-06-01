@@ -45,7 +45,7 @@ const Top = (props) => {
     const toFriendProfile = (id: string) => {
         props.globalState.setFriendId(id)
         // props.navigation.navigate('friendProfile')
-        props.navigation.navigate('friendProfileStack')
+        props.navigation.navigate('friendProfile')
     }
 
     return(

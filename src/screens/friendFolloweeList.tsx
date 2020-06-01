@@ -12,7 +12,6 @@ const FollowerList = (props) => {
     const [_followeeList, setFolloweeList] = useState<followeeListType>();
     useEffect(() => {
         (async () => {
-            const userId = props.globalState.state.userData.uid
             const friendId = props.globalState.state.friendId
             let followeeIdList: string[] = []
             let followeeUserList: followeeListType = []
