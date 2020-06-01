@@ -10,7 +10,7 @@ import GlobalStateContainer from '../containers/GlobalState';
 import { reduce } from 'lodash';
 
 
-CreateAccount = (props:any) => {
+CreateAccount = (props: any) => {
     console.log('ca---------------------------------------------')
     const [_navigation, setNavigation] = useState(props.navigation);
     const [_username, setUsername] = useState<string>('');
@@ -30,6 +30,7 @@ CreateAccount = (props:any) => {
     const [_passwordErrorMessageIsRed, setPasswordErrorMessageIsRed] = useState<boolean>();
     const [_signupErrorMessage, setSignupErrorMessage] = useState<string>();
     
+    const [_globalState, setGlobalState] = useState(props.globalState)
     // console.log("CreateAccount////////////////////////////////////////")
     
     ////input関数
@@ -48,6 +49,9 @@ CreateAccount = (props:any) => {
     //アイコンが押されたら、パスワードの表示 / 非表示を切り替える
     const isUnvisiblePasswordInput = () => {
         setIsUnvisiblePassword(!_isUnvisiblePassword);
+    }
+    const signupButtonIsloadingInput = (passed: boolean) => {
+        setSignupButtonIsloading(passed);
     }
 
     const usernameErrorMessageInput = (passedErrorMessageType: string) => {
@@ -183,7 +187,7 @@ CreateAccount = (props:any) => {
         ////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
-        let isUsernameValid: boolean = emailPattern.test(username);
+        let isUsernameValid: boolean = true;
         let isEmailValid: boolean = emailPattern.test(email);
         let isPasswordValid: boolean = passwordPattern.test(password);
         let isUsernameBlank: boolean = true;
@@ -255,33 +259,47 @@ CreateAccount = (props:any) => {
     }
 
     const pushSignup = () => {
+        signupButtonIsloadingInput(true);
+
         firebase.auth().createUserWithEmailAndPassword(_email, _password).catch(function (error) {
             console.log("errorCode: " + error.code)
             console.log("errorMessage: " + error.message)
             return error;
         }).then(async (result) => {
             if (result.message) {
-                // alert(result.message);
-                console.log('adsfadf')
+                alert(result.message);
             } else if (result.user) {
                 console.log('d')
                 let user = firebase.auth().currentUser;
-                let db = firebase.firestore().collection('userList').doc(user.uid)
-                db.set({
-                    userName: _username,
-                    iconURL: 'test-url',
-                    uid: user.uid
-                })
-                db.collection('follower').doc('first').set({})
-                db.collection('followee').doc('first').set({})
-                firebase.auth().languageCode = "ja";
-                console.log('navigate to resendEmail')
-                user.sendEmailVerification().then(function () {
-                    _navigation.navigate('ResendEmail');
+                _globalState.setUserData(user);
+
+                // let db = firebase.firestore().collection('userList').doc(user.uid)
+                // db.set({
+                //     userName: _username,
+                //     iconURL: 'test-url',
+                //     uid: user.uid
+                // })
+                // db.collection('follower').doc('first').set({})
+                // db.collection('followee').doc('first').set({})
+                // firebase.auth().languageCode = "ja";
+            
+                let sentEmail: boolean = false;
+                //なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
+                await user.sendEmailVerification().then(function () {
+                    //※errorがある場合でもthenの中身も実行される?
+                    console.log('then')
+                    sentEmail = true;
                 }).catch(function (error) {
-                    cosole.log("error = " + error);
-                    alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")
+                    sentEmail = false;
+                    console.log('catch')
+                    console.log(error);
                 });
+                if (sentEmail == true) { 
+                    console.log('navigate to resendEmail')
+                    console.log(user.email)
+                    console.log(sentEmail)
+                    _navigation.navigate('ResendEmail');
+                }
             } else {
                 console.log("予期せぬエラーが発生しました");
             }
