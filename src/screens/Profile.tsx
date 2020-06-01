@@ -20,9 +20,9 @@ const Profile = (props: any) => {
 	const [allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [userIcon, setUserIcon] = useState<string>();
 
-
 	useEffect(() => {
 		const userId = props.globalState.state.userData.uid
+		console.log(props.globalState.state.userData.uid, 'uid')
 		const userFirestoreDocument = firebase.firestore().collection('userList').doc(userId)
 		let userReviews: userReviewsType = []
 		db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()

@@ -5,6 +5,7 @@ export default class GlobalContainer extends Container {
       isSplash: true,
       isSignout: "",
       userData: undefined,
+      userEmail: '',
       itemId: "",
       friendId: '',
    }
@@ -49,6 +50,11 @@ export default class GlobalContainer extends Container {
    setFriendId = (id: string) => {
       this.setState({
          friendId: id
+      })
+   }
+   setUserEmail = (userEmail: string) => {
+      this.setState({
+         userEmail: userEmail
       })
    }
 }

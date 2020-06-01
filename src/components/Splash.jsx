@@ -1,27 +1,23 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text, } from 'react-native-elements'
 import firebase from '../../firebaseConfig'
-import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-import { resolveModuleName } from 'typescript';
 import { useEffect } from 'react';
-import { result } from 'lodash';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
     console.log("Splash////////////////////////////////////////")
     console.log(props.globalState.state)
    console.log(globalState.state)
-        
+
     //globalStateのisSplashをfalseにする関数
     const SplashFalse = () => {
         console.log("SplashFalse>>>")
         globalState.setSplashFalse();
     }
-    
     //認証状態の取得、状態に応じて画面遷移
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
@@ -49,8 +45,7 @@ const Splash = (props) => {
             // return;
         });
     }
-    
-    
+
     useEffect(() => {
         (async () => {
             await checkIsAuthed();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
