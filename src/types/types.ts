@@ -51,3 +51,20 @@ export type followButtonProps = {
     isFollowExchange: boolean
     userId: string
 }
+
+// Post.tsx
+export type PredictionJsonType = {
+    predictions: predictionsArrayType
+}
+export type predictionsArrayType = predictionsType[]
+
+export type predictionsType = {
+    description: string,
+    id: string,
+    place_id: string,
+    structured_formatting: structuredFormattingType
+}
+
+export type structuredFormattingType = {
+    main_text: string
+}
