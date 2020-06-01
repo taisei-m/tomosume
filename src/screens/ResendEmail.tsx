@@ -54,19 +54,23 @@ const ResendEmail = (props) => {
             存在しないメアドの場合でもユーザーにはそのメアドに「送信しました」って映るようにした。
             やから両方に同じ処理書いた。今後わかったら改善してくれ。
         */
-        let user = props.globalState.state.userData;
-        user.sendEmailVerification().then(function() {
-            // Email sent.
-            let textType: string = '再送信';
-            let email: string = '';
-            titleTextInput(textType, email);
-        }).catch(function(error: never) {
-        // An error happened.
-            console.log(error);
-            let textType: string = '再送信';
-            let email: string = '';
-            titleTextInput(textType, email);
-        })
+        let user = firebase.auth().currentUser;
+        if (user) {
+            user.sendEmailVerification().then(function () {
+                // Email sent.
+                let textType: string = '再送信';
+                let email: string = '';
+                titleTextInput(textType, email);
+            }).catch(function (error: never) {
+                // An error happened.
+                console.log(error);
+                let textType: string = '再送信';
+                let email: string = '';
+                titleTextInput(textType, email);
+            })
+        } else {
+            console.error("ResendEmail.tsx  userが取得できませんでした");
+        }
     }
 
 
