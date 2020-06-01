@@ -29,6 +29,10 @@ const Splash = (props) => {
             let emailVerified;
             if (user) {
                 // User is signed in.
+
+                // アカウント作成するとfirebaseに認可される。
+                // resendEmailにnavigatorを使って遷移しようとするとnavigaotorの仕様上index.jsxから評価しなおす。
+                // index.jsx → Splash.jsx　が読まれここの部分が実行される。なのでここでメールを確認したかどうかを見てisSignoutに"true"を入れる。
                 emailVerified = user.emailVerified;
                 if (emailVerified == true){
                     globalState.setUserData(user);

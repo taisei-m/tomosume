@@ -7,6 +7,7 @@ import { getAppLoadingLifecycleEmitter } from 'expo/build/launch/AppLoading';
 import { Subscribe } from 'unstated';
 //@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
+import { reduce } from 'lodash';
 
 
 CreateAccount = (props:any) => {
@@ -19,12 +20,15 @@ CreateAccount = (props:any) => {
     const [_passwordIconTypeVisible, setPasswordIconTypeVisible] = useState<string>('ios-eye-off');
     const [_signupButtonDisabled, setSignupButtonDisabled] = useState<boolean>(true);
     const [_signupButtonIsloading, setSignupButtonIsloading] = useState<boolean>(false);
+    
     //エラーメッセ―ジ
     const [_usernameErrorMessage, setUsernameErrorMessage] = useState<string>();
     const [_emailErrorMessage, setEmailErrorMessage] = useState<string>();
     const [_passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
+    const [_usernameErrorMessageIsRed, setUsernameErrorMessageIsRed] = useState<boolean>();
+    const [_emailErrorMessageIsRed, setEmailErrorMessageIsRed] = useState<boolean>();
+    const [_passwordErrorMessageIsRed, setPasswordErrorMessageIsRed] = useState<boolean>();
     const [_signupErrorMessage, setSignupErrorMessage] = useState<string>();
-
     
     // console.log("CreateAccount////////////////////////////////////////")
     
@@ -45,26 +49,32 @@ CreateAccount = (props:any) => {
     const isUnvisiblePasswordInput = () => {
         setIsUnvisiblePassword(!_isUnvisiblePassword);
     }
+
     const usernameErrorMessageInput = (passedErrorMessageType: string) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '*有効なメールアドレスを入力してください';
+        let denyText: string = '*12文字以内で入力してください';
         let blankText: string = '';
-        let fillblankText: string = '*メールアドレスは必須です';
+        let fillblankText: string = '*ユーザーネームは必須です';
         let errorMessage: string = '';
+        let errorMessageColorIsRed: boolean = true;
         switch(passedErrorMessageType){
             case 'valid':
                 errorMessage = allowText;
+                errorMessageColorIsRed= false;
                 break;
             case 'invalid':
                 errorMessage = denyText;
+                errorMessageColorIsRed= true;
                 break;
             case 'blank':
                 errorMessage = blankText;
+                errorMessageColorIsRed= true;
                 break;
                 case 'fillBlank':
                     errorMessage = fillblankText
         }  
         setUsernameErrorMessage(errorMessage);
+        setUsernameErrorMessageIsRed(errorMessageColorIsRed)
     }
     const emailErrorMessageInput = (passedErrorMessageType: string) => {
         let allowText: string = 'ok ✓';
@@ -72,20 +82,25 @@ CreateAccount = (props:any) => {
         let blankText: string = '';
         let fillblankText: string = '*メールアドレスは必須です';
         let errorMessage: string = '';
+        let errorMessageColorIsRed: boolean = true;
         switch(passedErrorMessageType){
             case 'valid':
                 errorMessage = allowText;
+                errorMessageColorIsRed= false;
                 break;
             case 'invalid':
                 errorMessage = denyText;
+                errorMessageColorIsRed= true;
                 break;
             case 'blank':
                 errorMessage = blankText;
+                errorMessageColorIsRed= true;
                 break;
             case 'fillBlank':
                 errorMessage = fillblankText
         }  
         setEmailErrorMessage(errorMessage);
+        setEmailErrorMessageIsRed(errorMessageColorIsRed)
     }
     const passwordErrorMessageInput = (passedErrorMessageType: string) => {
         let allowText: string = 'ok ✓';
@@ -93,20 +108,25 @@ CreateAccount = (props:any) => {
         let blankText: string = '';
         let fillblankText: string = '*パスワードは必須です'
         let errorMessage: string = '';
+        let errorMessageColorIsRed: boolean = true;
         switch (passedErrorMessageType) {
             case 'valid':
-                errorMessage = allowText;
+                 errorMessage = allowText;
+                 errorMessageColorIsRed= false;
                 break;
             case 'invalid':
                 errorMessage = denyText;
+                errorMessageColorIsRed= true;
                 break;
             case 'blank':
                 errorMessage = blankText;
+                errorMessageColorIsRed= true;
                 break;
             case 'fillBlank':
                 errorMessage = fillblankText;
         }
         setPasswordErrorMessage(errorMessage);
+        setPasswordErrorMessageIsRed(errorMessageColorIsRed);
     }
 
     //パスワードの表示/非表示に合わせてアイコンの切り替え
@@ -170,6 +190,7 @@ CreateAccount = (props:any) => {
         let isEmailBlank: boolean = true;
         let isPasswordBlank: boolean = true;
 
+        //各入力欄が未入力かどうか確かめる
         if (username == '') {
             isUsernameBlank = true;
         } else {
@@ -186,6 +207,7 @@ CreateAccount = (props:any) => {
             isPasswordBlank = false;
         }
 
+        //各入力欄のエラーの内容と色を切り替え
         let usernameValidationErrorMessageType: string = '';
         if (isUsernameValid) {
             usernameValidationErrorMessageType = 'valid';
@@ -222,6 +244,7 @@ CreateAccount = (props:any) => {
         }
         passwordErrorMessageInput(passwordValidationErrorMessageType);
 
+        //signupボタンの表示/非表示の切り替え
         let signupButtonDisabled: boolean = true;
         if (isUsernameValid && isEmailValid && isPasswordValid) {
             signupButtonDisabled = false;
@@ -245,7 +268,7 @@ CreateAccount = (props:any) => {
                 let user = firebase.auth().currentUser;
                 let db = firebase.firestore().collection('userList').doc(user.uid)
                 db.set({
-                    userName: 'user-name',
+                    userName: _username,
                     iconURL: 'test-url',
                     uid: user.uid
                 })
@@ -279,6 +302,7 @@ CreateAccount = (props:any) => {
                 placeholderTextColor="#818181"
                 value={_username}
                 errorMessage={_usernameErrorMessage}
+                errorStyle={_usernameErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
                 onChangeText={inputUsername}                
             />
         </View>
@@ -289,6 +313,7 @@ CreateAccount = (props:any) => {
                 placeholderTextColor="#818181"
                 value={_email}
                 errorMessage={_emailErrorMessage}
+                errorStyle={_emailErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
                 onChangeText={inputEmail}
             />
         </View>
@@ -299,7 +324,8 @@ CreateAccount = (props:any) => {
                 placeholderTextColor="#818181"
                 value={_password}
                 secureTextEntry={_isUnvisiblePassword}
-                errorMessage= {_passwordErrorMessage}
+                errorMessage={_passwordErrorMessage}
+                errorStyle={_passwordErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
                 onChangeText={inutPassword}
                 rightIcon={
                     <Icon
@@ -392,6 +418,12 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 0,
         fontSize: 14,
+    },
+    redInputErrorMessage: {
+        color: 'red',
+    },
+    greenInputErrorMessage: {
+        color: '#48D1CC',
     },
     aboveButtonMessage: {
 		marginTop: '2%',
