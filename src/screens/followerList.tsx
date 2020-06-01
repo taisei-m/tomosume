@@ -12,7 +12,7 @@ const FollowerList = (props) => {
     const [_followerList, setFollowerList] = useState<followerListType>();
     useEffect(() => {
         (async () => {
-            const userId = props.globalState.state.userData.uid
+            const userId = props.globalState.state.uid
             let followerIdList: string[] = []
             let followerUserList: followerListType = []
             let followerProfileData: followerProfileType
@@ -52,7 +52,7 @@ const FollowerList = (props) => {
                         id={item.uid}
                         //自分がフォローしているので必ずtrueとして渡す
                         isFollowExchange={true}
-                        userId = {props.globalState.state.userData.uid}
+                        userId = {props.globalState.state.uid}
                     />
                 </View>
             }

@@ -13,16 +13,16 @@ import {userDataDocResponse} from '../types/types'
 import {userReviewsType} from '../types/types'
 
 const Profile = (props: any) => {
-  const [_userName, setUserName] = useState<string>()
-  const [_followee, setFollowee] = useState<number>(0)
-  const [_follower, setFollower] = useState<number>(0)
-  const [_postNumber, setPostNumber] = useState<number>(0)
-  const [_allReviews, setAllReviews] = useState<userReviewsType>([])
-  const [_userIcon, setUserIcon] = useState<string>();
+	const [_userName, setUserName] = useState<string>()
+	const [_followee, setFollowee] = useState<number>(0)
+	const [_follower, setFollower] = useState<number>(0)
+	const [_postNumber, setPostNumber] = useState<number>(0)
+	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
+	const [_userIcon, setUserIcon] = useState<string>();
 
   // ユーザが投稿したレビューの一覧と投稿数を取得
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.uid
     const userFirestoreDocument = firebase.firestore().collection('userList').doc(userId)
     let userReviews: userReviewsType = []
     db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
@@ -39,7 +39,7 @@ const Profile = (props: any) => {
   // ユーザーのアイコン画像を取得
   useEffect(() => {
     (async () => {
-      const userId = props.globalState.state.userData.uid
+      const userId = props.globalState.state.uid
       const userProfileDocument = await db.collection('userList').doc(userId)
       .get().then(function(doc) {
         let userProfileData = doc.data() as userDataDocResponse
@@ -50,7 +50,7 @@ const Profile = (props: any) => {
   }, [])
   // ユーザの名前を取得
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.uid
     firebase.firestore().collection('userList').doc(userId)
     .get().then(function(doc) {
       let userProfileData = doc.data() as userDataDocResponse
@@ -60,7 +60,7 @@ const Profile = (props: any) => {
   },[])
   // ユーザのフォロワーを取得
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.uid
     let followeeArray:string[] = []
     db.collection('userList').doc(userId).collection('followee')
     .get()
@@ -74,7 +74,7 @@ const Profile = (props: any) => {
   },[])
   // ユーザのフォローしている人を取得
   useEffect(() => {
-    const userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.uid
     let followerArray:string[] = []
     db.collection('userList').doc(userId).collection('follower')
     .get()
@@ -129,7 +129,7 @@ const Profile = (props: any) => {
   }
   const setIconToFirestore = (url:string):Promise<void> => {
     console.log('3a')
-    const userId = props.globalState.state.userData.uid
+    const userId = props.globalState.state.uid
     return db.collection('userList').doc(userId)
     .set({
       iconURL: url
