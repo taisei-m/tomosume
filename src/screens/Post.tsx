@@ -3,61 +3,57 @@ import { useState } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
-import Icon from 'react-native-vector-icons/FontAwesome';
 //@ts-ignore
+import DropdownMenu from 'react-native-dropdown-menu';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from '../../firebaseConfig'
 import InputText from '../components/InputText';
 import apiKey from '../api/api_key';
+import GlobalStateContainer from '../containers/GlobalState';
+import { Subscribe } from 'unstated';
+import {PredictionJsonType} from '../types/types'
+import {predictionsArrayType} from '../types/types'
+// import {predictionsType} from '../types/types'
+// import {structuredFormattingType} from '../types/types'
 
-interface InputTextProps {
-    onChangeText: any
-    onKeyPress: any
-    shopName: string
-    address: string
-    favoriteMenu: string
-    price: string
-    predictions: string[]
-    locationResultLatitude: number
-    locationResultLongitude: number
-    locationResult: string
-    selectedCategory: string
-    showResult: boolean
-}
+const Post: React.FC = () => {
+    const [shopName, setShopName] = useState<string>('');
+    const [favoriteMenu, changeFavorite] = useState<string>('');
+    // 最終的にはnumber型にする。　その際に該当するファイルの型を変更する
+    const [price, changePrice] = useState<string>('');
+    const [category, setCategory] = useState<string>('');
+    const [address, setShopAddress] = useState<string>('');
+    const [inputedShopName, setInputedShopName] =useState<string>('');
+    const [predictions, setPredictions] = useState<predictionsArrayType>();
+    const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
 
-const Post: React.FC<InputTextProps>= () => {
-    const [shopName, changeShop] = useState('');
-    const [favoriteMenu, changeFavorite] = useState('');
-    const [price, changePrice] = useState('');
-    const [selectedCategory, selectItem] = useState('');
-    const [address, setAddress] = useState('');
-    const [destination, setDestination] =useState('');
-    const [predictions, setPredictions] = useState([]);
-    const [showResult, setResult] = useState(false);
-
+    const selectCategory = (category: string) => {
+        setCategory(category)
+    }
     const change = (text: string) => {
-        setDestination(text);
+        setInputedShopName(text);
     }
     const close = () => {
-        setResult(false)
+        //　falseになると検索結果の一覧が表示されなくなる
+        setIsShownPredictions(false)
         change('')
     }
-    const changeShopName = (text: string, address: string) => {
-        setAddress(address)
-        changeShop(text)
+    const selectShopName = (shopName: string, address: string) => {
+        setShopAddress(address)
+        setShopName(shopName)
     }
     const callApi = async () => {
-        const key = apiKey
-        if (destination == '') {
+        if (inputedShopName == '') {
             alert('店名を入力してください')
         } else {
-            const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${key}
-            &input=${destination}&location=34.7263212, 137.7176678
+            const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
+            &input=${inputedShopName}&location=34.7263212, 137.7176678
             &language=ja&radius=5000`;
             try {
-                const result = await fetch(apiUrl);
-                const json = await result.json();  
-                console.log(json)
-                setResult(true)
+                const searchPredictionResult: Response = await fetch(apiUrl);
+                const json = await searchPredictionResult.json() as PredictionJsonType;
+                //　検索結果の一覧を表示される
+                setIsShownPredictions(true)
                 setPredictions(json.predictions)
             } catch (error) {
                 console.log(error)
@@ -65,49 +61,50 @@ const Post: React.FC<InputTextProps>= () => {
         }
     }
 
-    const share = async() => {
-        const userId = firebase.auth().currentUser.uid
-        const ref = firebase.firestore().collection('userList').doc(userId)
-        const postShopData = firebase.firestore().collection('shops')
-        const key = apiKey;
-        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-        let latitude = 0
-        let longitude = 0
-        let placeId = ''
+    const share = async(props:any) => {
+        //たいせいのログインの機能が完成したらprops.globalStateの値に書き換える
+        const userId = '7BUw7mIWX9fBep4Gi2AYZPbryp13'
+        const shopReview = firebase.firestore().collection('shops')
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+        let latitude: number = 0
+        let longitude: number = 0
+        let placeId: string = ''
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();
-            console.log(json)
-            let set = (function setLocationData () {
+            let setShopLocationData = (()=> {
                 return new Promise((resolve) => {
                     latitude = json.results[0].geometry.location.lat
                     longitude = json.results[0].geometry.location.lng
                     placeId = json.results[0].place_id
                     resolve();
                 });
-            })();
-            Promise.all([set]).then(function() {
-                postShopData.doc(placeId).set({
+            })
+            setShopLocationData().then(() => {
+                shopReview.doc(placeId).set({
                     shopName: shopName,
                     address: address,
                     latitude: latitude,
                     longitude: longitude,
                 })
                 .then(function() {
-                    let key = placeId + userId
-                    postShopData.doc(placeId).collection('reviews').doc(key).set({
+                    shopReview.doc(placeId).collection('reviews').doc(placeId + userId).set({
                         shopId: placeId,
-                        user: ref,
+                        user: firebase.firestore().collection('userList').doc(userId),
                         shopAddress: address,
                         shopName: shopName,
                         favoriteMenu: favoriteMenu,
                         price: price,
-                        category: selectedCategory,
+                        category: category,
                         createdAt: new Date(),
                     })
                 })
                 .then(function() {
                     console.log('success')
+                    setShopName('')
+                    changeFavorite('')
+                    changePrice('')
+                    setCategory('')
                 })
                 .catch(function(error: any) {
                     console.log(error)
@@ -124,13 +121,13 @@ const Post: React.FC<InputTextProps>= () => {
                 店名検索
             </Text>
             <View style={{ flexDirection: 'row', marginHorizontal: 60}}>
-            <TextInput 
+            <TextInput
                 style={styles.input}
-                placeholder="例）新宿　吉野家" 
-                value={destination}
+                placeholder="例）新宿　吉野家"
+                value={inputedShopName}
                 onChangeText={change}
             />
-            <Button 
+            <Button
                 icon={
                     <Icon
                     name="search"
@@ -141,19 +138,19 @@ const Post: React.FC<InputTextProps>= () => {
                 buttonStyle={styles.searchButton}
                 type="clear"
                 titleStyle={{fontSize: 15, color: 'grey'}}
-                onPress={callApi}                
+                onPress={callApi}
             >
             </Button>
             </View>
             {
-                showResult ? 
+                isShownPredictions ?
             <View>
             <FlatList
                 data={predictions}
-                renderItem={({ item }) => 
+                renderItem={({ item }) =>
                 <TouchableOpacity
                     onPress={
-                        () => changeShopName(item.structured_formatting.main_text, item.description)
+                        () => selectShopName(item.structured_formatting.main_text, item.description)
                     }
                 >
                     <Text style={styles.suggestion} key={item.id}>
@@ -175,10 +172,10 @@ const Post: React.FC<InputTextProps>= () => {
             <Text style={styles.itemName}>
                 店名 (必須)
             </Text>
-            <InputText 
+            <InputText
                 holderName='店名'
                 value={shopName}
-                change={changeShopName}
+                change={selectShopName}
                 canEdit={false}
             />
             <Text style={styles.itemName}>
@@ -189,22 +186,22 @@ const Post: React.FC<InputTextProps>= () => {
                     data={
                         [
                             {value: '居酒屋',},
-                            {value: 'カフェ',}, 
-                            {value: '中華',}, 
+                            {value: 'カフェ',},
+                            {value: '中華',},
                             {value: 'ラーメン'},
                             {value: 'ランチ'},
                             {value: 'ディナー'},
                             {value: 'その他'},
                         ]
                     }
-                    value={selectedCategory}
-                    onChangeText={selectItem}
+                    value={category}
+                    onChangeText={selectCategory}
                 />
             </View>
             <Text style={styles.itemName}>
                 おすすめのメニュー
             </Text>
-            <InputText 
+            <InputText
                 holderName='おすすめのメニューを入力して下さい'
                 value={favoriteMenu}
                 change={changeFavorite}
@@ -212,7 +209,7 @@ const Post: React.FC<InputTextProps>= () => {
             <Text style={styles.itemName}>
                 値段
             </Text>
-            <InputText 
+            <InputText
                 holderName='価格を入力して下さい'
                 value={price}
                 change={changePrice}
@@ -223,7 +220,7 @@ const Post: React.FC<InputTextProps>= () => {
                     title='投稿する'
                     type='solid'
                     onPress={share}
-                    disabled={selectedCategory == '' || shopName == ''}
+                    disabled={category == '' || shopName == ''}
                 />
             </View>
             </View>
@@ -231,7 +228,17 @@ const Post: React.FC<InputTextProps>= () => {
     );
 }
 
-export default Post
+const PostWrapper = ({ navigation }) => {
+	return (
+			<Subscribe to={[GlobalStateContainer]}>
+				{
+					globalState => <Post globalState={globalState} navigation = {navigation} />
+				}
+			</Subscribe>
+	);
+	}
+
+export default PostWrapper;
 
 const styles = StyleSheet.create({
 container: {
