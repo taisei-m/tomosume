@@ -1,6 +1,14 @@
 import { Container } from "unstated";
 
 export default class GlobalContainer extends Container {
+   state = {
+      isSplash: true,
+      isSighout: '',
+      uid: '',
+      itemId: '',
+      friendId: '',
+      userEmail: ''
+   }
    //Splash.tsx
    setSplashFalse = ():void => {
       this.setState({
