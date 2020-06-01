@@ -104,88 +104,88 @@ const FriendProfile = (props: any) => {
 	}
 
 	return (
-   <View style={styles.container}>
-      <View style={{flexDirection: 'row', justifyContent: 'center',}}>
-         <View>
-            <View style={{alignItems: 'center', marginTop: 10}}>
-               <Image
-                  source={{ uri: image }}
-                  style = {styles.userIcon}
-               />
+	<View style={styles.container}>
+		<View style={{flexDirection: 'row', justifyContent: 'center',}}>
+			<View>
+				<View style={{alignItems: 'center', marginTop: 10}}>
+				<Image
+					source={{ uri: image }}
+					style = {styles.userIcon}
+				/>
+				</View>
+				<View style={{alignItems: 'center', marginTop: 10}}>
+				<Text style={styles.userName}>{friendName}</Text>
+				</View>
+			</View>
+			<View style={{marginLeft: 30}}>
+				<View
+				style={{
+					justifyContent: 'center',
+					flexDirection: 'row',
+					marginTop: 20,
+				}}
+				>
+				<ProfileNumber
+					number={postNumber}
+					itemName='post'
+				/>
+				<ProfileNumber
+					number={follower}
+					itemName="フォロー"
+							centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+							press={toFollowerList}
+				/>
+				<ProfileNumber
+					number={followee}
+							itemName="フォロワー"
+							press={toFolloweeList}
+				/>
+				</View>
+				<View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+				<TouchableOpacity
+					style={
+						isFollow
+						? styles.followButton
+						: styles.unFollowButton
+							}
+							onPress={()=> {pressFollowButton()}}
+				>
+				{
+				isFollow
+				? <Text style={{color: 'white'}}>フォロー中</Text>
+				: <Text style={{color: 'white'}}>フォロー</Text>
+				}
+				</TouchableOpacity>
             </View>
-            <View style={{alignItems: 'center', marginTop: 10}}>
-               <Text style={styles.userName}>{friendName}</Text>
-            </View>
-         </View>
-         <View style={{marginLeft: 30}}>
-            <View
-               style={{
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                  marginTop: 20,
-               }}
-            >
-               <ProfileNumber
-                  number={postNumber}
-                  itemName='post'
-               />
-               <ProfileNumber
-                  number={follower}
-                  itemName="フォロー"
-						centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-						press={toFollowerList}
-               />
-               <ProfileNumber
-                  number={followee}
-						itemName="フォロワー"
-						press={toFolloweeList}
-               />
-            </View>
-            <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
-               <TouchableOpacity
-                  style={
-                     isFollow
-                     ? styles.followButton
-                     : styles.unFollowButton
-						}
-						onPress={()=> {pressFollowButton()}}
-               >
-            {
-               isFollow
-               ? <Text style={{color: 'white'}}>フォロー中</Text>
-               : <Text style={{color: 'white'}}>フォロー</Text>
-            }
-               </TouchableOpacity>
-            </View>
-         </View>
-      </View>
-         <SafeAreaView style={styles.list}>
-            <FlatList
-               data={allReviews}
-               renderItem={
-                     ({ item }) =>
-                     <ProfileReviews
-                        shopName={item.shopName}
-                        shopAddress={item.shopAddress}
-                        category={item.category}
-                        price={item.price}
-                        favorite={item.favoriteMenu}
-                     />
-               }
-               keyExtractor={item => item.shopId}
-               />
-         </SafeAreaView>
-   </View>
-   );
+			</View>
+		</View>
+			<SafeAreaView style={styles.list}>
+				<FlatList
+				data={allReviews}
+				renderItem={
+						({ item }) =>
+						<ProfileReviews
+							shopName={item.shopName}
+							shopAddress={item.shopAddress}
+							category={item.category}
+							price={item.price}
+							favorite={item.favoriteMenu}
+						/>
+				}
+				keyExtractor={item => item.shopId}
+				/>
+			</SafeAreaView>
+	</View>
+	);
 }
 const FriendProfileWrapper = ({ navigation }) => {
-   return (
-      <Subscribe to={[GlobalStateContainer]}>
-         {
-            globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
-         }
-      </Subscribe>
-   );
+	return (
+		<Subscribe to={[GlobalStateContainer]}>
+			{
+				globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
+			}
+		</Subscribe>
+	);
 }
 
 export default FriendProfileWrapper;
