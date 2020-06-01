@@ -8,6 +8,7 @@ import GlobalStateContainer from '../containers/GlobalState';
 
 
 const CreateAccount = (props: any) => {
+    const [_globalState, setGlobalState] = useState(props.globalState)
     const [_navigation, setNavigation] = useState(props.navigation);
     const [_username, setUsername] = useState<string>('');
     const [_email, setEmail] = useState<string>('');
@@ -25,8 +26,6 @@ const CreateAccount = (props: any) => {
     const [_passwordErrorMessageIsRed, setPasswordErrorMessageIsRed] = useState<boolean>();
     const [_signupErrorMessage, setSignupErrorMessage] = useState<string>();
 
-    const [_globalState, setGlobalState] = useState(props.globalState)
-    // console.log("CreateAccount////////////////////////////////////////")
 
     ////input関数
     const usernameInput = (passedUsername: string) => {
@@ -127,6 +126,37 @@ const CreateAccount = (props: any) => {
         setPasswordErrorMessage(errorMessage);
         setPasswordErrorMessageIsRed(errorMessageColorIsRed);
     }
+    
+    //Signupボタンを押した時に表示されるエラーメッセージの内容
+    const signupErrorTextInput = (errorCode: string, errorMessage: string) => {
+        let outputErrorText: string = '';
+        switch (errorCode) {
+            case 'auth/email-already-in-use':
+                //Thrown if there already exists an account with the given email address.
+                outputErrorText = 'このメールアドレスは既に使用されています';
+                break;
+            case 'auth/invalid-email':
+                //Thrown if the email address is not valid.
+                outputErrorText = '有効なメールアドレスを入力してください';
+                break;
+            case 'auth/operation-not-allowed':
+                //Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.
+                outputErrorText = 'メールアドレスとパスワードによるログインが無効になっています';
+                break;
+            case 'auth/weak-password':
+                //Thrown if the password is not strong enough.
+                outputErrorText = '脆弱性が高いためパスワードを再度設定してください';
+                break;
+            case 'refresh':
+                outputErrorText = '';
+                break;
+            default:
+                outputErrorText = errorMessage;
+                break;
+        }
+        setSignupErrorMessage(outputErrorText);
+    }
+
 
     //パスワードの表示/非表示に合わせてアイコンの切り替え
     useEffect(
@@ -143,6 +173,8 @@ const CreateAccount = (props: any) => {
             setPasswordIconTypeVisible(iconName);
         }
     ,[_isUnvisiblePassword])
+    
+    
     //フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
     const inputUsername = (inputedUsername: string) => {
         usernameInput(inputedUsername);
@@ -158,6 +190,9 @@ const CreateAccount = (props: any) => {
     }
 
     const autoValidation = (inputedText: string, inputedForm: string) => {
+        //signinボタンの上のエラーメッセージを非表示にする
+        signupErrorTextInput('refresh', '');
+        
         let username: string = '';
         let email: string = '';
         let password: string = '';
@@ -258,10 +293,10 @@ const CreateAccount = (props: any) => {
             console.log("errorMessage: " + error.message)
             return error;
         }).then(async (result) => {
-            if (result.message) {
-                alert(result.message);
-            } else if (result.user) {
-                console.log('d')
+            //fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
+            signupErrorTextInput(result.code, result.messasge);
+
+            if (result.user) {
                 let user = result.user;
                 _globalState.setUserEmail(user.email);
 
@@ -288,8 +323,9 @@ const CreateAccount = (props: any) => {
                     _navigation.navigate('ResendEmail');
                 }
             } else {
-                console.log("予期せぬエラーが発生しました");
+                console.log("予期せぬエラーが発生しました CreateAccount.tsx");
             }
+            signupButtonIsloadingInput(false);
         })
     }
 
@@ -350,7 +386,7 @@ const CreateAccount = (props: any) => {
             style={{width: '80%'}}
         >
             <ButtonElem
-            title="testLogin"
+            title="Signup"
             type="solid"
             buttonStyle={styles.button}
             onPress={pushSignup}
@@ -364,7 +400,7 @@ const CreateAccount = (props: any) => {
         <TouchableOpacity
             onPress={() => props.navigation.navigate('LoginScreen')}
         >
-            <Text> Already have an account </Text>
+            <Text style={styles.AlreadyHaveAccountText}> Already have an account </Text>
         </TouchableOpacity>
         </View>
     );
@@ -442,4 +478,8 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10
     },
+    AlreadyHaveAccountText: {
+        textDecorationLine: 'underline',
+        marginTop: '5%',
+    }
 });

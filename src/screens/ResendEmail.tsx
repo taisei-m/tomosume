@@ -69,7 +69,7 @@ const ResendEmail = (props) => {
                 titleTextInput(textType, email);
             })
         } else {
-            console.error("ResendEmail.tsx  userが取得できませんでした");
+            console.log("ResendEmail.tsx  userが取得できませんでした");
         }
     }
 
@@ -98,7 +98,7 @@ const ResendEmail = (props) => {
             <TouchableOpacity
                 onPress={() => { _navigation.navigate('LoginScreen') }}
             >
-                <Text style={styles.buttonToLogin}> ログイン画面へ </Text>
+                <Text style={styles.ToLoginText}> ログイン画面へ </Text>
             </TouchableOpacity>
         </View>
     );
@@ -163,8 +163,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white'
     },
-    buttonToLogin: {
-        textDecorationLine: 'underline'
+    ToLoginText: {
+        textDecorationLine: 'underline',
+        marginTop: '5%',
     },
     icon: {
         marginRight: 10

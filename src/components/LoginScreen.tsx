@@ -101,15 +101,18 @@ const LoginScreen = (props: any) => {
         switch (errorCode) {
             case 'auth/wrong-password':
                 //default firebase error message: 'The password is invalid or the user does not have a password'
-                outputErrorText = 'パスワードが違います。もしくは設定されていません。'
+                outputErrorText = 'パスワードが違います。もしくは設定されていません。';
                 break;
             case 'auth/user-not-found':
                  //default firebase error message: 'There is no user record corresponding to this identifier. The user may have been deleted.'
-                outputErrorText = 'メールアドレスまたはパスワードが間違っています'
+                outputErrorText = 'メールアドレスまたはパスワードが間違っています';
                 break;
             case 'auth/network-request-failed':
                  //default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
-                outputErrorText = 'ネットワークエラー：インターネットに接続されていません'
+                outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
+                break;
+            case 'auth/user-disabled':
+                outputErrorText = errorMessage;//翻訳できやんだ
                 break;
             case 'authentication mail-did not check':
                 outputErrorText = 'アカウント作成時に送信された認証メールを確認してくだい';
@@ -238,18 +241,15 @@ const LoginScreen = (props: any) => {
                 //fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
                 signinErrorTextInputFirebase(result.code, result.messasge);
 
-                //firebaseに認可されたらログイン処理(ユーザー情報の取得、AsyncStorage)
+                //firebaseに認可されたらログイン処理(ユーザー情報の取得)
                 if (result.user) {
                     if (result.user.emailVerified == true) {
                         //////メール認証ができている場合
-                        console.log("メール認証済");
-                        AsyncStorage.setItem('Authenticated', 'true');
                         props.globalState.login(result.user.uid);
                     }
                     else if (result.user.emailVerified == false) {
                         //////メールを登録したけどメール認証していない場合
                         signinErrorTextInputFirebase('authentication mail-did not check', '');
-                        console.log("メール未認証")
                         //認証メールを送る画面に飛ばす処理、ボタンの出現とか書くならここ
                     }
                 } else {
@@ -303,7 +303,7 @@ const LoginScreen = (props: any) => {
             <TouchableOpacity 
                 onPress={() => { props.navigation.navigate('ResetPassword') }}
             >
-                <Text style={styles.forgot}>Forgot Password?</Text>
+                <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
             {/* ボタンの上のエラーメッセージ */}
             <View>
@@ -316,7 +316,7 @@ const LoginScreen = (props: any) => {
                 style={{width: '80%'}}
             >
                 <ButtonElem
-                title="testLogin"
+                title="Login"
                 type="solid"
                 buttonStyle={styles.button}
                 onPress={pushLogin}
@@ -328,7 +328,6 @@ const LoginScreen = (props: any) => {
                 {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('CreateAccount') }}
-                style={{marginVertical: 10}}
             >
                 <Text style={styles.createAccountText}> Create Account </Text>
             </TouchableOpacity>
@@ -393,15 +392,18 @@ const styles = StyleSheet.create({
         marginBottom: "5%",
         color: "#48D1CC",
     },
-    forgot: {
-    	color: '#818181',
+    forgotText: {
+    	color: 'black',
       // marginBottom: "13%",
     },
     createAccountText: {
-    color: '#818181',	
+    // color: '#818181',
+        color: 'black',
+        textDecorationLine: 'underline',
+        marginTop: '5%',
     },
     resendEmailText: {
-        color: '#818181',
+        color: 'black',
     },
 	aboveButtonMessage: {
 		marginTop: '2%',
@@ -416,5 +418,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 10
+    },
+    buttonToCreateAccount: {
+        // marginVertical: 10,
+        textDecorationLine: 'underline',
+        marginTop: '5%',
     }
 });
