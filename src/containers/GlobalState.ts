@@ -57,4 +57,9 @@ export default class GlobalContainer extends Container {
          userEmail: userEmail
       })
    }
+   setUid = (uid: string) => {
+      this.setState({
+         userEmail: uid
+      })
+   }
 }

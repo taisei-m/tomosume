@@ -37,7 +37,7 @@ const ResendEmail = (props) => {
 
     useEffect(
         () => {
-            let email: string = props.globalState.state.userData.email;
+            let email: string = props.globalState.state.userEmail;
             emailInput(email);
             let textType: string = '初期表示';
             titleTextInput(textType, email);

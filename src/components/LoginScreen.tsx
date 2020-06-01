@@ -3,14 +3,9 @@ import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage} from 'reac
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig'
-//@ts-ignore
 import GlobalStateContainer from '../containers/GlobalState';
 
 const LoginScreen = (props: any) => {
-    console.log('login--------------------------------------------')
-    console.log(props.globalState.state.isSiginout)
-    const [navigation, setNavigation] = useState(props.navigation);
-    const [globalState, setGlobalState] = useState(props.globalState);
     const [emailAsRendered, setEmailAsRendered] = useState('');
     const [passwordAsRendered, setPasswordAsRendered] = useState('');
     const [validateTextEmail, setValidateTextEmail] = useState('');
@@ -20,8 +15,6 @@ const LoginScreen = (props: any) => {
     const [passwordErrorIsRed, setPasswordErrorIsRed] =useState<boolean>();
     const [signinButtonDisabled, setSingnBunttonDisabled] = useState<boolean>(true);
     const [signinButtonIsloading, setSigninButtonIsloading] = useState<boolean>(false);
-    // console.log("LoginScreen/////////////////////////////////////")
-    // console.log(globalState.state);
 
     const emailAsRenderedInput = (text: string) => {
         setEmailAsRendered(text)
@@ -40,7 +33,6 @@ const LoginScreen = (props: any) => {
     }
     const SigninButtonIsloadingInput = (result: boolean) => {
         setSigninButtonIsloading(result);
-        
     }
 
     //CreateAccount.tsxの方が綺麗に書いてある
@@ -49,7 +41,7 @@ const LoginScreen = (props: any) => {
         let denyText: string = '*有効なメールアドレスを入力してください';
         let blankText: string = '';
         let fillblankText: string = '*メールアドレスは必須です';
-        
+
         switch(textType){
             case 'allow':
                 setValidateTextEmail(allowText);
@@ -62,7 +54,7 @@ const LoginScreen = (props: any) => {
                 break;
             case 'fillBlank':
                 setValidateTextEmail(fillblankText)
-        }  
+        }
     }
     //CreateAccount.tsxの方が綺麗に書いてある
     const validateTextPasswordInput = (textType: string) => {
@@ -86,7 +78,7 @@ const LoginScreen = (props: any) => {
         }
     }
 
-    //新規登録で使うからコメントアウト残す   
+    //新規登録で使うからコメントアウト残す 
     // const signinErrorTextBlankInput = (errorCode: string) => {
     //     let outputErrorText: string = '';
 
@@ -103,7 +95,6 @@ const LoginScreen = (props: any) => {
     //     }
     //     setSigninErrorText(outputErrorText);
     // }
-
     const signinErrorTextInputFirebase = (errorCode: string, errorMessage: string) => {
         let outputErrorText: string = '';
 
@@ -133,7 +124,6 @@ const LoginScreen = (props: any) => {
         setSigninErrorText(outputErrorText);
     }
 
-
     ////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
     const inputedEmail = (textInputed: string) => {
         emailAsRenderedInput(textInputed);
@@ -145,11 +135,8 @@ const LoginScreen = (props: any) => {
         let inputedPlace: string = 'password';
         doValidate(textInputed, inputedPlace);
     }
-    
-    
-    const doValidate = (textInputed: string, inputedPlace: string) => {
-        console.log("pushed login--------------")
 
+    const doValidate = (textInputed: string, inputedPlace: string) => {
         //signinボタンの上のエラーメッセージを非表示にする
         signinErrorTextInputFirebase("refrech", "");
 
@@ -173,10 +160,6 @@ const LoginScreen = (props: any) => {
         let approvePasswordValidation = passwordPattern.test(password);
         let isEmailBlank: boolean = true;
         let isPasswordBlank: boolean = true;
-        
-        console.log("checkEmail = " + approveEmailValidation);
-        console.log("checkPassword = " + approvePasswordValidation);
-            
         //////入力欄の値に応じて入力方法のメッセージ(変更内容)を表示する
 
         ////フォームに値があるかどうかの判別
@@ -191,7 +174,6 @@ const LoginScreen = (props: any) => {
         } else {
             isPasswordBlank = false;
         }
-        
         ////フォーム(validate)の下に表示されるメッセージ
         //メールアドレス
         if (approveEmailValidation) {
@@ -219,7 +201,6 @@ const LoginScreen = (props: any) => {
                 passwordErrorIsRedInput(true);
             }
         }
-        
         //signinボタンを表示するかどうか
         if (approveEmailValidation == true && approvePasswordValidation == true) {
             if (isEmailBlank == false && isPasswordBlank == false) {
@@ -231,7 +212,6 @@ const LoginScreen = (props: any) => {
     }
 
     const pushLogin = () => {
-        console.log("testLogin---------------------------------------------")
         
         //↓新規登録で使う
         // //////未入力欄があるかどうかのチェック
@@ -255,10 +235,6 @@ const LoginScreen = (props: any) => {
                 console.log(error.message)
                 return error;
             }).then((result) => {
-                console.log("code = " + result.code)
-                console.log("message = " + result.message)
-                console.log(result)
-                
                 //fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
                 signinErrorTextInputFirebase(result.code, result.messasge);
 
@@ -268,7 +244,7 @@ const LoginScreen = (props: any) => {
                         //////メール認証ができている場合
                         console.log("メール認証済");
                         AsyncStorage.setItem('Authenticated', 'true');
-                        globalState.login(result.user);
+                        props.globalState.login(result.user.uid);
                     }
                     else if (result.user.emailVerified == false) {
                         //////メールを登録したけどメール認証していない場合
@@ -277,7 +253,7 @@ const LoginScreen = (props: any) => {
                         //認証メールを送る画面に飛ばす処理、ボタンの出現とか書くならここ
                     }
                 } else {
-                    console.log("認可されてないよ");
+                    console.log("loginScreen result.userがない");
                 }
                 SigninButtonIsloadingInput(false);
             })
@@ -325,7 +301,7 @@ const LoginScreen = (props: any) => {
             </View>
             {/* パスワード忘れたボタン */}
             <TouchableOpacity 
-                onPress={() => { navigation.navigate('ResetPassword') }}
+                onPress={() => { props.navigation.navigate('ResetPassword') }}
             >
                 <Text style={styles.forgot}>Forgot Password?</Text>
             </TouchableOpacity>
@@ -351,13 +327,13 @@ const LoginScreen = (props: any) => {
             </View>
                 {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
-                onPress={() => { navigation.navigate('CreateAccount') }}
+                onPress={() => { props.navigation.navigate('CreateAccount') }}
                 style={{marginVertical: 10}}
             >
                 <Text style={styles.createAccountText}> Create Account </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => { navigation.navigate('ResendEmail') }}
+                onPress={() => { props.navigation.navigate('ResendEmail') }}
             >
                 <Text style={styles.resendEmailText}> ResendEmail </Text>
             </TouchableOpacity>
