@@ -7,6 +7,8 @@ import firebase from '../../firebaseConfig'
 import GlobalStateContainer from '../containers/GlobalState';
 
 const LoginScreen = (props: any) => {
+    console.log('login--------------------------------------------')
+    console.log(props.globalState.state.isSiginout)
     const [navigation, setNavigation] = useState(props.navigation);
     const [globalState, setGlobalState] = useState(props.globalState);
     const [emailAsRendered, setEmailAsRendered] = useState('');
@@ -41,8 +43,7 @@ const LoginScreen = (props: any) => {
         
     }
 
-
-
+    //CreateAccount.tsxの方が綺麗に書いてある
     const validateTextEmailInput = (textType: string) => {
         let allowText: string = 'ok ✓';
         let denyText: string = '*有効なメールアドレスを入力してください';
@@ -63,7 +64,7 @@ const LoginScreen = (props: any) => {
                 setValidateTextEmail(fillblankText)
         }  
     }
-
+    //CreateAccount.tsxの方が綺麗に書いてある
     const validateTextPasswordInput = (textType: string) => {
         let allowText: string = 'ok ✓';
         let denyText: string = '*半角英数字を含む6文字以上にしてください';
@@ -134,7 +135,7 @@ const LoginScreen = (props: any) => {
 
 
     ////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
-    const inputedMail = (textInputed: string) => {
+    const inputedEmail = (textInputed: string) => {
         emailAsRenderedInput(textInputed);
         let inputedPlace: string = 'email';
         doValidate(textInputed, inputedPlace);
@@ -145,7 +146,7 @@ const LoginScreen = (props: any) => {
         doValidate(textInputed, inputedPlace);
     }
     
-    ////ログイン関数
+    
     const doValidate = (textInputed: string, inputedPlace: string) => {
         console.log("pushed login--------------")
 
@@ -293,7 +294,7 @@ const LoginScreen = (props: any) => {
                     placeholder="email"
                     placeholderTextColor="#818181"
                     value={emailAsRendered}
-                    onChangeText={inputedMail}
+                    onChangeText={inputedEmail}
                 />
             </View>
             <View >
@@ -324,13 +325,13 @@ const LoginScreen = (props: any) => {
             </View>
             {/* パスワード忘れたボタン */}
             <TouchableOpacity 
-                onPress={() => navigation.navigate('ResetPassword')}
+                onPress={() => { navigation.navigate('ResetPassword') }}
             >
                 <Text style={styles.forgot}>Forgot Password?</Text>
             </TouchableOpacity>
             {/* ボタンの上のエラーメッセージ */}
             <View>
-                <Text style={styles.onButtonMessage}>
+                <Text style={styles.aboveButtonMessage}>
                     {signinErrorText}
                 </Text>
             </View>
@@ -343,21 +344,20 @@ const LoginScreen = (props: any) => {
                 type="solid"
                 buttonStyle={styles.button}
                 onPress={pushLogin}
-                    // color="#841584"
-                    disabled={signinButtonDisabled}
-                    accessibilityLabel="Learn more about this purple button"
-                    loading={signinButtonIsloading}
+                disabled={signinButtonDisabled}
+                accessibilityLabel="Learn more about this purple button"
+                loading={signinButtonIsloading}
                     />
             </View>
                 {/* アカウント作成画面へ　ボタン */}
             <TouchableOpacity
-                onPress={() => navigation.navigate('CreateAccount')}
+                onPress={() => { navigation.navigate('CreateAccount') }}
                 style={{marginVertical: 10}}
             >
                 <Text style={styles.createAccountText}> Create Account </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('ResendEmail')}
+                onPress={() => { navigation.navigate('ResendEmail') }}
             >
                 <Text style={styles.resendEmailText}> ResendEmail </Text>
             </TouchableOpacity>
@@ -427,13 +427,13 @@ const styles = StyleSheet.create({
     resendEmailText: {
         color: '#818181',
     },
-	onButtonMessage: {
+	aboveButtonMessage: {
 		marginTop: '2%',
 		marginBottom: '4%',
 		color: 'red',
 	 },
 	button: {
-		backgroundColor:"#5E9CFE",
+	  backgroundColor:"#5E9CFE",
       borderRadius: 25,
       borderColor: 'black',
       height: 50,

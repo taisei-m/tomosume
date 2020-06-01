@@ -8,11 +8,13 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import { resolveModuleName } from 'typescript';
 import { useEffect } from 'react';
+import { result } from 'lodash';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
-//    console.log("Splash////////////////////////////////////////")
-//    console.log(globalState.state)
+    console.log("Splash////////////////////////////////////////")
+    console.log(props.globalState.state)
+   console.log(globalState.state)
         
     //globalStateのisSplashをfalseにする関数
     const SplashFalse = () => {
@@ -23,12 +25,21 @@ const Splash = (props) => {
     //認証状態の取得、状態に応じて画面遷移
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
-            console.log(user);
             let isnotAuthed; 
+            let emailVerified;
             if (user) {
                 // User is signed in.
-                globalState.setUserData(user);
-                isnotAuthed = "false";
+
+                // アカウント作成するとfirebaseに認可される。
+                // resendEmailにnavigatorを使って遷移しようとするとnavigaotorの仕様上index.jsxから評価しなおす。
+                // index.jsx → Splash.jsx　が読まれここの部分が実行される。なのでここでメールを確認したかどうかを見てisSignoutに"true"を入れる。
+                emailVerified = user.emailVerified;
+                if (emailVerified == true){
+                    globalState.setUserData(user);
+                    isnotAuthed = "false";
+                } else if (emailVerified == false){
+                    isnotAuthed = "true";
+                }
             } else {
                 // No user is signed in.
                 console.log("No user is signed in.");

@@ -62,7 +62,7 @@ const ResetPassword = (props) => {
                 <Text style={styles.buttonText}> submit </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('LoginScreen')}
+                onPress={() => { navigation.navigate('LoginScreen') }}
             >
                 <Text>  Already have an account  </Text>
             </TouchableOpacity>
