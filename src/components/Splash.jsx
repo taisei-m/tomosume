@@ -8,6 +8,7 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import { resolveModuleName } from 'typescript';
 import { useEffect } from 'react';
+import { result } from 'lodash';
 
 const Splash = (props) => {
    const [globalState, setGlobalState] = useState(props.globalState);
@@ -25,10 +26,16 @@ const Splash = (props) => {
     const checkIsAuthed = async () => {
         firebase.auth().onAuthStateChanged(function (user) {
             let isnotAuthed; 
+            let emailVerified;
             if (user) {
                 // User is signed in.
-                globalState.setUserData(user);
-                isnotAuthed = "false";
+                emailVerified = user.emailVerified;
+                if (emailVerified == true){
+                    globalState.setUserData(user);
+                    isnotAuthed = "false";
+                } else if (emailVerified == false){
+                    isnotAuthed = "true";
+                }
             } else {
                 // No user is signed in.
                 console.log("No user is signed in.");

@@ -236,36 +236,33 @@ CreateAccount = (props:any) => {
             console.log("errorCode: " + error.code)
             console.log("errorMessage: " + error.message)
             return error;
+        }).then(async (result) => {
+            if (result.message) {
+                // alert(result.message);
+                console.log('adsfadf')
+            } else if (result.user) {
+                console.log('d')
+                let user = firebase.auth().currentUser;
+                let db = firebase.firestore().collection('userList').doc(user.uid)
+                db.set({
+                    userName: 'user-name',
+                    iconURL: 'test-url',
+                    uid: user.uid
+                })
+                db.collection('follower').doc('first').set({})
+                db.collection('followee').doc('first').set({})
+                firebase.auth().languageCode = "ja";
+                console.log('navigate to resendEmail')
+                user.sendEmailVerification().then(function () {
+                    _navigation.navigate('ResendEmail');
+                }).catch(function (error) {
+                    cosole.log("error = " + error);
+                    alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")
+                });
+            } else {
+                console.log("予期せぬエラーが発生しました");
+            }
         })
-        console.log('pppppppppp');
-            // }).then(async (result) => {
-                console.log('thennn')
-                // if (result.message) {
-                //     // alert(result.message);
-                //     console.log('adsfadf')
-                // } else if (result.user) {
-                //     console.log('d')
-                //     let user = firebase.auth().currentUser;
-                //     let db = firebase.firestore().collection('userList').doc(user.uid)
-                //     db.set({
-                //         userName: 'user-name',
-                //         iconURL: 'test-url',
-                //         uid: user.uid
-                //     })
-                //     db.collection('follower').doc('first').set({})
-                //     db.collection('followee').doc('first').set({})
-                //     firebase.auth().languageCode = "ja";
-                //     // console.log("user = "+ user)
-                //     user.sendEmailVerification().then(function() {
-                //         _navigation.navigate('ResendEmail');
-                //     }).catch(function(error) {
-                //         cosole.log("error = " + error);
-                //         alert("送信先が存在しません。メールアドレスが正しいかご確認ください。")
-                //     });
-                // } else{
-                //     console.log("予期せぬエラーが発生しました");
-                // }
-        
     }
     
 
