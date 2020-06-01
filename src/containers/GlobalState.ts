@@ -16,7 +16,7 @@ export default class GlobalContainer extends Container {
       })
    }
    //Splash.tsx
-   setSignout = (result:boolean):void => {
+   setSignout = (result:string):void => {
       this.setState({
          isSignout: result
       })
@@ -55,7 +55,7 @@ export default class GlobalContainer extends Container {
    //Splash.tsx
    setUid = (uid: string): void=> {
       this.setState({
-         userEmail: uid
+         uid: uid
       })
    }
 }
