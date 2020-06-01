@@ -23,6 +23,8 @@ type ReviewDocResponse = {
 type ReviewsDocResponse = ReviewDocResponse[]
 
 const Top = (props) => {
+    console.log('top============================')
+    console.log(props.globalState.state.isSignout)
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     useEffect(() => {
         (async () => {
@@ -44,6 +46,7 @@ const Top = (props) => {
 
     const toFriendProfile = (id: string) => {
         props.globalState.setFriendId(id)
+        // props.navigation.navigate('friendProfile')
         props.navigation.navigate('friendProfile')
     }
 

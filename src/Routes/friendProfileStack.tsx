@@ -1,61 +1,53 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Top from '../screens/Top';
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
 import friendProfile from '../screens/friendProfile';
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
+import { Subscribe } from 'unstated';
+import GlobalStateContainer from '../containers/GlobalState';
 
-const TopNavStack = createStackNavigator();
+const FriendProfileNavStack = createStackNavigator();
 
-const TopStack = (props) => {
+const FriendProfileStack = (props) => {
     let navigation = props.navigation;
     React.useEffect(( ) => {
         const unsubscribe = navigation.addListener('tabPress', e => {
-            navigation.navigate('Top')
+            navigation.navigate('friendProfile')
         });
         return unsubscribe;
     }, [navigation]);
 
     return (
-    <TopNavStack.Navigator>
-        <TopNavStack.Screen
-            name="Top"
-            component={Top}
+    <FriendProfileNavStack.Navigator>
+        <FriendProfileNavStack.Screen
+            name="friendProfile"
+            component={friendProfile}
             options={{
                 headerShown: false,
             }}
         />
-        <TopNavStack.Screen
-            name="friendProfile"
-            component={friendProfile}
-            options={{
-                headerShown: true,
-            }}
-        />
-        <TopNavStack.Screen
+        <FriendProfileNavStack.Screen
             name="friendFollowerList"
             component={friendFollowerList}
             options={{ headerShown: true }}
         />
-        <TopNavStack.Screen
+        <FriendProfileNavStack.Screen
             name="friendFolloweeList"
             component={friendFolloweeList}
             options={{ headerShown: true }}
         />
-    </TopNavStack.Navigator>
+    </FriendProfileNavStack.Navigator>
     )
 };
 
-const topStackWrapper = ({ navigation }) => {
+const ProfileStackWrapper = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalStateContainer]}>
             {
-                globalState => <TopStack globalState={globalState} navigation = {navigation} />
+                globalState => <FriendProfileStack globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
 }
 
-export default topStackWrapper
+export default ProfileStackWrapper;

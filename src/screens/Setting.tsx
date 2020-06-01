@@ -9,7 +9,7 @@ import GlobalStateContainer from '../containers/GlobalState';
 
 const Setting = (props) => {
 
-const logout = () => { 
+const logout = () => {
     firebase.auth().signOut().then(function() {
         console.log("Sign-out successful and call global.logout")
         AsyncStorage.setItem('Authenticated', 'false', () => {
@@ -18,7 +18,7 @@ const logout = () => {
     })
     .catch(function(error) {
         console.log(error); 
-    }); 
+    });
     alert('logout')
 }
     return (

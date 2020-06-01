@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet,
-			Text,
-			Image,
-			View,
-			TouchableOpacity,
-			SafeAreaView,
-			FlatList,
-			} from 'react-native';
+import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList} from 'react-native';
 import { Subscribe } from 'unstated';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
 import GlobalStateContainer from '../containers/GlobalState';
@@ -25,12 +17,11 @@ type friendReviewDocResponse = {
 	shopName: string
 	user: firebase.firestore.DocumentReference
 }
-
 type friendDataDocResponse = {
 	userName: string
 	iconURL: string
+	uid: string
 }
-
 type friendReviewsType = friendReviewDocResponse[]
 
 const FriendProfile = (props: any) => {
@@ -38,11 +29,11 @@ const FriendProfile = (props: any) => {
 	const [followee, setFollowee] = useState<number>(0)
 	const [follower, setFollower] = useState<number>(0)
 	const [postNumber, setPostNumber] = useState<number>(0)
-	const [shopData, setShopData] = useState<userReviewsType>([])
-	const [followStatus, changeStatus] = useState('follow')
-	const [pressStatus, changePress] = useState(false)
+	const [allReviews, setAllReviews] = useState<friendReviewsType>([])
+	const [isFollow, setIsFollow] = useState(true)
 	const [image, setFriendIconUrl] = useState<string>();
 
+	// 投稿されたレビューを取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		const ref = db.collection('userList').doc(friendId)
@@ -56,21 +47,20 @@ const FriendProfile = (props: any) => {
         //投稿されたレビューの件数を取得
 			let reviewNumber: number = friendReviews.length
 			setPostNumber(reviewNumber)
-			setShopData(friendReviews)
+			setAllReviews(friendReviews)
       })
 	}, [])
-
+	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		firebase.firestore().collection('userList').doc(friendId)
 		.get().then(function(doc) {
 			let friendProfileData = doc.data() as friendDataDocResponse
-			console.log(friendProfileData)
 			setFriendName(friendProfileData.userName)
 			setFriendIconUrl(friendProfileData.iconURL)
 		})
 	},[])
-
+	// フォロワーの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		let followeeArray:string[] = []
@@ -84,7 +74,7 @@ const FriendProfile = (props: any) => {
 		setFollowee(followeeNumber)
 	})
 	},[])
-
+	//フォローの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		let followerArray:string[] = []
@@ -98,100 +88,104 @@ const FriendProfile = (props: any) => {
 			setFollower(followerNumber)
 	})
 	},[])
+	//　フォロー状態を解除する
+	const pressFollowButton = () => {
+		const userId = props.globalState.state.userData.uid
+		const friendId = props.globalState.state.friendId
+		db.collection('userList').doc(userId).collection('follower').doc(friendId).delete()
+		setIsFollow(!isFollow)
+	}
+
+	const toFolloweeList = () => {
+		props.navigation.navigate('friendFolloweeList')
+	}
+	const toFollowerList = () => {
+		props.navigation.navigate('friendFollowerList')
+	}
 
 	return (
-   <View style={styles.container}>
-      <View style={{flexDirection: 'row', justifyContent: 'center',}}>
-         <View>
-            <View style={{alignItems: 'center', marginTop: 10}}>
-               <Image
-                  source={{ uri: image }}
-                  style = {styles.userIcon}
-               />
+	<View style={styles.container}>
+		<View style={{flexDirection: 'row', justifyContent: 'center',}}>
+			<View>
+				<View style={{alignItems: 'center', marginTop: 10}}>
+				<Image
+					source={{ uri: image }}
+					style = {styles.userIcon}
+				/>
+				</View>
+				<View style={{alignItems: 'center', marginTop: 10}}>
+				<Text style={styles.userName}>{friendName}</Text>
+				</View>
+			</View>
+			<View style={{marginLeft: 30}}>
+				<View
+				style={{
+					justifyContent: 'center',
+					flexDirection: 'row',
+					marginTop: 20,
+				}}
+				>
+				<ProfileNumber
+					number={postNumber}
+					itemName='post'
+				/>
+				<ProfileNumber
+					number={follower}
+					itemName="フォロー"
+							centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+							press={toFollowerList}
+				/>
+				<ProfileNumber
+					number={followee}
+							itemName="フォロワー"
+							press={toFolloweeList}
+				/>
+				</View>
+				<View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+				<TouchableOpacity
+					style={
+						isFollow
+						? styles.followButton
+						: styles.unFollowButton
+							}
+							onPress={()=> {pressFollowButton()}}
+				>
+				{
+				isFollow
+				? <Text style={{color: 'white'}}>フォロー中</Text>
+				: <Text style={{color: 'white'}}>フォロー</Text>
+				}
+				</TouchableOpacity>
             </View>
-            <View style={{alignItems: 'center', marginTop: 10}}>
-               <Text style={styles.userName}>{friendName}</Text>
-            </View>
-         </View>
-         <View style={{marginLeft: 30}}>
-            <View
-               style={{
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                  marginTop: 20,
-               }}
-            >
-               <ProfileNumber
-                  number={postNumber}
-                  itemName='post'
-               />
-               <ProfileNumber
-                  number={follower}
-                  itemName="フォロー"
-                  centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-               />
-               <ProfileNumber
-                  number={followee}
-                  itemName="フォロワー"
-               />
-            </View>
-            <View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
-               <TouchableOpacity
-                  style={
-                     pressStatus
-                     ? styles.followButton
-                     : styles.unFollowButton
-                  }
-                // onPress={follow}
-               >
-						<Text
-							style={
-								pressStatus
-								? styles.followButtonText
-								: styles.unfollowButtonText
-							}>
-							{followStatus}
-						</Text>
-               </TouchableOpacity>
-               <TouchableOpacity
-                  style={{marginLeft: 10}}
-               >
-						<Icon
-							name="bars"
-							size={30}
-							color="#000"
+			</View>
+		</View>
+			<SafeAreaView style={styles.list}>
+				<FlatList
+				data={allReviews}
+				renderItem={
+						({ item }) =>
+						<ProfileReviews
+							shopName={item.shopName}
+							shopAddress={item.shopAddress}
+							category={item.category}
+							price={item.price}
+							favorite={item.favoriteMenu}
 						/>
-               </TouchableOpacity>
-            </View>
-         </View>
-      </View>
-         <SafeAreaView style={styles.list}>
-            <FlatList
-               data={shopData}
-               renderItem={
-                     ({ item }) =>
-                     <ProfileReviews
-                        shopName={item.shopName}
-                        shopAddress={item.shopAddress}
-                        category={item.category}
-                        price={item.price}
-                        favorite={item.favoriteMenu}
-                     />
-               }
-               keyExtractor={item => item.shopId}
-               />
-         </SafeAreaView>
-   </View>
-   );
+				}
+				keyExtractor={item => item.shopId}
+				/>
+			</SafeAreaView>
+	</View>
+	);
 }
 const FriendProfileWrapper = ({ navigation }) => {
-   return (
-      <Subscribe to={[GlobalStateContainer]}>
-         {
-            globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
-         }
-      </Subscribe>
-   );
+	return (
+		<Subscribe to={[GlobalStateContainer]}>
+			{
+				globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
+			}
+		</Subscribe>
+	);
 }
 
 export default FriendProfileWrapper;
@@ -231,27 +225,27 @@ const styles = StyleSheet.create({
 		color: '#818181'
 	},
 	followButton: {
-		width: 160,
-		backgroundColor:"white",
+		width: 180,
+		backgroundColor:"#d3d3d3",
 		borderRadius:15,
 		height:35,
 		alignItems:"center",
 		justifyContent:"center",
-		borderColor: '#5E9CFE',
+		borderColor: '#d3d3d3',
 		borderWidth: 1,
 	},
 	unFollowButton: {
-		width: 160,
+		width: 180,
 		backgroundColor:"#5E9CFE",
 		borderRadius:15,
 		height : 35,
 		alignItems:"center",
 		justifyContent:"center",
-		borderColor: '#F4F8FB',
+		borderColor: '#5E9CFE',
 		borderWidth: 1,
 	},
 	followButtonText: {
-		color: '#5E9CFE'
+		color: 'white'
 	},
 	unfollowButtonText: {
 		color: 'white'

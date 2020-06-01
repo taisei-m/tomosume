@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 interface ProfileNumberProps {
     number: number
-    press?: any
+    press?: Function
     itemName: string
     centerClass?: object
 }
@@ -11,11 +11,12 @@ interface ProfileNumberProps {
 const ProfileNumber = (props: ProfileNumberProps) => {
     return(
         <View style={props.centerClass}>
-            <Text 
-                style={styles.number}
-                onPress={props.press}
-            >{props.number}</Text>
-            <Text style={styles.numberKey}>{props.itemName}</Text>
+            <TouchableOpacity onPress={() => props.press()}>
+                <Text
+                    style={styles.number}
+                >{props.number}</Text>
+                <Text style={styles.numberKey}>{props.itemName}</Text>
+            </TouchableOpacity>
         </View>
     )
 }

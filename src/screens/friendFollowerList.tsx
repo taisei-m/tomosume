@@ -12,12 +12,12 @@ const FollowerList = (props) => {
     const [_followerList, setFollowerList] = useState<followerListType>();
     useEffect(() => {
         (async () => {
-            const userId = props.globalState.state.uid
+            const friendId = props.globalState.state.friendId
             let followerIdList: string[] = []
             let followerUserList: followerListType = []
             let followerProfileData: followerProfileType
             // フォローしているユーザのuidをfollowerIdListへ追加
-            const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
+            const querySnapshot = await db.collection('userList').doc(friendId).collection('follower').get()
             querySnapshot.forEach((data) => {
                 followerIdList.push(data.id)
             })
@@ -32,9 +32,26 @@ const FollowerList = (props) => {
                 })
                 return followerProfileData;
             }))
-            setFollowerList(followerUserList)
+            const checkedFollowExchangeArray =  await checkFollowExchange(followerUserList)
+            setFollowerList(checkedFollowExchangeArray)
         })();
     }, [])
+    const checkFollowExchange = async(followeeList: followerListType): Promise<followerListType> => {
+        const userId = props.globalState.state.userData.uid
+        const followerUserList: string[] = []
+        const followerList = await db.collection('userList').doc(userId).collection('follower').get()
+        followerList.forEach((data) => {
+            followerUserList.push(data.id)
+        })
+        //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
+        followeeList.forEach((item) => {
+            let followeeUserId = item.uid
+            let isFollowExchange = followerUserList.includes(followeeUserId)
+        // 相互フォローの場合true, 相互フォローしていない場合falseを代入
+            isFollowExchange ? item.followExchange = true : item.followExchange = false
+        })
+        return followeeList
+    }
     return(
         <FlatList
             style={styles.container}
@@ -51,7 +68,7 @@ const FollowerList = (props) => {
                         id={item.uid}
                         //自分がフォローしているので必ずtrueとして渡す
                         isFollowExchange={true}
-                        userId = {props.globalState.state.uid}
+                        userId = {props.globalState.state.userData.uid}
                     />
                 </View>
             }
