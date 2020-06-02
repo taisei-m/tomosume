@@ -38,7 +38,7 @@ const LoginScreen = (props: any) => {
     //CreateAccount.tsxの方が綺麗に書いてある
     const validateTextEmailInput = (textType: string) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '*有効なメールアドレスを入力してください';
+        let denyText: string = '*メールアドレスの形式が正しくありません';
         let blankText: string = '';
         let fillblankText: string = '*メールアドレスは必須です';
 
@@ -78,26 +78,8 @@ const LoginScreen = (props: any) => {
         }
     }
 
-    //新規登録で使うからコメントアウト残す 
-    // const signinErrorTextBlankInput = (errorCode: string) => {
-    //     let outputErrorText: string = '';
-
-    //     switch (errorCode) {
-    //         case 'Email is blank':
-    //                 outputErrorText = 'メールアドレスが未入力です';
-    //             break;
-    //         case 'Password is blank':
-    //             outputErrorText = 'パスワードが未入力です';
-    //             break;
-    //         case 'None is blank':
-    //                 outputErrorText = '';
-    //             break;
-    //     }
-    //     setSigninErrorText(outputErrorText);
-    // }
     const signinErrorTextInputFirebase = (errorCode: string, errorMessage: string) => {
         let outputErrorText: string = '';
-
         switch (errorCode) {
             case 'auth/wrong-password':
                 //default firebase error message: 'The password is invalid or the user does not have a password'
@@ -215,22 +197,7 @@ const LoginScreen = (props: any) => {
     }
 
     const pushLogin = () => {
-        
-        //↓新規登録で使う
-        // //////未入力欄があるかどうかのチェック
-        // ///signinボタンの上に表示されるメッセージ
-        // let blankErrorCode: string = '';
-        // if (emailAsRendered == "") {
-        //     blankErrorCode = 'Email is blank';
-        //     validateTextEmailInput('fillBlank');
-        //     emailErrorIsRedInput(true);
-        // } else if (passwordAsRendered == "") {
-        //     blankErrorCode = 'Password is blank';
-        
-        // } else if (emailAsRendered !== "" && passwordAsRendered !== "") {
-        //     blankErrorCode = 'None is blank';
-        // }
-        // signinErrorTextBlankInput(blankErrorCode);
+
         SigninButtonIsloadingInput(true);
 
             firebase.auth().signInWithEmailAndPassword(emailAsRendered, passwordAsRendered).catch(function (error) {

@@ -76,7 +76,7 @@ const CreateAccount = (props: any) => {
     }
     const emailErrorMessageInput = (passedErrorMessageType: string) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '*有効なメールアドレスを入力してください';
+        let denyText: string = '*メールアドレスの形式が正しくありません';
         let blankText: string = '';
         let fillblankText: string = '*メールアドレスは必須です';
         let errorMessage: string = '';
@@ -212,12 +212,13 @@ const CreateAccount = (props: any) => {
         }
         //validation
         ////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
+        let usernamePattern = new RegExp(/^.{1,13}/);
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
         let isUsernameValid: boolean = true;
+        let isUsernameBlank: boolean = usernamePattern.test(username);
         let isEmailValid: boolean = emailPattern.test(email);
         let isPasswordValid: boolean = passwordPattern.test(password);
-        let isUsernameBlank: boolean = true;
         let isEmailBlank: boolean = true;
         let isPasswordBlank: boolean = true;
 
