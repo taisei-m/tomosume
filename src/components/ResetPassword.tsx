@@ -93,7 +93,7 @@ const ResetPassword = (props) => {
             firebase.auth().languageCode = 'ja';
             user.sendPasswordResetEmail(email).then(function() {
             // Email sent.
-               alert("再設定メールを送信しました。");
+               alert("パスワード再設定メールを送信しました。");
                props.navigation.navigate('LoginScreen');
             }).catch(function(error) {
             // An error happened.
