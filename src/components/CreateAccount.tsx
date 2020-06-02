@@ -147,6 +147,10 @@ const CreateAccount = (props: any) => {
                 //Thrown if the password is not strong enough.
                 outputErrorText = '脆弱性が高いためパスワードを再度設定してください';
                 break;
+            case 'auth/network-request-failed':
+                //default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
+                outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
+                break;
             case 'refresh':
                 outputErrorText = '';
                 break;

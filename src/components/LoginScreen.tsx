@@ -345,18 +345,18 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent:"center",
         paddingLeft: '5%',
-        paddingRight: 20,
+        paddingRight: '5%',
     },
     inputText:{
         height:50,
         color: "black",
     },
     inputErrorMessage:{
-        marginBottom: "5%",
+        marginBottom: "3%",
         color: "red",
     },
     inputNotErrorMessage:{
-        marginBottom: "5%",
+        marginBottom: "3%",
         color: "#48D1CC",
     },
     forgotText: {
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
 	aboveButtonMessage: {
-		marginTop: '2%',
+		marginTop: '3%',
 		marginBottom: '4%',
 		color: 'red',
 	 },
@@ -386,9 +386,4 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10
     },
-    buttonToCreateAccount: {
-        // marginVertical: 10,
-        textDecorationLine: 'underline',
-        marginTop: '5%',
-    }
 });
