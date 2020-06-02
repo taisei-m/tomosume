@@ -54,19 +54,23 @@ const ResendEmail = (props) => {
             存在しないメアドの場合でもユーザーにはそのメアドに「送信しました」って映るようにした。
             やから両方に同じ処理書いた。今後わかったら改善してくれ。
         */
-        let user = props.globalState.state.userData;
-        user.sendEmailVerification().then(function() {
-            // Email sent.
-            let textType: string = '再送信';
-            let email: string = '';
-            titleTextInput(textType, email);
-        }).catch(function(error: never) {
-        // An error happened.
-            console.log(error);
-            let textType: string = '再送信';
-            let email: string = '';
-            titleTextInput(textType, email);
-        })
+        let user = firebase.auth().currentUser;
+        if (user) {
+            user.sendEmailVerification().then(function () {
+                // Email sent.
+                let textType: string = '再送信';
+                let email: string = '';
+                titleTextInput(textType, email);
+            }).catch(function (error: never) {
+                // An error happened.
+                console.log(error);
+                let textType: string = '再送信';
+                let email: string = '';
+                titleTextInput(textType, email);
+            })
+        } else {
+            console.log("ResendEmail.tsx  userが取得できませんでした");
+        }
     }
 
 
@@ -94,7 +98,7 @@ const ResendEmail = (props) => {
             <TouchableOpacity
                 onPress={() => { _navigation.navigate('LoginScreen') }}
             >
-                <Text style={styles.buttonToLogin}> ログイン画面へ </Text>
+                <Text style={styles.ToLoginText}> ログイン画面へ </Text>
             </TouchableOpacity>
         </View>
     );
@@ -159,8 +163,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white'
     },
-    buttonToLogin: {
-        textDecorationLine: 'underline'
+    ToLoginText: {
+        textDecorationLine: 'underline',
+        marginTop: '5%',
     },
     icon: {
         marginRight: 10

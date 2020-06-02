@@ -32,7 +32,6 @@ const Splash = (props) => {
                 }
             } else {
                 // No user is signed in.
-                console.log("No user is signed in.");
                 isnotAuthed = "true";
             }
             globalState.setSignout(isnotAuthed);
