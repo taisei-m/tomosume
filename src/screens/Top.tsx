@@ -4,32 +4,17 @@ import {db} from '../../firebaseConfig'
 import Item from '../components/Item';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-
-type ReviewDocResponse = {
-	category: string,
-	createdAt: firebase.firestore.Timestamp,
-	favoriteMenu: string,
-	price: string,
-	shopAddress: string,
-	shopId: string,
-	shopName: string
-	user: firebase.firestore.DocumentReference
-	userName?: string
-	iconURL?: string
-	key?: string
-	userId?: string
-}
-
-type ReviewsDocResponse = ReviewDocResponse[]
+import {ReviewDocResponse} from '../types/types'
+import {ReviewsDocResponse} from '../types/types'
 
 const Top = (props) => {
-    console.log('top============================')
-    console.log(props.globalState.state.isSignout)
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     useEffect(() => {
         (async () => {
+            const uidArray = await getFollowingUid()
+            const testArray = await convertTypeToReference(uidArray)
             let reviewArray: ReviewsDocResponse = []
-            const querySnapshot = await db.collectionGroup('reviews').orderBy('createdAt', 'desc').get()
+            const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', testArray).orderBy('createdAt', 'desc').get()
             const queryDocsSnapshot = querySnapshot.docs
             reviewArray = await Promise.all(queryDocsSnapshot.map(async (item) => {
                 let review = item.data() as ReviewDocResponse
@@ -43,10 +28,30 @@ const Top = (props) => {
             setAllReviews(reviewArray)
         })()
     }, [])
-
-    const toFriendProfile = (id: string) => {
+    //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
+    const convertTypeToReference = (array: string[]):Promise<firebase.firestore.DocumentReference[]> => {
+        let reference: firebase.firestore.DocumentReference
+        // 文字列firstを削除する
+        array = array.filter(n => n !== 'first')
+        let convertedArray = array.map((uid) => {
+            reference = db.collection('userList').doc(uid)
+            return reference
+        })
+        return convertedArray
+    }
+    // ログインユーザのフォローしているユーザのuidを取得する
+    const getFollowingUid = async():Promise<string[]> => {
+        let followingUidList: string[] = []
+        // この書き方がsubcollectionの展開の仕方のはず
+        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('follower').get()
+        followingUidList =  querySnapshot.docs.map((doc) => {
+            return doc.id
+        })
+        return followingUidList
+    }
+    // 友達のプロフィール欄に遷移する
+    const toFriendProfile = (id: string):void => {
         props.globalState.setFriendId(id)
-        // props.navigation.navigate('friendProfile')
         props.navigation.navigate('friendProfile')
     }
 

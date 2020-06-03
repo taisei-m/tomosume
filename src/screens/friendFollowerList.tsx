@@ -37,7 +37,7 @@ const FollowerList = (props) => {
         })();
     }, [])
     const checkFollowExchange = async(followeeList: followerListType): Promise<followerListType> => {
-        const userId = props.globalState.state.userData.uid
+        const userId = props.globalState.state.uid
         const followerUserList: string[] = []
         const followerList = await db.collection('userList').doc(userId).collection('follower').get()
         followerList.forEach((data) => {
@@ -66,9 +66,8 @@ const FollowerList = (props) => {
                     <Text style={styles.text}>{item.userName}</Text>
                     <FollowButton
                         id={item.uid}
-                        //自分がフォローしているので必ずtrueとして渡す
-                        isFollowExchange={true}
-                        userId = {props.globalState.state.userData.uid}
+                        isFollowExchange={item.followExchange}
+                        userId = {props.globalState.state.uid}
                     />
                 </View>
             }
