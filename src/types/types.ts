@@ -68,3 +68,21 @@ export type predictionsType = {
 export type structuredFormattingType = {
     main_text: string
 }
+
+// Top.tsx
+export type ReviewDocResponse = {
+	category: string,
+	createdAt: firebase.firestore.Timestamp,
+	favoriteMenu: string,
+	price: string,
+	shopAddress: string,
+	shopId: string,
+	shopName: string
+	user: firebase.firestore.DocumentReference
+	userName?: string
+	iconURL?: string
+	key?: string
+	userId?: string
+}
+
+export type ReviewsDocResponse = ReviewDocResponse[]
