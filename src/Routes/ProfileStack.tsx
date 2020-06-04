@@ -32,7 +32,9 @@ const ProfileStack = (props) => {
         <ProfileNavStack.Screen
             name="followerList"
             component={followerList}
-            options={{ headerShown: true }}
+            options={{ headerShown: true,
+                title: 'フォローリスト'
+            }}
         />
         <ProfileNavStack.Screen
             name="followeeList"
