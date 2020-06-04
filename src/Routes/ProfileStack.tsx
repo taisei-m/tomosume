@@ -5,6 +5,7 @@ import followerList from '../screens/followerList';
 import followeeList from '../screens/followeeList'
 import Setting from '../screens/Setting'
 import findUser from '../screens/findUser'
+import friendProfile from '../screens/friendProfile'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 
@@ -46,6 +47,11 @@ const ProfileStack = (props) => {
         <ProfileNavStack.Screen
             name="findUser"
             component={findUser}
+            options={{ headerShown: true }}
+        />
+        <ProfileNavStack.Screen
+            name="friendProfile"
+            component={friendProfile}
             options={{ headerShown: true }}
         />
     </ProfileNavStack.Navigator>
