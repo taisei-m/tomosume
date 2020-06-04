@@ -4,9 +4,9 @@ import Profile from '../screens/Profile';
 import followerList from '../screens/followerList';
 import followeeList from '../screens/followeeList'
 import Setting from '../screens/Setting'
+import findUser from '../screens/findUser'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-
 
 const ProfileNavStack = createStackNavigator();
 
@@ -41,6 +41,11 @@ const ProfileStack = (props) => {
         <ProfileNavStack.Screen
             name="toSettingPage"
             component={Setting}
+            options={{ headerShown: true }}
+        />
+        <ProfileNavStack.Screen
+            name="findUser"
+            component={findUser}
             options={{ headerShown: true }}
         />
     </ProfileNavStack.Navigator>

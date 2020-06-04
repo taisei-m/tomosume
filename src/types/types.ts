@@ -86,3 +86,13 @@ export type ReviewDocResponse = {
 }
 
 export type ReviewsDocResponse = ReviewDocResponse[]
+
+// findUser.tsx
+export type userProfileDataType = {
+    userName: string
+    uid: string
+    iconURL: string
+    followExchange: boolean
+}
+
+export type candidateUesrsDataListType = userProfileDataType[]

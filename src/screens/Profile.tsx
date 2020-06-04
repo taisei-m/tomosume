@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
+import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
@@ -19,7 +20,6 @@ const Profile = (props: any) => {
 	const [_postNumber, setPostNumber] = useState<number>(0)
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [_userIcon, setUserIcon] = useState<string>();
-
   // ユーザが投稿したレビューの一覧と投稿数を取得
 useEffect(() => {
     const userId = props.globalState.state.uid
@@ -94,6 +94,9 @@ useEffect(() => {
 	}
 	const toFollowerList = () => {
 		props.navigation.navigate('followerList')
+	}
+	const tofindUser = () => {
+		props.navigation.navigate('findUser')
 	}
 	const imageInput = (url: string) =>{
 		setUserIcon(url);
@@ -188,6 +191,12 @@ useEffect(() => {
 					{'編集'}
 				</Text>
 				</TouchableOpacity>
+				<Icon 
+				size={20}
+				name='search'
+				type='font-awesome'
+				color='black'
+				onPress={tofindUser}/>
 			</View>
 			</View>
 		</View>
@@ -257,7 +266,7 @@ useEffect(() => {
 		color: '#818181'
 	},
 	editButton: {
-		width: 180,
+		width: 160,
 		backgroundColor:"white",
 		borderRadius:15,
 		height:35,
@@ -265,6 +274,7 @@ useEffect(() => {
 		justifyContent:"center",
 		borderColor: '#818181',
 		borderWidth: 1,
+		marginRight: 10
 	},
 	editText: {
 		color: 'black',
