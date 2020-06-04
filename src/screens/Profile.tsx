@@ -54,7 +54,6 @@ useEffect(() => {
 		firebase.firestore().collection('userList').doc(userId)
 		.get().then(function(doc) {
 		let userProfileData = doc.data() as userDataDocResponse
-		console.log(userProfileData)
 		setUserName(userProfileData.userName)
 		})
 	},[])
@@ -191,12 +190,13 @@ useEffect(() => {
 					{'編集'}
 				</Text>
 				</TouchableOpacity>
-				<Icon 
+				<Icon
 				size={20}
 				name='search'
 				type='font-awesome'
 				color='black'
-				onPress={tofindUser}/>
+				onPress={tofindUser}
+				/>
 			</View>
 			</View>
 		</View>

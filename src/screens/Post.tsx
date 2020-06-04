@@ -16,7 +16,7 @@ import {predictionsArrayType} from '../types/types'
 // import {predictionsType} from '../types/types'
 // import {structuredFormattingType} from '../types/types'
 
-const Post: React.FC = () => {
+const Post: React.FC = (props) => {
     const [shopName, setShopName] = useState<string>('');
     const [favoriteMenu, changeFavorite] = useState<string>('');
     // 最終的にはnumber型にする。　その際に該当するファイルの型を変更する
@@ -61,9 +61,10 @@ const Post: React.FC = () => {
         }
     }
 
-    const share = async(props:any) => {
+    const share = async() => {
         //たいせいのログインの機能が完成したらprops.globalStateの値に書き換える
-        const userId = '7BUw7mIWX9fBep4Gi2AYZPbryp13'
+        const userId = props.globalState.state.uid
+        console.log(props.globalState.state.uid)
         const shopReview = firebase.firestore().collection('shops')
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
         let latitude: number = 0
@@ -107,11 +108,11 @@ const Post: React.FC = () => {
                     setCategory('')
                 })
                 .catch(function(error: any) {
-                    console.log(error)
+                    console.log(error, '1')
                 })
             })
         } catch (error) {
-            console.log(error)
+            console.log(error, '2')
         }
     }
     return (

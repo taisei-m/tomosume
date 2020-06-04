@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef }from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View,　FlatList, TouchableOpacity} from 'react-native';
 import { Avatar, Card, } from 'react-native-elements'
-
 import firebase from 'firebase/app'
 import {db} from '../../firebaseConfig'
 import RBSheet from "react-native-raw-bottom-sheet";
+import GlobalStateContainer from '../containers/GlobalState';
+import { Subscribe } from 'unstated';
 
 
 type ReviewDocResponse = {
@@ -20,10 +21,10 @@ type ReviewDocResponse = {
 	userName?: string
 	iconURL?: string
 	key?: string
-	userId?: string
+	userId: string
 }
 
-type ShopData = {
+type ShopDocResponse = {
 	address: string
 	latitude: number
 	longitude: number
@@ -35,49 +36,53 @@ type ShopData = {
 type ReviewsDocResponse = ReviewDocResponse[]
 type ShopsArrayType= ShopDocResponse[]
 
-const Search = () => {
-	const [locationData, changeLocationData] = useState<ShopsData>([])
+const Search = (props: any) => {
+	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
 	const [latitude, changeLatitude] = useState<number>(34.7201152);
 	const [longitude, changeLongitude] = useState<number>(137.7394095);
-	const [reviews, setReviews] = useState<ReviewsDocResponse>([])
+	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
+	const [isShownSheet, setIsShownSheet] = useState<boolean>()
 	const refRBSheet = useRef();
 
+	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
-		let dataArray: ShopsData = []
+		let shopDataArray: ShopsArrayType = []
 		db.collection('shops')
-			.get()
-			.then(function(querySnapshot) {
-				querySnapshot.forEach(function(doc) {
-						let tmp = doc.data() as ShopData
-						tmp.id = doc.id
-						dataArray.push(tmp)
-				})
-				changeLocationData(dataArray)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+					let shopDoc = doc.data() as ShopDocResponse
+					shopDoc.id = doc.id
+					shopDataArray.push(shopDoc)
+			})
+			setAllShopsData(shopDataArray)
 		})
 	},[])
-
+	// 選択したお店の全レビューを取得する
 	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
-		let reviewssss: ReviewsDocResponse = []
+		let reviews: ReviewsDocResponse = []
 		const querySnapshot = await db.collectionGroup('reviews').where('shopId', '==', id).orderBy('createdAt', 'desc').get()
-				const queryDocsSnapshot = querySnapshot.docs
-				reviewssss = await Promise.all(queryDocsSnapshot.map(async (item) => {
-					let data = item.data()
-					data.key = item.id
-					const profile = await (data.user).get()
-					data.userName = profile.get('userName')
-					data.iconURL = profile.get('iconURL')
-					data.userId = profile.id
-					//// ここは削除する
-					delete data.user
-					return data
-				}))
-		return reviewssss
+		const queryDocsSnapshot = querySnapshot.docs
+			reviews = await Promise.all(queryDocsSnapshot.map(async (item) => {
+				let reviewData = item.data() as ReviewDocResponse
+				reviewData.key = item.id
+				const profile = await (reviewData.user).get()
+				reviewData.userName = profile.get('userName')
+				reviewData.iconURL = profile.get('iconURL')
+				reviewData.userId = profile.id
+				return reviewData
+			}))
+		return reviews
 	}
-	const handlePress = async (id: string) => {
+	const showShopReviews = async (id: string) => {
 		refRBSheet.current.open()
 		const _reviews = await getAllReviews(id)
-		console.log(_reviews)
-		setReviews(_reviews)
+		setAllReviews(_reviews)
+	}
+	const toProfilePage = (id: string) => {
+		props.globalState.setFriendId(id)
+		refRBSheet.current.close()
+		props.navigation.navigate('friendProfile')
 	}
 	return (
 		<View style={styles.container}>
@@ -85,15 +90,15 @@ const Search = () => {
 				initialRegion={{
 					latitude: latitude,
 					longitude: longitude,
-					latitudeDelta: 0.02,
-					longitudeDelta: 0.02,
+					latitudeDelta: 20,
+					longitudeDelta: 20,
 				}}>
-				{locationData.map((location) =>
+				{allShopsData.map((location) =>
 					<Marker
 						key={location.id}
 						title={location.shopName}
 						description={location.address}
-						onPress={() => handlePress(location.id)}
+						onPress={() => showShopReviews(location.id)}
 						coordinate={
 							{
 								latitude: location.latitude,
@@ -115,7 +120,7 @@ const Search = () => {
 					style={{borderRadius: 20}}
 					ref={refRBSheet}
 					animationType={"slide"}
-					height={270}
+					height={300}
 					closeOnDragDown={true}
 					closeOnPressMask={true}
 					customStyles={{
@@ -124,39 +129,40 @@ const Search = () => {
 						},
 					}}
 				>
-					<View>
+					<View style={{paddingBottom: 50}}>
 						<FlatList
-							style={{marginBottom: 30}}
-							data={reviews}
+							data={_allReviews}
 							renderItem={
 								({ item }) =>
 									<View>
+										<TouchableOpacity>
 										<Card containerStyle={{borderRadius: 25}}>
-											<TouchableOpacity  onPress={() => alert(item.userId)}>
+											<TouchableOpacity  onPress={() => toProfilePage(item.userId)}>
 												<View style={styles.userInfomation}>
 													<Avatar rounded source={{ uri: item.iconURL }}/>
 													<Text style={styles.userName}>{item.userName}</Text>
 												</View>
 											</TouchableOpacity>
-											<View style={{flexDirection: 'row'}}>
-												<View>
-													<View style={{flexDirection: 'row', marginTop: 10,}}>
+											<View>
+													<View style={{flexDirection: 'row',}}>
 														<View style={styles.favorite}>
-															<Text style={styles.itemName}>Favorite Menu</Text>
+															<Text style={styles.itemName}>おすすめのメニュー</Text>
 															<Text style={styles.menuName}>{item.favoriteMenu}</Text>
-														</View>
-														<View style={styles.price}>
-															<Text style={styles.itemName}>Price</Text>
-															<Text style={styles.menuName}>{item.price}</Text>
-														</View>
-														<View style={styles.category}>
-															<Text style={styles.itemName}>Category</Text>
-															<Text style={styles.categoryName}>{item.category}</Text>
 														</View>
 													</View>
 												</View>
+											<View style={{flexDirection: 'row', marginTop: 10}}>
+												<View style={styles.price}>
+													<Text style={styles.itemName}>値段</Text>
+													<Text style={styles.menuName}>{item.price}</Text>
+												</View>
+												<View style={styles.category}>
+													<Text style={styles.itemName}>カテゴリー</Text>
+													<Text style={styles.categoryName}>{item.category}</Text>
+												</View>
 											</View>
 										</Card>
+										</TouchableOpacity>
 									</View>
 							}
 							keyExtractor={item => item.key}
@@ -168,7 +174,17 @@ const Search = () => {
 	);
 }
 
-export default Search;
+const SearchWrapper = ({ navigation }) => {
+	return (
+			<Subscribe to={[GlobalStateContainer]}>
+				{
+					globalState => <Search globalState={globalState} navigation = {navigation} />
+				}
+			</Subscribe>
+	);
+	}
+
+export default SearchWrapper;
 
 const styles = StyleSheet.create({
 	container: {
@@ -193,16 +209,14 @@ const styles = StyleSheet.create({
 			paddingLeft: 10
 	},
 	favorite: {
-			borderRightWidth: 1,
-			borderRightColor: 'grey',
 			paddingRight: 40,
-			marginLeft: 5
+			marginLeft: 5,
 	},
 	price: {
 			borderRightWidth: 1,
 			borderRightColor: 'grey',
 			paddingRight: 40,
-			marginLeft: 10
+			marginLeft: 5
 	},
 	category: {
 			marginLeft: 10,
