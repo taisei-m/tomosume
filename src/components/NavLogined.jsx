@@ -6,6 +6,7 @@ import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileStack from '../Routes/ProfileStack';
 import topStack from '../Routes/topStack'
+import SearchStack from '../Routes/SearchStack'
 
 const Tab1 = createBottomTabNavigator();
 
@@ -36,7 +37,7 @@ export default Tab = () => {
     }}
     >
       <Tab1.Screen name="Top" component={topStack} />
-      <Tab1.Screen name="Search" component={Search} />
+      <Tab1.Screen name="Search" component={SearchStack} />
       <Tab1.Screen name="Post" component={Post} />
       <Tab1.Screen name="Profile" component={ProfileStack} />
     </Tab1.Navigator>
