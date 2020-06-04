@@ -12,9 +12,11 @@ const Top = (props) => {
     useEffect(() => {
         (async () => {
             const uidArray = await getFollowingUid()
-            const testArray = await convertTypeToReference(uidArray)
+            // 自分の投稿も表示されるように自分のuidを追加する
+            uidArray.push(props.globalState.state.uid)
+            const convertedUidArray = await convertTypeToReference(uidArray)
             let reviewArray: ReviewsDocResponse = []
-            const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', testArray).orderBy('createdAt', 'desc').get()
+            const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', convertedUidArray).orderBy('createdAt', 'desc').get()
             const queryDocsSnapshot = querySnapshot.docs
             reviewArray = await Promise.all(queryDocsSnapshot.map(async (item) => {
                 let review = item.data() as ReviewDocResponse
