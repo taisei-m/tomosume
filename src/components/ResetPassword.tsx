@@ -1,12 +1,12 @@
-import React, { Component, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import firebase from '../../firebaseConfig'
 
-const ResetPassword = (props) => {
-    const [navigation, setNavigation] = useState(props.navigation);
+const ResetPassword = (props:any) => {
+    const [navigation] = useState(props.navigation);
     const [_email, setEmail] = useState<string>('');
     const [_setErrorMessageAboveSubmitButton, setErrorMessageAboveSubmitButton] = useState<string>('');
     const [_submitButtonIsloading, setSubmitButtonIsloading] = useState<boolean>(false);
@@ -56,7 +56,7 @@ const ResetPassword = (props) => {
                 break;
             case 'auth/user-not-found':
                 //The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
-                outputErrorText = 'メールアドレスまたはパスワードが間違っています';
+                outputErrorText = 'このメールアドレスは登録されていません';
                 break;           
             case 'auth/network-request-failed':
                 //default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
@@ -71,7 +71,7 @@ const ResetPassword = (props) => {
         }
         setErrorMessageAboveSubmitButton(outputErrorText);
     }
-    const resetPassword = () => {
+    const pushSubmit = () => {
         submitButtonIsloadingInput(true);
         console.log("pushed resetPassword")
         let email: string = _email;
@@ -79,6 +79,9 @@ const ResetPassword = (props) => {
         let errorMessage: string = '';
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let approveEmailValidation = emailPattern.test(email);
+        console.log(email);
+        props.globalState.setResetPasswordEmail(email);
+
         if (email == '') {
             errorCode = 'email is blank';
             errorMessage = '';
@@ -92,9 +95,9 @@ const ResetPassword = (props) => {
             let user = firebase.auth();
             firebase.auth().languageCode = 'ja';
             user.sendPasswordResetEmail(email).then(function() {
-            // Email sent.
-               alert("パスワード再設定メールを送信しました。");
-               props.navigation.navigate('LoginScreen');
+                // Email sent.
+                // alert("パスワード再設定メールを送信しました。");
+                props.navigation.navigate('afterResetEmail');
             }).catch(function(error) {
             // An error happened.
                 errorCode = error.code;
@@ -131,7 +134,7 @@ const ResetPassword = (props) => {
                 title="submit"
                 type="solid"
                 buttonStyle={styles.button}
-                onPress={resetPassword}
+                onPress={pushSubmit}
                 loading={_submitButtonIsloading}
                     />
             </View>

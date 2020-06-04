@@ -7,7 +7,8 @@ export default class GlobalContainer extends Container {
       uid: '',
       itemId: '',
       friendId: '',
-      userEmail: ''
+      createAccountEmail: '',
+      resetPasswordEmail: '',
    }
    //Splash.tsx
    setSplashFalse = ():void => {
@@ -25,7 +26,7 @@ export default class GlobalContainer extends Container {
    login = (uid: string):void => {
       this.setState({
          isSignout: "false"
-      }),
+      });
       this.setState({
          uid: uid
       })
@@ -47,9 +48,15 @@ export default class GlobalContainer extends Container {
       })
    }
    //CreateAccount.tsx
-   setUserEmail = (userEmail: string): void => {
+   setCreateAccountEmail = (userEmail: string): void => {
       this.setState({
-         userEmail: userEmail
+         createAccountEmail: userEmail
+      })
+   }
+   //RestPassword.tsx
+   setResetPasswordEmail = (userEmail: string): void => {
+      this.setState({
+         resetPasswordEmail: userEmail
       })
    }
    //Splash.tsx
