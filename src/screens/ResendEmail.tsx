@@ -1,13 +1,12 @@
-import React, { Component, useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Tile, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import firebase from '../../firebaseConfig';
-import { convertCompilerOptionsFromJson } from 'typescript';
 
 const ResendEmail = (props) => {
-    const [_navigation, setNavigation] = useState(props.navigation);
+    const [_navigation] = useState(props.navigation);
     const [_email, setEmail] = useState<string>('');
     const [_titleText, setTitleText] = useState<string>('');
     const [_contentText, setContentText] = useState<string>("メールを確認して本登録をしてください。");
@@ -31,7 +30,7 @@ const ResendEmail = (props) => {
 
     useEffect(
         () => {
-            let email: string = props.globalState.state.userEmail;
+            let email: string = props.globalState.state.createAccountEmail;
             emailInput(email);
             let textType: string = '初期表示';
             titleTextInput(textType, email);
@@ -61,7 +60,7 @@ const ResendEmail = (props) => {
                 let textType: string = '再送信';
                 let email: string = '';
                 titleTextInput(textType, email);
-            }).catch(function (error: never) {
+            }).catch(function (error: any) :void {
                 // An error happened.
                 console.log(error);
                 let textType: string = '再送信';

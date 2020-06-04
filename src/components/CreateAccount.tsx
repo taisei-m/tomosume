@@ -303,7 +303,7 @@ const CreateAccount = (props: any) => {
 
             if (result.user) {
                 let user = result.user;
-                _globalState.setUserEmail(user.email);
+                _globalState.setCreateAccountEmail(user.email);
 
                 let db = firebase.firestore().collection('userList').doc(user.uid)
                 db.set({
