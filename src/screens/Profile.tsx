@@ -101,15 +101,21 @@ useEffect(() => {
 		setUserIcon(url);
 	}
 	const changeIcon = async() => {
-		const iconUrl = await changeIconUrl()
-		await setIconToFirestore(iconUrl);
-		imageInput(iconUrl);
+		try {
+			const iconUrl = await changeIconUrl()
+			await setIconToFirestore(iconUrl);
+			imageInput(iconUrl);
+		} catch(error) {
+			console.log(error)
+		}
 	}
 	const changeIconUrl = async():Promise<string> => {
 		let result = await selectIconPicture() as pickerResult
-		let data = ''
-		data = await uploadResult(result.uri, 'test-image7')
-		return data
+		if (!result.cancelled) {
+			let data = ''
+			data = await uploadResult(result.uri, props.globalState.state.uid)
+			return data
+		}
 	}
 	// 写真の変更をキャンセルした際の処理を書く必要あり
 	const selectIconPicture = async(): Promise<ImagePicker.ImagePickerResult> => {
@@ -130,7 +136,6 @@ useEffect(() => {
 		return url
 	}
 	const setIconToFirestore = (url:string):Promise<void> => {
-		console.log('3a')
 		const userId = props.globalState.state.uid
 		return db.collection('userList').doc(userId)
 		.set({
@@ -187,7 +192,7 @@ useEffect(() => {
 				>
 				<Text
 					style={styles.editText}>
-					{'編集'}
+					{'設定'}
 				</Text>
 				</TouchableOpacity>
 				<Icon
