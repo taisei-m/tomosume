@@ -14,10 +14,10 @@ const ChangeUserName = (props) => {
     }, [])
 
     const changeName = () => {
-        console.log(_userName)
         db.collection('userList').doc(props.globalState.state.uid).update({
             userName: _userName
         })
+        props.navigation.navigate('ProfileTop')
     }
 
     return (

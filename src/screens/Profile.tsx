@@ -263,7 +263,7 @@ useEffect(() => {
 	},
 	userName: {
 		color: 'black',
-		fontSize: 18,
+		fontSize: 15,
 		fontWeight: '700',
 	},
 	userIcon: {
