@@ -6,23 +6,9 @@ import {db} from '../../firebaseConfig'
 import GlobalStateContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import ProfileReviews from '../components/ProfileReviews';
-
-type friendReviewDocResponse = {
-	category: string,
-	createdAt: firebase.firestore.Timestamp,
-	favoriteMenu: string,
-	price: string,
-	shopAddress: string,
-	shopId: string,
-	shopName: string
-	user: firebase.firestore.DocumentReference
-}
-type friendDataDocResponse = {
-	userName: string
-	iconURL: string
-	uid: string
-}
-type friendReviewsType = friendReviewDocResponse[]
+import {friendReviewDocResponse} from '../types/types'
+import {friendDataDocResponse} from '../types/types'
+import {friendReviewsType} from '../types/types'
 
 const FriendProfile = (props: any) => {
 	const [friendName, setFriendName] = useState<string>()
@@ -32,6 +18,43 @@ const FriendProfile = (props: any) => {
 	const [allReviews, setAllReviews] = useState<friendReviewsType>([])
 	const [isFollow, setIsFollow] = useState(true)
 	const [image, setFriendIconUrl] = useState<string>();
+	const [canPressFollowButton, setCanPressFollowButton] = useState<boolean>(true)
+
+	//自分のページを見ている場合、フォローボタンを押せないようにする
+	useEffect(() => {
+		checkCanPressFollowButton()
+	},[])
+
+	const checkCanPressFollowButton = () => {
+		const friendId = props.globalState.state.friendId
+		const userId = props.globalState.state.uid
+		if(userId == friendId) {
+			setCanPressFollowButton(true)
+		} else {
+			setCanPressFollowButton(false)
+		}
+	}
+
+	useEffect(() => {
+		checkFollowExchange()
+	},[])
+
+	// ユーザをフォローしているかを確認する処理
+	const checkFollowExchange = async() => {
+		const friendId = props.globalState.state.friendId
+		const userId = props.globalState.state.uid
+		let followerIdArray: string[] = []
+		const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
+		querySnapshot.forEach((doc) => {
+			followerIdArray.push(doc.id)
+		})
+		followerIdArray = followerIdArray.filter(n => n !== 'first')
+		if (followerIdArray.includes(friendId)) {
+			setIsFollow(true)
+		} else {
+			setIsFollow(false)
+		}
+	}
 
 	// 投稿されたレビューを取得する
 	useEffect(() => {
@@ -39,7 +62,7 @@ const FriendProfile = (props: any) => {
 		const ref = db.collection('userList').doc(friendId)
 		let friendReviews: friendReviewsType = []
 		db.collectionGroup('reviews').where('user', '==', ref).orderBy('createdAt', 'desc').get()
-      .then(function(querySnapshot) {
+        .then(function(querySnapshot) {
 			querySnapshot.forEach(function(doc) {
 				let userReview = doc.data() as friendReviewDocResponse
 				friendReviews.push(userReview)
@@ -48,7 +71,7 @@ const FriendProfile = (props: any) => {
 			let reviewNumber: number = friendReviews.length
 			setPostNumber(reviewNumber)
 			setAllReviews(friendReviews)
-      })
+    })
 	}, [])
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
@@ -90,10 +113,15 @@ const FriendProfile = (props: any) => {
 	},[])
 	//　フォロー状態を解除する
 	const pressFollowButton = () => {
-		const userId = props.globalState.state.userData.uid
+		const userId = props.globalState.state.uid
 		const friendId = props.globalState.state.friendId
-		db.collection('userList').doc(userId).collection('follower').doc(friendId).delete()
-		setIsFollow(!isFollow)
+		if (isFollow) {
+			db.collection('userList').doc(userId).collection('follower').doc(friendId).delete()
+			setIsFollow(false)
+		} else {
+			db.collection('userList').doc(userId).collection('follower').doc(friendId).set({})
+			setIsFollow(true)
+		}
 	}
 
 	const toFolloweeList = () => {
@@ -143,6 +171,7 @@ const FriendProfile = (props: any) => {
 				</View>
 				<View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
 				<TouchableOpacity
+					disabled={canPressFollowButton}
 					style={
 						isFollow
 						? styles.followButton
