@@ -23,6 +23,7 @@ const Post = (props) => {
     const [inputedShopName, setInputedShopName] =useState<string>('');
     const [predictions, setPredictions] = useState<predictionsArrayType>();
     const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const selectCategory = (category: string) => {
         setCategory(category)
@@ -59,7 +60,7 @@ const Post = (props) => {
     }
 
     const share = async() => {
-        //たいせいのログインの機能が完成したらprops.globalStateの値に書き換える
+        setIsLoading(true)
         const userId = props.globalState.state.uid
         const shopReview = firebase.firestore().collection('shops')
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
@@ -104,6 +105,7 @@ const Post = (props) => {
                     selectCategory('選択してください')
                 })
                 .then(() => {
+                    setIsLoading(false)
                     props.navigation.navigate('Top')
                 })
                 .catch(function(error: any) {
@@ -229,6 +231,7 @@ const Post = (props) => {
                     type='solid'
                     onPress={share}
                     disabled={category == '' || shopName == ''}
+                    loading={isLoading}
                 />
             </View>
         </View>
