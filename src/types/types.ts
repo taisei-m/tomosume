@@ -96,3 +96,21 @@ export type userProfileDataType = {
 }
 
 export type candidateUesrsDataListType = userProfileDataType[]
+
+// friendProfile.tsx
+export type friendReviewDocResponse = {
+	category: string,
+	createdAt: firebase.firestore.Timestamp,
+	favoriteMenu: string,
+	price: string,
+	shopAddress: string,
+	shopId: string,
+	shopName: string
+	user: firebase.firestore.DocumentReference
+}
+export type friendDataDocResponse = {
+	userName: string
+	iconURL: string
+	uid: string
+}
+export type friendReviewsType = friendReviewDocResponse[]
