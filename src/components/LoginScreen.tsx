@@ -4,6 +4,7 @@ import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig'
 import GlobalStateContainer from '../containers/GlobalState';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const LoginScreen = (props: any) => {
     const [emailAsRendered, setEmailAsRendered] = useState('');
@@ -226,6 +227,7 @@ const LoginScreen = (props: any) => {
             })
         }
     return (
+        <KeyboardAwareScrollView style={styles.keyboardScrollView}>
         <View style={styles.container}>
             <View>
                 <Text style={styles.logo}>TomoSume</Text>
@@ -302,8 +304,9 @@ const LoginScreen = (props: any) => {
                 onPress={() => { props.navigation.navigate('ResendEmail') }}
             >
                 <Text style={styles.resendEmailText}> ResendEmail </Text>
-            </TouchableOpacity>
+                </TouchableOpacity>
         </View>
+                </KeyboardAwareScrollView>
     );
 }
 
@@ -321,6 +324,10 @@ export default LoginScreenWrapper;
 
 
 const styles = StyleSheet.create({
+    keyboardScrollView: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
     sigininButton: {
         width: "80%",
     },
@@ -328,14 +335,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
     },
     logo:{
         fontWeight:"bold",
         fontSize:50,
         color: "black",
-        marginTop: "5%",
-        marginBottom:"20%",
+        marginTop: "20%",
+        marginBottom:"10%",
     },
     inputView:{
         width:"80%",
