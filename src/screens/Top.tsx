@@ -30,6 +30,7 @@ const Top = (props) => {
                 return review
             }))
             setAllReviews(reviewArray)
+            setRefreshing(false)
         })()
     }, [isRefreshed])
     //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
@@ -61,6 +62,7 @@ const Top = (props) => {
 
     const handleRefresh = () => {
         setIsRefreshed(!isRefreshed)
+        setRefreshing(true)
     }
 
     return(
