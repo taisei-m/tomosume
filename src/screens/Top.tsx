@@ -9,6 +9,8 @@ import {ReviewsDocResponse} from '../types/types'
 
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
+    const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+    const [refreshing, setRefreshing] = useState<boolean>(false)
     useEffect(() => {
         (async () => {
             const uidArray = await getFollowingUid()
@@ -28,8 +30,9 @@ const Top = (props) => {
                 return review
             }))
             setAllReviews(reviewArray)
+            setRefreshing(false)
         })()
-    }, [])
+    }, [isRefreshed])
     //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
     const convertTypeToReference = (array: string[]):Promise<firebase.firestore.DocumentReference[]> => {
         let reference: firebase.firestore.DocumentReference
@@ -57,6 +60,11 @@ const Top = (props) => {
         props.navigation.navigate('friendProfile')
     }
 
+    const handleRefresh = () => {
+        setIsRefreshed(!isRefreshed)
+        setRefreshing(true)
+    }
+
     return(
         <View style={styles.container}>
             <FlatList
@@ -76,6 +84,8 @@ const Top = (props) => {
                                 pressMethod={toFriendProfile}
                                 />
                 }
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
             />
         </View>
     )

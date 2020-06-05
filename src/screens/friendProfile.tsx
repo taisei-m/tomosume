@@ -34,11 +34,9 @@ const FriendProfile = (props: any) => {
 			setCanPressFollowButton(false)
 		}
 	}
-
 	useEffect(() => {
 		checkFollowExchange()
 	},[])
-
 	// ユーザをフォローしているかを確認する処理
 	const checkFollowExchange = async() => {
 		const friendId = props.globalState.state.friendId
@@ -55,7 +53,6 @@ const FriendProfile = (props: any) => {
 			setIsFollow(false)
 		}
 	}
-
 	// 投稿されたレビューを取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -87,29 +84,35 @@ const FriendProfile = (props: any) => {
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		let followeeArray:string[] = []
-		db.collection('userList').doc(friendId).collection('followee')
-		.get()
-		.then(function(querySnapshot) {
+		const unsubscribe = db.collection('userList').doc(friendId).collection('followee')
+		.onSnapshot(function(querySnapshot) {
+			followeeArray = []
 			querySnapshot.forEach(function(doc) {
 			followeeArray.push(doc.id)
 			})
 		let followeeNumber: number = followeeArray.length-1
 		setFollowee(followeeNumber)
 	})
+	return () => {
+		unsubscribe();
+	};
 	},[])
 	//フォローの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
 		let followerArray:string[] = []
-		db.collection('userList').doc(friendId).collection('follower')
-		.get()
-		.then(function(querySnapshot:any) {
+		const unsubscribe = db.collection('userList').doc(friendId).collection('follower')
+		.onSnapshot(function(querySnapshot:any) {
+			followerArray = []
 			querySnapshot.forEach(function(doc:any) {
 			followerArray.push(doc.id)
 			})
 			let followerNumber: number = followerArray.length-1
 			setFollower(followerNumber)
 	})
+	return () => {
+		unsubscribe();
+	};
 	},[])
 	//　フォロー状態を解除する
 	const pressFollowButton = () => {
