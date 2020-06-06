@@ -20,6 +20,8 @@ const Profile = (props: any) => {
 	const [_postNumber, setPostNumber] = useState<number>(0)
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [_userIcon, setUserIcon] = useState<string>();
+	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+    const [refreshing, setRefreshing] = useState<boolean>(false)
   // ユーザが投稿したレビューの一覧と投稿数を取得
 useEffect(() => {
     const userId = props.globalState.state.uid
@@ -34,8 +36,9 @@ useEffect(() => {
 			let reviewNumber: number = userReviews.length
 			setPostNumber(reviewNumber)
 			setAllReviews(userReviews)
+			setRefreshing(false)
 		})
-	}, [])
+	}, [isRefreshed])
 	// ユーザーのアイコン画像を取得
 	useEffect(() => {
 		(async () => {
@@ -51,39 +54,50 @@ useEffect(() => {
 	// ユーザの名前を取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
-		firebase.firestore().collection('userList').doc(userId)
-		.get().then(function(doc) {
+		const unsubscribe = firebase.firestore().collection('userList').doc(userId)
+		.onSnapshot(function(doc) {
 		let userProfileData = doc.data() as userDataDocResponse
 		setUserName(userProfileData.userName)
 		})
+		return () => {
+			unsubscribe();
+		};
 	},[])
 	// ユーザのフォロワーを取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
 		let followeeArray:string[] = []
-		db.collection('userList').doc(userId).collection('followee')
-		.get()
-		.then(function(querySnapshot) {
+		const unsubscribe = db.collection('userList').doc(userId).collection('followee')
+		.onSnapshot(function(querySnapshot) {
+		// followeeArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
+		followeeArray = []
 		querySnapshot.forEach(function(doc) {
 			followeeArray.push(doc.id)
 		})
 		let followeeNumber: number = followeeArray.length-1
 		setFollowee(followeeNumber)
 	})
+	return () => {
+		unsubscribe();
+	};
 	},[])
 	// ユーザのフォローしている人を取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
 		let followerArray:string[] = []
-		db.collection('userList').doc(userId).collection('follower')
-		.get()
-		.then(function(querySnapshot) {
+		const unsubscribe = db.collection('userList').doc(userId).collection('follower')
+		.onSnapshot(function(querySnapshot) {
+		// followerArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
+		followerArray = []
 		querySnapshot.forEach(function(doc) {
 			followerArray.push(doc.id)
 		})
 		let followerNumber: number = followerArray.length-1
 		setFollower(followerNumber)
 	})
+	return () => {
+		unsubscribe();
+	};
 	},[])
 	const setting = () => {
 		props.navigation.navigate('toSettingPage')
@@ -142,6 +156,10 @@ useEffect(() => {
 		iconURL: url
 		}, {merge: true})
 	}
+	const handleRefresh = () => {
+		setIsRefreshed(!isRefreshed)
+		setRefreshing(true)
+    }
 
 	return (
 		<View style={styles.container}>
@@ -158,7 +176,9 @@ useEffect(() => {
 				</TouchableOpacity>
 			</View>
 			<View style={{alignItems: 'center', marginTop: 10}}>
-				<Text style={styles.userName}>{_userName}</Text>
+				<Text
+				numberOfLines={2}
+				style={styles.userName}>{_userName}</Text>
 			</View>
 			</View>
 			<View style={{marginLeft: 30}}>
@@ -219,6 +239,8 @@ useEffect(() => {
 				/>
 			}
 			keyExtractor={item => item.shopId}
+			refreshing={refreshing}
+            onRefresh={handleRefresh}
 			/>
 		</SafeAreaView>
 		</View>
@@ -243,8 +265,9 @@ useEffect(() => {
 	},
 	userName: {
 		color: 'black',
-		fontSize: 18,
+		fontSize: 15,
 		fontWeight: '700',
+		width: 90
 	},
 	userIcon: {
 		width: 90,

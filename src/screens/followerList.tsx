@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, FlatList, Text } from 'react-native';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -35,6 +35,10 @@ const FollowerList = (props) => {
             setFollowerList(followerUserList)
         })();
     }, [])
+    const toProfileDetailPage = (id) => {
+        props.globalState.setFriendId(id)
+        props.navigation.navigate('friendProfile')
+    }
     return(
         <FlatList
             style={styles.container}
@@ -42,11 +46,15 @@ const FollowerList = (props) => {
             keyExtractor={item => item.uid}
             renderItem={({item}) =>
                 <View style={styles.cell}>
-                    <Avatar
-                        rounded
-                        containerStyle={{marginLeft: 20, marginTop: 9}}
-                        source={{ uri: item.iconURL }}/>
-                    <Text style={styles.text}>{item.userName}</Text>
+                    <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
+                        <Avatar
+                            rounded
+                            containerStyle={{marginLeft: 20, marginTop: 9}}
+                            source={{ uri: item.iconURL }}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
+                        <Text style={styles.text}>{item.userName}</Text>
+                    </TouchableOpacity>
                     <FollowButton
                         id={item.uid}
                         //自分がフォローしているので必ずtrueとして渡す

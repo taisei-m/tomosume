@@ -1,22 +1,21 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import {Input} from 'react-native-elements'
 import { Button } from 'react-native-elements';
-import { Dropdown } from 'react-native-material-dropdown';
-//@ts-ignore
-import DropdownMenu from 'react-native-dropdown-menu';
+import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from '../../firebaseConfig'
-import InputText from '../components/InputText';
 import apiKey from '../api/api_key';
 import GlobalStateContainer from '../containers/GlobalState';
 import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
-// import {predictionsType} from '../types/types'
-// import {structuredFormattingType} from '../types/types'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+//@ts-ignore
+import { Dialog } from 'react-native-simple-dialogs';
 
-const Post: React.FC = (props) => {
+const Post = (props) => {
     const [shopName, setShopName] = useState<string>('');
     const [favoriteMenu, changeFavorite] = useState<string>('');
     // 最終的にはnumber型にする。　その際に該当するファイルの型を変更する
@@ -26,6 +25,18 @@ const Post: React.FC = (props) => {
     const [inputedShopName, setInputedShopName] =useState<string>('');
     const [predictions, setPredictions] = useState<predictionsArrayType>();
     const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isPressed , setIsPressed] = useState<boolean>(false);
+    const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
+    const categoryItemList = [
+        {label: '居酒屋', value: '居酒屋',},
+        {label: 'カフェ', value: 'カフェ',},
+        {label: '中華', value: '中華',},
+        {label: 'ラーメン', value: 'ラーメン',},
+        {label: 'ランチ', value: 'ランチ',},
+        {label: 'ディナー', value: 'ディナー',},
+        {label: 'その他', value: 'その他',},
+    ]
 
     const selectCategory = (category: string) => {
         setCategory(category)
@@ -42,9 +53,9 @@ const Post: React.FC = (props) => {
         setShopAddress(address)
         setShopName(shopName)
     }
-    const callApi = async () => {
+    const searchShop = async () => {
         if (inputedShopName == '') {
-            alert('店名を入力してください')
+            openDialog()
         } else {
             const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
             &input=${inputedShopName}&location=34.7263212, 137.7176678
@@ -62,9 +73,10 @@ const Post: React.FC = (props) => {
     }
 
     const share = async() => {
-        //たいせいのログインの機能が完成したらprops.globalStateの値に書き換える
+        setIsLoading(true)
+        setIsPressed(true)
+        canPress()
         const userId = props.globalState.state.uid
-        console.log(props.globalState.state.uid)
         const shopReview = firebase.firestore().collection('shops')
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
         let latitude: number = 0
@@ -101,131 +113,162 @@ const Post: React.FC = (props) => {
                     })
                 })
                 .then(function() {
-                    console.log('success')
+                    alert('投稿か完了しました')
                     setShopName('')
                     changeFavorite('')
                     changePrice('')
-                    setCategory('')
+                    selectCategory('選択してください')
+                })
+                .then(() => {
+                    setIsLoading(false)
+                    setIsPressed(false)
+                    props.navigation.navigate('Top')
                 })
                 .catch(function(error: any) {
-                    console.log(error, '1')
+                    console.log(error)
                 })
             })
         } catch (error) {
-            console.log(error, '2')
+            console.log(error)
         }
     }
+    const canPress = ():boolean => {
+        if (category == '' || shopName == '') {
+            return true
+        } else if (isPressed){
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    const openDialog = () => {
+        setDialogVisible(true)
+    }
+    const closeDialob = () => {
+        setDialogVisible(false)
+    }
     return (
+        <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
         <View style={styles.container}>
-            <View style={{marginTop: 70}}>
-            <Text style={styles.itemName}>
-                店名検索
-            </Text>
-            <View style={{ flexDirection: 'row', marginHorizontal: 60}}>
-            <TextInput
-                style={styles.input}
-                placeholder="例）新宿　吉野家"
-                value={inputedShopName}
-                onChangeText={change}
-            />
-            <Button
-                icon={
-                    <Icon
-                    name="search"
-                    size={20}
-                    color="black"
+            <View>
+                <Text style={styles.itemName}>
+                    店名検索
+                </Text>
+                <View style={{ flexDirection: 'row'}}>
+                    <Input
+                        containerStyle={styles.searchResultArea}
+                        placeholder="例）新宿　吉野家"
+                        value={inputedShopName}
+                        onChangeText={change}
+                        rightIcon={
+                        <Icon
+                            name="search"
+                            size={20}
+                            color="black"
+                            onPress={searchShop}
+                            />
+                        }
                     />
-                }
-                buttonStyle={styles.searchButton}
-                type="clear"
-                titleStyle={{fontSize: 15, color: 'grey'}}
-                onPress={callApi}
-            >
-            </Button>
+                </View>
             </View>
             {
                 isShownPredictions ?
+                <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
             <View>
-            <FlatList
-                data={predictions}
-                renderItem={({ item }) =>
-                <TouchableOpacity
-                    onPress={
-                        () => selectShopName(item.structured_formatting.main_text, item.description)
+                <FlatList
+                    data={predictions}
+                    renderItem={({ item }) =>
+                    <TouchableOpacity
+                        onPress={
+                            () => selectShopName(item.structured_formatting.main_text, item.description)
+                        }
+                    >
+                        <Text style={styles.suggestion} key={item.id}>
+                            {item.description}
+                        </Text>
+                    </TouchableOpacity>
                     }
-                >
-                    <Text style={styles.suggestion} key={item.id}>
-                        {item.description}
-                    </Text>
-                </TouchableOpacity>
-                }
-                >
-            </FlatList>
-            <Button
-                title={'close'}
-                type='outline'
-                buttonStyle={styles.closeButton}
-                onPress={close}
-            />
-            </View>
-            : null
-            }
-            <Text style={styles.itemName}>
-                店名 (必須)
-            </Text>
-            <InputText
-                holderName='店名'
-                value={shopName}
-                change={selectShopName}
-                canEdit={false}
-            />
-            <Text style={styles.itemName}>
-                カテゴリー (必須)
-            </Text>
-            <View style={{alignContent: 'center', marginHorizontal: 60 }}>
-                <Dropdown
-                    data={
-                        [
-                            {value: '居酒屋',},
-                            {value: 'カフェ',},
-                            {value: '中華',},
-                            {value: 'ラーメン'},
-                            {value: 'ランチ'},
-                            {value: 'ディナー'},
-                            {value: 'その他'},
-                        ]
-                    }
-                    value={category}
-                    onChangeText={selectCategory}
+                    >
+                </FlatList>
+                <Button
+                    title={'close'}
+                    type='outline'
+                    buttonStyle={styles.closeButton}
+                    onPress={close}
                 />
             </View>
-            <Text style={styles.itemName}>
-                おすすめのメニュー
-            </Text>
-            <InputText
-                holderName='おすすめのメニューを入力して下さい'
-                value={favoriteMenu}
-                change={changeFavorite}
-            />
-            <Text style={styles.itemName}>
-                値段
-            </Text>
-            <InputText
-                holderName='価格を入力して下さい'
-                value={price}
-                change={changePrice}
-            />
-            <View style={{alignContent: 'center', marginHorizontal: 60, marginTop: 30 }}>
+            </KeyboardAwareScrollView>
+            : null
+            }
+            <View style={{marginTop: 30}}>
+                <Text style={styles.itemName}>
+                    店名 (必須)
+                </Text>
+                <TextInput
+                    placeholder='検索結果が入力されます'
+                    value={shopName}
+                    style={styles.input}
+                    onChangeText={selectShopName}
+                    editable={false}
+                />
+            </View>
+            <View style={{marginTop: 30}}>
+                <Text style={styles.itemName}>
+                    カテゴリー (必須)
+                </Text>
+                <RNPickerSelect
+                    items={categoryItemList}
+                    style={pickerSelectStyles}
+                    placeholder={{label: '選択してください', value: ''}}
+                    onValueChange={selectCategory}
+                />
+            </View>
+            <View style={{marginTop: 30}}>
+                <Text style={styles.itemName}>
+                    おすすめのメニュー
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder='おすすめのメニューを入力して下さい'
+                    value={favoriteMenu}
+                    onChangeText={changeFavorite}
+                />
+            </View>
+            <View style={{marginTop: 30}}>
+                <Text style={styles.itemName}>
+                    値段
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder='価格を入力して下さい'
+                    value={price}
+                    onChangeText={changePrice}
+                />
+            </View>
+            <View style={{marginTop: 30, width: '60%'}}>
                 <Button
                     buttonStyle={{borderRadius: 20}}
                     title='投稿する'
                     type='solid'
                     onPress={share}
-                    disabled={category == '' || shopName == ''}
+                    // disabled={category == '' || shopName == ''}
+                    disabled={canPress()}
+                    loading={isLoading}
                 />
             </View>
-            </View>
         </View>
+        <View>
+        <Dialog
+            visible={_dialogVisible}
+            onTouchOutside={closeDialob}
+            >
+        <View>
+            <Text style={{textAlign: 'center'}}>店名を入力して下さい</Text>
+        </View>
+    </Dialog>
+    </View>
+        </KeyboardAwareScrollView>
     );
 }
 
@@ -245,12 +288,19 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 0
+    paddingTop: 50,
+    alignItems: 'center'
 },
 itemName: {
-    marginLeft: 60,
     color: '#5E9CFE',
-    marginTop: 20
+},
+searchResultArea: {
+    width: 265,
+    backgroundColor: 'white',
+    height: 40,
+    padding: 5,
+    fontSize: 18,
+    borderColor: 'black'
 },
 inputView:{
     borderRadius:25,
@@ -297,5 +347,28 @@ suggestion: {
     marginLeft: 5
 }
 })
-
-//ChIJUdNf03veGmARWgnQGmH1Hyo
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'grey',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+        width: 250,
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0.5,
+        borderColor: 'grey',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+        width: 250,
+        backgroundColor:'#eee'
+    },
+})

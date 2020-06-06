@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import {db} from '../../firebaseConfig'
-import Item from '../components/Item';
+import ListItem from '../components/ListItem';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {ReviewDocResponse} from '../types/types'
@@ -9,6 +9,8 @@ import {ReviewsDocResponse} from '../types/types'
 
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
+    const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+    const [refreshing, setRefreshing] = useState<boolean>(false)
     useEffect(() => {
         (async () => {
             const uidArray = await getFollowingUid()
@@ -28,8 +30,9 @@ const Top = (props) => {
                 return review
             }))
             setAllReviews(reviewArray)
+            setRefreshing(false)
         })()
-    }, [])
+    }, [isRefreshed])
     //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
     const convertTypeToReference = (array: string[]):Promise<firebase.firestore.DocumentReference[]> => {
         let reference: firebase.firestore.DocumentReference
@@ -57,13 +60,17 @@ const Top = (props) => {
         props.navigation.navigate('friendProfile')
     }
 
+    const handleRefresh = () => {
+        setIsRefreshed(!isRefreshed)
+        setRefreshing(true)
+    }
+
     return(
         <View style={styles.container}>
             <FlatList
-            style={styles.list}
             data={allReviews}
             renderItem={
-                ({ item }) => <Item
+                ({ item }) => <ListItem
                                 id={item.shopId}
                                 title={item.shopName}
                                 category={item.category}
@@ -76,6 +83,8 @@ const Top = (props) => {
                                 pressMethod={toFriendProfile}
                                 />
                 }
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
             />
         </View>
     )
@@ -95,12 +104,7 @@ export default ProfileWrapper
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingVertical: 10,
         backgroundColor: 'white',
-        alignItems: 'center',
-    },
-    list: {
-        marginTop: 30
+        paddingTop: 20
     },
 });

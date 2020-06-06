@@ -1,11 +1,14 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import GlobalStateContainer from '../containers/GlobalState';
+//@ts-ignore
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const Setting = (props) => {
+    const [_dialogVisible, setDialogVisible] = useState<boolean>(false)
 
 const Item = (props) => {
     return (
@@ -20,7 +23,6 @@ const Item = (props) => {
 
 const logout = () => {
     firebase.auth().signOut().then(function() {
-        console.log("Sign-out successful and call global.logout")
         AsyncStorage.setItem('Authenticated', 'false', () => {
         props.globalState.logout();
     });
@@ -28,7 +30,12 @@ const logout = () => {
     .catch(function(error) {
         console.log(error);
     });
-    alert('logout')
+}
+const openDialog = () => {
+    setDialogVisible(true)
+}
+const closeDialob = () => {
+    setDialogVisible(false)
 }
 const changeUserName = () => {
     console.log('change')
@@ -54,10 +61,30 @@ const itemList = [
         id: '58694a0f-3da1-471f-bd96-145571e29d72',
         title: 'ログアウト',
         icon: 'sign-out',
-        method: logout
+        method: openDialog
     },
 ]
     return (
+        <>
+        <View>
+            <ConfirmDialog
+                visible={_dialogVisible}
+                title="確認画面"
+                onTouchOutside={closeDialob}
+                positiveButton={{
+                    title: "はい",
+                    onPress: () => logout()
+                }}
+                negativeButton={{
+                    title: "いいえ",
+                    onPress: () => closeDialob()
+                }}
+                >
+            <View>
+                <Text style={{textAlign: 'center'}}>本当にログアウトしますか？</Text>
+            </View>
+        </ConfirmDialog>
+        </View>
         <SafeAreaView style={styles.container}>
             <FlatList
                 data={itemList}
@@ -71,6 +98,7 @@ const itemList = [
                 keyExtractor={item => item.id}
             />
         </SafeAreaView>
+        </>
     );
 }
 

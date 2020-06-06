@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, } from 'react-native';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView} from 'react-native';
 
 interface InputTextProps{
     holderName: string,
@@ -10,8 +10,8 @@ interface InputTextProps{
 
 const InputText = (props: InputTextProps) => {
     return(
-        <View style={styles.inputView} >
-            <TextInput  
+        <View　style={styles.inputView} >
+            <TextInput
                 editable={props.canEdit}
                 placeholderTextColor="#818181"
                 style={styles.inputText}
@@ -19,7 +19,7 @@ const InputText = (props: InputTextProps) => {
                 value={props.value}
                 onChangeText={props.change}
             />
-        </View> 
+        </View>
     )
 }
 
