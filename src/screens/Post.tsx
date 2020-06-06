@@ -255,6 +255,12 @@ const Post = (props) => {
                     // disabled={category == '' || shopName == ''}
                     disabled={canPress()}
                     loading={isLoading}
+                    disabledStyle={
+                        isPressed ?
+                        {backgroundColor: '#4388D6'}
+                    :
+                    null
+                }
                 />
             </View>
         </View>
