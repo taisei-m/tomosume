@@ -176,7 +176,9 @@ useEffect(() => {
 				</TouchableOpacity>
 			</View>
 			<View style={{alignItems: 'center', marginTop: 10}}>
-				<Text style={styles.userName}>{_userName}</Text>
+				<Text
+				numberOfLines={2}
+				style={styles.userName}>{_userName}</Text>
 			</View>
 			</View>
 			<View style={{marginLeft: 30}}>
@@ -265,6 +267,7 @@ useEffect(() => {
 		color: 'black',
 		fontSize: 15,
 		fontWeight: '700',
+		width: 90
 	},
 	userIcon: {
 		width: 90,
