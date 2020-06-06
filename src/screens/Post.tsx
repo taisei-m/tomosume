@@ -12,6 +12,8 @@ import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+//@ts-ignore
+import { Dialog } from 'react-native-simple-dialogs';
 
 const Post = (props) => {
     const [shopName, setShopName] = useState<string>('');
@@ -24,7 +26,8 @@ const Post = (props) => {
     const [predictions, setPredictions] = useState<predictionsArrayType>();
     const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isPressed , setIsPressed] = useState<boolean>(false)
+    const [isPressed , setIsPressed] = useState<boolean>(false);
+    const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
     const categoryItemList = [
         {label: '居酒屋', value: '居酒屋',},
         {label: 'カフェ', value: 'カフェ',},
@@ -52,7 +55,7 @@ const Post = (props) => {
     }
     const searchShop = async () => {
         if (inputedShopName == '') {
-            alert('店名を入力してください')
+            openDialog()
         } else {
             const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
             &input=${inputedShopName}&location=34.7263212, 137.7176678
@@ -139,6 +142,12 @@ const Post = (props) => {
             return false
         }
     }
+    const openDialog = () => {
+        setDialogVisible(true)
+    }
+    const closeDialob = () => {
+        setDialogVisible(false)
+    }
     return (
         <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
         <View style={styles.container}>
@@ -197,7 +206,7 @@ const Post = (props) => {
                     店名 (必須)
                 </Text>
                 <TextInput
-                    placeholder='店名'
+                    placeholder='検索結果が入力されます'
                     value={shopName}
                     style={styles.input}
                     onChangeText={selectShopName}
@@ -249,6 +258,16 @@ const Post = (props) => {
                 />
             </View>
         </View>
+        <View>
+        <Dialog
+            visible={_dialogVisible}
+            onTouchOutside={closeDialob}
+            >
+        <View>
+            <Text style={{textAlign: 'center'}}>店名を入力して下さい</Text>
+        </View>
+    </Dialog>
+    </View>
         </KeyboardAwareScrollView>
     );
 }
