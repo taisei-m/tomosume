@@ -5,7 +5,7 @@ import { Text,  Input, Icon, Button as ButtonElem} from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const CreateAccount = (props: any) => {
     const [_globalState, setGlobalState] = useState(props.globalState)
@@ -335,9 +335,12 @@ const CreateAccount = (props: any) => {
     }
 
     return (
+        <KeyboardAwareScrollView style={styles.keyboardScrollView}>
         <View style={styles.container}>
         <View>
-            <Text style={styles.newAccountTitle}>アカウント新規作成</Text>
+
+            <Text style={styles.logo}>アカウント新規作成</Text>
+
         </View>
         <View style={styles.inputView} >
             <Input
@@ -408,6 +411,7 @@ const CreateAccount = (props: any) => {
             <Text style={styles.AlreadyHaveAccountText}> すでにアカウントをお持ちの方はこちら </Text>
         </TouchableOpacity>
         </View>
+        </KeyboardAwareScrollView>
     );
 }
 
@@ -425,6 +429,10 @@ export default CreateAccountWrapper;
 
 
 const styles = StyleSheet.create({
+    keyboardScrollView: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -434,20 +442,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'center'
+        // justifyContent: 'center'
     },
-    newAccountTitle: {
+    logo: {
         fontWeight:"bold",
         fontSize:30,
         color:"black",
-        marginTop: 120,
-        marginBottom: 60
-    },
-    logo:{
-        fontWeight:"bold",
-        fontSize:50,
-        color:"black",
-        marginBottom:100
+        marginTop: "20%",
+        marginBottom: "10%"
     },
     inputView:{
         width:"85%",
