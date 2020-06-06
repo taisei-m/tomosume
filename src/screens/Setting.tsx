@@ -23,7 +23,6 @@ const Item = (props) => {
 
 const logout = () => {
     firebase.auth().signOut().then(function() {
-        console.log("Sign-out successful and call global.logout")
         AsyncStorage.setItem('Authenticated', 'false', () => {
         props.globalState.logout();
     });
@@ -31,7 +30,6 @@ const logout = () => {
     .catch(function(error) {
         console.log(error);
     });
-    alert('logout')
 }
 const openDialog = () => {
     setDialogVisible(true)
