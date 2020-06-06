@@ -12,6 +12,7 @@ import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getCameraPermissionsAsync } from 'expo-image-picker';
 
 const Post = (props) => {
     const [shopName, setShopName] = useState<string>('');
@@ -24,6 +25,16 @@ const Post = (props) => {
     const [predictions, setPredictions] = useState<predictionsArrayType>();
     const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const categoryItemList = [
+        {label: '居酒屋', value: '居酒屋',},
+        {label: 'カフェ', value: 'カフェ',},
+        {label: '中華', value: '中華',},
+        {label: 'ラーメン', value: 'ラーメン',},
+        {label: 'ランチ', value: 'ランチ',},
+        {label: 'ディナー', value: 'ディナー',},
+        {label: 'その他', value: 'その他',},
+    ]
+    const [isPressed , setIsPressed] = useState<boolean>(false)
 
     const selectCategory = (category: string) => {
         setCategory(category)
@@ -61,6 +72,8 @@ const Post = (props) => {
 
     const share = async() => {
         setIsLoading(true)
+        setIsPressed(true)
+        canPress()
         const userId = props.globalState.state.uid
         const shopReview = firebase.firestore().collection('shops')
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
@@ -106,6 +119,7 @@ const Post = (props) => {
                 })
                 .then(() => {
                     setIsLoading(false)
+                    setIsPressed(false)
                     props.navigation.navigate('Top')
                 })
                 .catch(function(error: any) {
@@ -114,6 +128,18 @@ const Post = (props) => {
             })
         } catch (error) {
             console.log(error)
+        }
+    }
+    const canPress = ():boolean => {
+        if (category == '' || shopName == '') {
+            console.log('========')
+            console.log('押せません')
+            return true
+        } else if (isPressed){
+            return true
+        }
+        else {
+            return false
         }
     }
     return (
@@ -186,17 +212,7 @@ const Post = (props) => {
                     カテゴリー (必須)
                 </Text>
                 <RNPickerSelect
-                    items={
-                        [
-                            {label: '居酒屋', value: '居酒屋',},
-                            {label: 'カフェ', value: 'カフェ',},
-                            {label: '中華', value: '中華',},
-                            {label: 'ラーメン', value: 'ラーメン',},
-                            {label: 'ランチ', value: 'ランチ',},
-                            {label: 'ディナー', value: 'ディナー',},
-                            {label: 'その他', value: 'その他',},
-                        ]
-                    }
+                    items={categoryItemList}
                     style={pickerSelectStyles}
                     placeholder={{label: '選択してください', value: ''}}
                     onValueChange={selectCategory}
@@ -230,7 +246,8 @@ const Post = (props) => {
                     title='投稿する'
                     type='solid'
                     onPress={share}
-                    disabled={category == '' || shopName == ''}
+                    // disabled={category == '' || shopName == ''}
+                    disabled={canPress()}
                     loading={isLoading}
                 />
             </View>
@@ -320,7 +337,7 @@ const pickerSelectStyles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderWidth: 1,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 4,
         color: 'black',
         paddingRight: 30, // to ensure the text is never behind the icon
@@ -331,7 +348,7 @@ const pickerSelectStyles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 8,
         borderWidth: 0.5,
-        borderColor: 'black',
+        borderColor: 'grey',
         borderRadius: 8,
         color: 'black',
         paddingRight: 30, // to ensure the text is never behind the icon
