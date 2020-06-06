@@ -28,39 +28,56 @@ const ProfileStack = (props) => {
                 component={Profile}
                 options={{
                     headerShown: false,
+                    title: 'プロフィール'
                 }}
         />
         <ProfileNavStack.Screen
             name="followerList"
             component={followerList}
-            options={{ headerShown: true,
+            options={{
+                headerShown: true,
                 title: 'フォローリスト'
             }}
         />
         <ProfileNavStack.Screen
             name="followeeList"
             component={followeeList}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'フォロワーリスト'
+            }}
         />
         <ProfileNavStack.Screen
             name="toSettingPage"
             component={Setting}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: '設定'
+            }}
         />
         <ProfileNavStack.Screen
             name="findUser"
             component={findUser}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'ユーザー検索'
+            }}
         />
         <ProfileNavStack.Screen
             name="friendProfile"
             component={friendProfile}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'プロフィール'
+            }}
         />
         <ProfileNavStack.Screen
             name="changeUserName"
             component={changeUserName}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'ユーザー名変更'
+            }}
         />
     </ProfileNavStack.Navigator>
     )
