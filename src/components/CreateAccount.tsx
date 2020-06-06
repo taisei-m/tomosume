@@ -337,23 +337,23 @@ const CreateAccount = (props: any) => {
     return (
         <View style={styles.container}>
         <View>
-            <Text style={styles.newAccountTitle}>Create New Account</Text>
+            <Text style={styles.newAccountTitle}>アカウント新規作成</Text>
         </View>
         <View style={styles.inputView} >
             <Input
                 inputStyle={styles.inputText}
-                placeholder="usernme（ex. 奥瀬雄哉）"
+                placeholder="ユーザー名（アプリ内で変更可能）"
                 placeholderTextColor="#818181"
                 value={_username}
                 errorMessage={_usernameErrorMessage}
                 errorStyle={_usernameErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
-                onChangeText={inputUsername}                
+                onChangeText={inputUsername}
             />
         </View>
         <View style={styles.inputView} >
-            <Input  
+            <Input
                 inputStyle={styles.inputText}
-                placeholder="email"
+                placeholder="メールアドレス"
                 placeholderTextColor="#818181"
                 value={_email}
                 errorMessage={_emailErrorMessage}
@@ -364,7 +364,7 @@ const CreateAccount = (props: any) => {
         <View style={styles.inputView} >
             <Input
                 inputStyle={styles.inputText}
-                placeholder="password" 
+                placeholder="パスワード(半角英数字６文字以上)"
                 placeholderTextColor="#818181"
                 value={_password}
                 secureTextEntry={_isUnvisiblePassword}
@@ -391,7 +391,7 @@ const CreateAccount = (props: any) => {
             style={{width: '80%'}}
         >
             <ButtonElem
-            title="Signup"
+            title="新規登録"
             type="solid"
             buttonStyle={styles.button}
             onPress={pushSignup}
@@ -405,7 +405,7 @@ const CreateAccount = (props: any) => {
         <TouchableOpacity
             onPress={() => props.navigation.navigate('LoginScreen')}
         >
-            <Text style={styles.AlreadyHaveAccountText}> Already have an account </Text>
+            <Text style={styles.AlreadyHaveAccountText}> すでにアカウントをお持ちの方はこちら </Text>
         </TouchableOpacity>
         </View>
     );

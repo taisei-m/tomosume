@@ -111,12 +111,15 @@ const ResetPassword = (props:any) => {
     return (
         <View style={styles.container}>
             <View>
-                <Text style={styles.logo}>Reset Password</Text>
+                <Text style={styles.title}>パスワードをお忘れの場合</Text>
+            </View>
+            <View style={styles.resetDescription}>
+                <Text>パスワードの再設定用リンクを送信いたします。ご登録いただいたメールアドレスを入力し、送信ボタンを押してください</Text>
             </View>
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
-                    placeholder="email"
+                    placeholder="メールアドレス"
                     placeholderTextColor="#818181"
                     value={_email}
                     onChangeText={emailInput}
@@ -131,7 +134,7 @@ const ResetPassword = (props:any) => {
                 style={{width: '80%'}}
             >
                 <ButtonElem
-                title="submit"
+                title="送信"
                 type="solid"
                 buttonStyle={styles.button}
                 onPress={pushSubmit}
@@ -142,7 +145,7 @@ const ResetPassword = (props:any) => {
             <TouchableOpacity
                 onPress={() => { navigation.navigate('LoginScreen') }}
             >
-                <Text style={styles.AlreadyHaveAnAccountText}>  Already have an account  </Text>
+                <Text style={styles.AlreadyHaveAnAccountText}> ログイン画面へ  </Text>
             </TouchableOpacity>
 
 
@@ -171,11 +174,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    logo:{
+    title:{
         fontWeight:"bold",
-        fontSize:40,
+        fontSize:27,
         color:"black",
-        marginBottom:40
+        marginBottom:40,
+    },
+    resetDescription: {
+        width: '80%',
+        marginBottom: 30
     },
     inputView:{
         width:"80%",
