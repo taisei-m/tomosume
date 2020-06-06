@@ -17,24 +17,29 @@ interface ItemProps {
 
 const Item = (props: ItemProps) => {
     return (
-        <View>
-            <Card containerStyle={{borderRadius: 25, width: '90%'}}>
+        <View style={styles.container}>
+            <Card containerStyle={styles.card}>
                 <TouchableOpacity  onPress={() => props.pressMethod(props.userId)}>
                     <View style={styles.userInfomation}>
                         <Avatar rounded source={{ uri: props.iconURL }}/>
                         <Text style={styles.userName}>{props.userName}</Text>
                     </View>
                 </TouchableOpacity>
-                    <View style={{flexDirection: 'row'}}>
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>店名</Text>
-                            <Text style={styles.shopName}>{props.title}</Text>
+                            <Text style={styles.shopName} numberOfLines={2}>{props.title}</Text>
                             <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>住所</Text>
-                            <Text style={styles.shopAddress}>{props.address}</Text>
-                            <View style={{flexDirection: 'row', marginTop: 10,}}>
+                            <Text
+                                style={styles.shopAddress}
+                                numberOfLines={2}
+                                >{props.address}</Text>
+                            <View style={{flexDirection: 'row', marginTop: 10, flex: 1, paddingLeft: 5}}>
                                 <View style={styles.favorite}>
-                                    <Text style={styles.itemName}>おすすめのメニュー</Text>
-                                    <Text style={styles.menuName}>{props.favorite}</Text>
+                                    <Text style={styles.itemName}>おすすめメニュー</Text>
+                                    <Text
+                                        style={styles.menuName}
+                                        numberOfLines={3}
+                                    >{props.favorite}</Text>
                                 </View>
                                 <View style={styles.price}>
                                     <Text style={styles.itemName}>値段</Text>
@@ -46,7 +51,6 @@ const Item = (props: ItemProps) => {
                                 </View>
                             </View>
                         </View>
-                    </View>
             </Card>
         </View>
     );
@@ -55,13 +59,14 @@ export default Item
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingVertical: 10,
         backgroundColor: 'white',
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     card: {
-        borderRadius: 10
+        borderRadius: 25,
+        width: '95%'
     },
     userInfomation: {
         flexDirection: 'row',
@@ -74,35 +79,36 @@ const styles = StyleSheet.create({
     },
     shopName: {
         fontSize: 18,
-        marginLeft: 5,
+        paddingLeft: 5,
         marginTop: 10,
-        fontWeight: '700'
+        fontWeight: '700',
     },
     shopAddress: {
         fontSize: 15,
-        marginLeft: 5,
+        paddingLeft: 5,
         marginTop: 10,
         fontWeight: '700'
     },
     favorite: {
         borderRightWidth: 1,
         borderRightColor: 'grey',
-        paddingRight: 40,
-        marginLeft: 5
+        flex: 2,
+        paddingRight: 5
     },
     price: {
         borderRightWidth: 1,
         borderRightColor: 'grey',
-        paddingRight: 40,
-        marginLeft: 10
+        flex: 1,
+        paddingHorizontal: 5
     },
     category: {
-        marginLeft: 10,
-        marginRight: 5
+        flex: 1,
+        paddingLeft: 5
     },
     itemName: {
         color: 'grey',
-        fontWeight: '700'
+        fontWeight: '700',
+        fontSize: 13
     },
     categoryName: {
         marginTop: 5,
@@ -111,13 +117,5 @@ const styles = StyleSheet.create({
     menuName: {
         marginTop: 5,
         fontWeight: '700'
-    },
-    tinyLogo: {
-        width: 80,
-        height: 80,
-    },
-    logo: {
-        width: 66,
-        height: 58,
     },
 });
