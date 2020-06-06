@@ -12,12 +12,11 @@ interface ItemProps {
 
 const Item = (props: ItemProps) => {
     return (
-        <View>
-            <Card containerStyle={{borderRadius: 25}}>
-                    <View style={{flexDirection: 'row'}}>
+        <View style={styles.container}>
+            <Card containerStyle={styles.card}>
                         <View>
                             <Text style={{ color: 'grey', marginLeft: 5}}>店名</Text>
-                            <Text style={styles.shopName}>{props.shopName}</Text>
+                            <Text style={styles.shopNameStyle}>{props.shopName}</Text>
                             <Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>住所</Text>
                             <Text style={styles.shopAddress}>{props.shopAddress}</Text>
                             <View style={{flexDirection: 'row', marginTop: 10,}}>
@@ -35,7 +34,6 @@ const Item = (props: ItemProps) => {
                                 </View>
                             </View>
                         </View>
-                    </View>
             </Card>
         </View>
     );
@@ -44,12 +42,14 @@ export default Item
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: 'white',
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     card: {
-        borderRadius: 10
+        borderRadius: 25,
+        width: '95%'
     },
     shopName: {
         fontSize: 18,
@@ -57,28 +57,38 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontWeight: '700'
     },
-    shopAddress: {
-        fontSize: 15,
-        marginLeft: 5,
+    shopNameStyle: {
+        fontSize: 18,
+        paddingLeft: 5,
         marginTop: 10,
         fontWeight: '700',
-        paddingHorizontal: 3
+    },
+    shopAddress: {
+        fontSize: 15,
+        paddingLeft: 5,
+        marginTop: 10,
+        fontWeight: '700'
     },
     favorite: {
         borderRightWidth: 1,
         borderRightColor: 'grey',
-        paddingRight: 40,
-        marginLeft: 5
+        flex: 2,
+        paddingRight: 5
     },
     price: {
         borderRightWidth: 1,
         borderRightColor: 'grey',
-        paddingRight: 25,
-        marginLeft: 10
+        flex: 1,
+        paddingHorizontal: 5
     },
     category: {
-        marginLeft: 10,
-        marginRight: 5
+        flex: 1,
+        paddingLeft: 5
+    },
+    itemName: {
+        color: 'grey',
+        fontWeight: '700',
+        fontSize: 13
     },
     itemName: {
         color: 'grey',
