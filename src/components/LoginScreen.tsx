@@ -234,7 +234,7 @@ const LoginScreen = (props: any) => {
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
-                    placeholder="email"
+                    placeholder="メールアドレス"
                     placeholderTextColor="#818181"
                     value={emailAsRendered}
                     onChangeText={inputedEmail}
@@ -254,7 +254,8 @@ const LoginScreen = (props: any) => {
             <View style={styles.inputView} >
                 <TextInput
                     style={styles.inputText}
-                    placeholder="password"
+                    placeholder="パスワード"
+                    secureTextEntry={true}
                     placeholderTextColor="#818181"
                     value={passwordAsRendered}
                     onChangeText={inputedPassword}
@@ -270,7 +271,7 @@ const LoginScreen = (props: any) => {
             <TouchableOpacity 
                 onPress={() => { props.navigation.navigate('ResetPassword') }}
             >
-                <Text style={styles.forgotText}>Forgot Password?</Text>
+                <Text style={styles.forgotText}>パスワードをお忘れの方はこちら</Text>
             </TouchableOpacity>
             {/* ボタンの上のエラーメッセージ */}
             <View>
@@ -283,7 +284,7 @@ const LoginScreen = (props: any) => {
                 style={{width: '80%'}}
             >
                 <ButtonElem
-                title="Login"
+                title="ログイン"
                 type="solid"
                 buttonStyle={styles.button}
                 onPress={pushLogin}
@@ -296,12 +297,12 @@ const LoginScreen = (props: any) => {
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('CreateAccount') }}
             >
-                <Text style={styles.createAccountText}> Create Account </Text>
+                <Text style={styles.createAccountText}> 新規登録 </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('ResendEmail') }}
             >
-                <Text style={styles.resendEmailText}> ResendEmail </Text>
+                <Text style={styles.resendEmailText}> メールの再送信 </Text>
             </TouchableOpacity>
         </View>
     );
@@ -360,7 +361,8 @@ const styles = StyleSheet.create({
         color: "#48D1CC",
     },
     forgotText: {
-    	color: 'black',
+        color: 'black',
+        textDecorationLine: 'underline',
       // marginBottom: "13%",
     },
     createAccountText: {
