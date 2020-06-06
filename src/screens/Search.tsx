@@ -47,9 +47,9 @@ const Search = (props: any) => {
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
 		let shopDataArray: ShopsArrayType = []
-		db.collection('shops')
-		.get()
-		.then(function(querySnapshot) {
+		const unsubscribe = db.collection('shops')
+		.onSnapshot(function(querySnapshot) {
+			shopDataArray = []
 			querySnapshot.forEach(function(doc) {
 					let shopDoc = doc.data() as ShopDocResponse
 					shopDoc.id = doc.id
@@ -57,6 +57,9 @@ const Search = (props: any) => {
 			})
 			setAllShopsData(shopDataArray)
 		})
+		return () => {
+			unsubscribe();
+		};
 	},[])
 	// 選択したお店の全レビューを取得する
 	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
