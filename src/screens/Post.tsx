@@ -12,7 +12,6 @@ import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getCameraPermissionsAsync } from 'expo-image-picker';
 
 const Post = (props) => {
     const [shopName, setShopName] = useState<string>('');
@@ -25,6 +24,7 @@ const Post = (props) => {
     const [predictions, setPredictions] = useState<predictionsArrayType>();
     const [isShownPredictions, setIsShownPredictions] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isPressed , setIsPressed] = useState<boolean>(false)
     const categoryItemList = [
         {label: '居酒屋', value: '居酒屋',},
         {label: 'カフェ', value: 'カフェ',},
@@ -34,7 +34,6 @@ const Post = (props) => {
         {label: 'ディナー', value: 'ディナー',},
         {label: 'その他', value: 'その他',},
     ]
-    const [isPressed , setIsPressed] = useState<boolean>(false)
 
     const selectCategory = (category: string) => {
         setCategory(category)
@@ -132,8 +131,6 @@ const Post = (props) => {
     }
     const canPress = ():boolean => {
         if (category == '' || shopName == '') {
-            console.log('========')
-            console.log('押せません')
             return true
         } else if (isPressed){
             return true
