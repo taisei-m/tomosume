@@ -36,6 +36,12 @@ type ShopDocResponse = {
 type ReviewsDocResponse = ReviewDocResponse[]
 type ShopsArrayType= ShopDocResponse[]
 
+
+// フォローしているユーザを判別する関数は独立させたい
+
+
+
+
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
 	const [latitude, changeLatitude] = useState<number>(34.7201152);
@@ -46,25 +52,34 @@ const Search = (props: any) => {
 
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
-		let shopDataArray: ShopsArrayType = []
-		const unsubscribe = db.collection('shops')
-		.onSnapshot(function(querySnapshot) {
-			shopDataArray = []
-			querySnapshot.forEach(function(doc) {
-					let shopDoc = doc.data() as ShopDocResponse
-					shopDoc.id = doc.id
-					shopDataArray.push(shopDoc)
-			})
+		(async() => {
+			let shopDataArray: ShopsArrayType = []
+			const followrIdList = await getFollowingUid()
+			followrIdList.push(props.globalState.state.uid)
+			const convertedFolloerUidList = await convertTypeToReference(followrIdList)
+			const shopReviewdByFollower = await db.collectionGroup('reviews').where('user', 'in', convertedFolloerUidList).orderBy('createdAt', 'desc').get()
+			const shopReviewdByFollowerDocs = shopReviewdByFollower.docs
+			shopDataArray = await Promise.all(shopReviewdByFollowerDocs.map(async (item) => {
+				let shopId = item.data().shopId
+				return db.collection('shops').doc(shopId).get().then((doc) => {
+					let shopData = doc.data() as ShopDocResponse
+					shopData.id = doc.id
+					return shopData
+				})
+			}))
 			setAllShopsData(shopDataArray)
-		})
-		return () => {
-			unsubscribe();
-		};
+			// return () => {
+			// 	unsubscribe();
+			// };
+		})()
 	},[])
 	// 選択したお店の全レビューを取得する
 	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
 		let reviews: ReviewsDocResponse = []
-		const querySnapshot = await db.collectionGroup('reviews').where('shopId', '==', id).orderBy('createdAt', 'desc').get()
+		const followrIdList = await getFollowingUid()
+		followrIdList.push(props.globalState.state.uid)
+		const convertedFolloerUidList = await convertTypeToReference(followrIdList)
+		const querySnapshot = await db.collectionGroup('reviews').where('shopId', '==', id).where('user', 'in', convertedFolloerUidList).orderBy('createdAt', 'desc').get()
 		const queryDocsSnapshot = querySnapshot.docs
 			reviews = await Promise.all(queryDocsSnapshot.map(async (item) => {
 				let reviewData = item.data() as ReviewDocResponse
@@ -77,6 +92,27 @@ const Search = (props: any) => {
 			}))
 		return reviews
 	}
+	//ログインユーザのフォローしているユーザのuidを取得する
+	const getFollowingUid = async():Promise<string[]> => {
+        let followingUidList: string[] = []
+        // この書き方がsubcollectionの展開の仕方のはず
+        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('follower').get()
+        followingUidList =  querySnapshot.docs.map((doc) => {
+            return doc.id
+        })
+        return followingUidList
+	}
+    //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
+    const convertTypeToReference = (array: string[]):Promise<firebase.firestore.DocumentReference[]> => {
+        let reference: firebase.firestore.DocumentReference
+        // 文字列firstを削除する
+        array = array.filter(n => n !== 'first')
+        let convertedArray = array.map((uid) => {
+            reference = db.collection('userList').doc(uid)
+            return reference
+        })
+        return convertedArray
+    }
 	const showShopReviews = async (id: string) => {
 		refRBSheet.current.open()
 		const _reviews = await getAllReviews(id)
