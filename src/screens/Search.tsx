@@ -125,13 +125,16 @@ const Search = (props: any) => {
 	}
 	return (
 		<View style={styles.container}>
-			<MapView style={styles.mapStyle}
+			<MapView
+				style={styles.mapStyle}
 				initialRegion={{
+					// 初期位置
 					latitude: latitude,
 					longitude: longitude,
-					latitudeDelta: 20,
-					longitudeDelta: 20,
-				}}>
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05,
+				}}
+				>
 				{allShopsData.map((location) =>
 					<Marker
 						key={location.id}
