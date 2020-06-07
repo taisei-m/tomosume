@@ -1,7 +1,5 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import Top from '../screens/Top';
-import Search from '../screens/Search';
 import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileStack from '../Routes/ProfileStack';
@@ -19,10 +17,10 @@ export default Tab = () => {
         let iconName;
         if (route.name === 'Top') {
           iconName = focused
-            ? 'ios-information-circle'
-            : 'ios-information-circle-outline';
+            ? 'md-home'
+            : 'md-home';
         } else if (route.name === 'Post') {
-          iconName = focused ? 'ios-list-box' : 'ios-list';
+          iconName = focused ? 'ios-add-circle' : 'ios-add-circle-outline';
         } else if (route.name === 'Search') {
           iconName = focused ? 'ios-search' : 'ios-search'
         } else if (route.name === 'Profile') {
@@ -36,10 +34,10 @@ export default Tab = () => {
       inactiveTintColor: 'gray',
     }}
     >
-      <Tab1.Screen name="Top" component={topStack} />
-      <Tab1.Screen name="Search" component={SearchStack} />
-      <Tab1.Screen name="Post" component={Post} />
-      <Tab1.Screen name="Profile" component={ProfileStack} />
+      <Tab1.Screen name="Top" component={topStack} options={{title: 'トップ'}}/>
+      <Tab1.Screen name="Search" component={SearchStack} options={{title: '検索'}}/>
+      <Tab1.Screen name="Post" component={Post} options={{title: '投稿'}}/>
+      <Tab1.Screen name="Profile" component={ProfileStack} options={{title: 'プロフィール'}}/>
     </Tab1.Navigator>
   );
 }
