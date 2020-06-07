@@ -7,9 +7,6 @@ import GlobalStateContainer from '../containers/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const SelectLoginOrSignup = (props: any) => {
-
-
-
     return(
     <View style={styles.container}>
         <View>

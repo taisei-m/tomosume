@@ -345,11 +345,11 @@ const CreateAccount = (props: any) => {
     return (
         <KeyboardAwareScrollView style={styles.keyboardScrollView}>
         <View style={styles.container}>
-        <View>
+        {/* <View>
 
             <Text style={styles.logo}>アカウント新規作成</Text>
 
-        </View>
+        </View> */}
         <View style={styles.inputView} >
             <Input
                 inputStyle={styles.inputText}
@@ -422,7 +422,7 @@ const CreateAccount = (props: any) => {
         <TouchableOpacity
             onPress={() => props.navigation.navigate('LoginScreen')}
         >
-            <Text style={styles.AlreadyHaveAccountText}> すでにアカウントをお持ちの方はこちら </Text>
+            <Text style={styles.AlreadyHaveAccountText}> 既にアカウントをお持ちの方はこちら </Text>
         </TouchableOpacity>
         </View>
         </KeyboardAwareScrollView>
@@ -451,12 +451,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-    },
-    container1: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        // justifyContent: 'center'
+        paddingTop: '30%'
     },
     logo: {
         fontWeight:"bold",
