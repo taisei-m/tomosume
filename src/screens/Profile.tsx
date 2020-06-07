@@ -23,22 +23,22 @@ const Profile = (props: any) => {
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
   // ユーザが投稿したレビューの一覧と投稿数を取得
-useEffect(() => {
-    const userId = props.globalState.state.uid
-    const userFirestoreDocument = firebase.firestore().collection('userList').doc(userId)
-    let userReviews: userReviewsType = []
-    db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
-		.then(function(querySnapshot) {
-			querySnapshot.forEach(function(doc) {
-			let userReview = doc.data() as userReviewDocResponse
-			userReviews.push(userReview)
+	useEffect(() => {
+		const userId = props.globalState.state.uid
+		const userFirestoreDocument = firebase.firestore().collection('userList').doc(userId)
+		let userReviews: userReviewsType = []
+		db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
+			.then(function(querySnapshot) {
+				querySnapshot.forEach(function(doc) {
+				let userReview = doc.data() as userReviewDocResponse
+				userReviews.push(userReview)
+				})
+				let reviewNumber: number = userReviews.length
+				setPostNumber(reviewNumber)
+				setAllReviews(userReviews)
+				setRefreshing(false)
 			})
-			let reviewNumber: number = userReviews.length
-			setPostNumber(reviewNumber)
-			setAllReviews(userReviews)
-			setRefreshing(false)
-		})
-	}, [isRefreshed])
+		}, [isRefreshed])
 	// ユーザーのアイコン画像を取得
 	useEffect(() => {
 		(async () => {

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState } from 'react';
-import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import {Input} from 'react-native-elements'
 import { Button } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
@@ -12,6 +12,8 @@ import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions'
 //@ts-ignore
 import { Dialog } from 'react-native-simple-dialogs';
 
@@ -28,6 +30,9 @@ const Post = (props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isPressed , setIsPressed] = useState<boolean>(false);
     const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
+    const [permissionDialogVisible , setPermissionDialogVisible] = useState<boolean>(false);
+    const [_latitude, setLatitude] = useState<number>(35.68123620000001);
+    const [_longitude, setLongitude] = useState<number>(139.7671248);
     const categoryItemList = [
         {label: '居酒屋', value: '居酒屋',},
         {label: 'カフェ', value: 'カフェ',},
@@ -38,6 +43,18 @@ const Post = (props) => {
         {label: 'その他', value: 'その他',},
     ]
 
+    useEffect(() => {
+        (async() => {
+            let {status} = await Permissions.askAsync(Permissions.LOCATION);
+            if(status !== 'granted') {
+                setPermissionDialogVisible(true)
+            } else {
+            const location = await Location.getCurrentPositionAsync({});
+            setLatitude(location.coords.latitude)
+            setLongitude(location.coords.longitude)
+            }
+        })()
+    }, [])
     const selectCategory = (category: string) => {
         setCategory(category)
     }
@@ -58,7 +75,7 @@ const Post = (props) => {
             openDialog()
         } else {
             const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
-            &input=${inputedShopName}&location=34.7263212, 137.7176678
+            &input=${inputedShopName}&location=${_latitude}, ${_longitude}
             &language=ja&radius=5000`;
             try {
                 const searchPredictionResult: Response = await fetch(apiUrl);
@@ -147,6 +164,9 @@ const Post = (props) => {
     }
     const closeDialob = () => {
         setDialogVisible(false)
+    }
+    const closePermissionDialog =() => {
+        setPermissionDialogVisible(false)
     }
     return (
         <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
@@ -265,15 +285,25 @@ const Post = (props) => {
             </View>
         </View>
         <View>
-        <Dialog
-            visible={_dialogVisible}
-            onTouchOutside={closeDialob}
-            >
-        <View>
-            <Text style={{textAlign: 'center'}}>店名を入力して下さい</Text>
+            <Dialog
+                visible={_dialogVisible}
+                onTouchOutside={closeDialob}
+                >
+                <View>
+                    <Text style={{textAlign: 'center'}}>店名を入力して下さい</Text>
+                </View>
+            </Dialog>
         </View>
-    </Dialog>
-    </View>
+        <View>
+            <Dialog
+                visible={permissionDialogVisible}
+                onTouchOutside={closePermissionDialog}
+                >
+                <View>
+            <Text style={{textAlign: 'center'}}>位置情報利用が許可されていません。位置情報を利用すると、より正確にお店を検索することができます。位置情報を許可する場合は端末の設定から許可をお願いします</Text>
+                </View>
+            </Dialog>
+        </View>
         </KeyboardAwareScrollView>
     );
 }
@@ -305,7 +335,6 @@ searchResultArea: {
     backgroundColor: 'white',
     height: 40,
     padding: 5,
-    fontSize: 18,
     borderColor: 'black'
 },
 inputView:{
@@ -355,7 +384,6 @@ suggestion: {
 })
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
-        fontSize: 16,
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderWidth: 1,
@@ -366,7 +394,6 @@ const pickerSelectStyles = StyleSheet.create({
         width: 250,
     },
     inputAndroid: {
-        fontSize: 16,
         paddingHorizontal: 10,
         paddingVertical: 8,
         borderWidth: 0.5,
