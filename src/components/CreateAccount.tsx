@@ -54,7 +54,7 @@ const CreateAccount = (props: any) => {
 
     const usernameErrorMessageInput = (passedErrorMessageType: string) => {
         let allowText: string = 'ok ✓';
-        let denyText: string = '*12文字以内で入力してください';
+        let denyText: string = '*13文字以内で入力してください';
         let blankText: string = '';
         let fillblankText: string = '*ユーザーネームは必須です';
         let errorMessage: string = '';
@@ -72,8 +72,9 @@ const CreateAccount = (props: any) => {
                 errorMessage = blankText;
                 errorMessageColorIsRed= true;
                 break;
-                case 'fillBlank':
-                    errorMessage = fillblankText
+            case 'fillBlank':
+                errorMessage = fillblankText
+                break;
         }
         setUsernameErrorMessage(errorMessage);
         setUsernameErrorMessageIsRed(errorMessageColorIsRed)
@@ -100,6 +101,7 @@ const CreateAccount = (props: any) => {
                 break;
             case 'fillBlank':
                 errorMessage = fillblankText
+                break;
         }
         setEmailErrorMessage(errorMessage);
         setEmailErrorMessageIsRed(errorMessageColorIsRed)
@@ -126,6 +128,7 @@ const CreateAccount = (props: any) => {
                 break;
             case 'fillBlank':
                 errorMessage = fillblankText;
+                break;
         }
         setPasswordErrorMessage(errorMessage);
         setPasswordErrorMessageIsRed(errorMessageColorIsRed);
@@ -220,13 +223,21 @@ const CreateAccount = (props: any) => {
         }
         //validation
         ////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
-        let usernamePattern = new RegExp(/^.{1,13}/);
+        let usernamePattern = (username: string):boolean => {
+            if (username.length == 0) {
+                return false;
+            } else if (username.length > 13) {
+                return false;
+            } else {
+                return true;
+            }
+        } 
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
-        let isUsernameValid: boolean = true;
-        let isUsernameBlank: boolean = usernamePattern.test(username);
+        let isUsernameValid: boolean = usernamePattern(username);
         let isEmailValid: boolean = emailPattern.test(email);
         let isPasswordValid: boolean = passwordPattern.test(password);
+        let isUsernameBlank: boolean = true;
         let isEmailBlank: boolean = true;
         let isPasswordBlank: boolean = true;
 
@@ -345,11 +356,11 @@ const CreateAccount = (props: any) => {
     return (
         <KeyboardAwareScrollView style={styles.keyboardScrollView}>
         <View style={styles.container}>
-        <View>
+        {/* <View>
 
             <Text style={styles.logo}>アカウント新規作成</Text>
 
-        </View>
+        </View> */}
         <View style={styles.inputView} >
             <Input
                 inputStyle={styles.inputText}
@@ -422,7 +433,7 @@ const CreateAccount = (props: any) => {
         <TouchableOpacity
             onPress={() => props.navigation.navigate('LoginScreen')}
         >
-            <Text style={styles.AlreadyHaveAccountText}> すでにアカウントをお持ちの方はこちら </Text>
+            <Text style={styles.AlreadyHaveAccountText}> 既にアカウントをお持ちの方はこちら </Text>
         </TouchableOpacity>
         </View>
         </KeyboardAwareScrollView>
@@ -451,12 +462,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-    },
-    container1: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        // justifyContent: 'center'
+        paddingTop: '30%'
     },
     logo: {
         fontWeight:"bold",

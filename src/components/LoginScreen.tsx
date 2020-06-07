@@ -238,9 +238,9 @@ const LoginScreen = (props: any) => {
     return (
         <KeyboardAwareScrollView style={styles.keyboardScrollView}>
         <View style={styles.container}>
-            <View>
+            {/* <View>
                 <Text style={styles.logo}>TomoSume</Text>
-            </View>
+            </View> */}
             {/* Emailの入力フォーム */}
             <View style={styles.inputView} >
                 <TextInput
@@ -315,7 +315,7 @@ const LoginScreen = (props: any) => {
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('CreateAccount') }}
             >
-                <Text style={styles.createAccountText}> 新規登録 </Text>
+                <Text style={styles.createAccountText}> 新しいアカウントを作成 </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('ResendEmail') }}
@@ -354,6 +354,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         // justifyContent: 'center',
+        paddingTop: '30%'
     },
     logo:{
         fontWeight:"bold",

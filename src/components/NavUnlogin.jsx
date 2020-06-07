@@ -1,4 +1,5 @@
 import React from 'react';
+import SelectLoginOrSignup from '../screens/selectLoginOrSignup';
 import LoginScreen from './LoginScreen';
 import CreateAccount from './CreateAccount';
 import ResetPassword from './ResetPassword';
@@ -11,7 +12,10 @@ const TabUnlogin = createStackNavigator();
 
 export default Unlogin = () => {
   return (
-    <TabUnlogin.Navigator initialRouteName = "LoginScreen">
+    <TabUnlogin.Navigator initialRouteName="LoginScreen"
+    initialRouteName = "SelectLoginOrSignup"
+    >
+      <TabUnlogin.Screen name="SelectLoginOrSignup" component={SelectLoginOrSignup} options={{ headerShown: false }}/>
       <TabUnlogin.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }}/>
       <TabUnlogin.Screen name="CreateAccount" component={CreateAccount} options={{ headerShown: false }}/>
       <TabUnlogin.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
