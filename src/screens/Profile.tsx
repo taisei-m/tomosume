@@ -261,7 +261,8 @@ useEffect(() => {
 
 	const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#fff'
+		backgroundColor: '#fff',
+		flex: 1
 	},
 	userName: {
 		color: 'black',

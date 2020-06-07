@@ -105,6 +105,7 @@ export default ProfileWrapper
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        paddingTop: 20
+        paddingTop: 20,
+        flex: 1
     },
 });
