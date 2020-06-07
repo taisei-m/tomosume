@@ -16,7 +16,7 @@ const LoginScreen = (props: any) => {
     const [passwordErrorIsRed, setPasswordErrorIsRed] =useState<boolean>();
     const [signinButtonDisabled, setSingnBunttonDisabled] = useState<boolean>(true);
     const [signinButtonIsloading, setSigninButtonIsloading] = useState<boolean>(false);
-
+    const [_isDisabledInitialState, setIsDisabledInitialState] = useState<boolean>(true);
     const emailAsRenderedInput = (text: string) => {
         setEmailAsRendered(text)
     }
@@ -32,9 +32,13 @@ const LoginScreen = (props: any) => {
     const signinButtonDisabledInput = (result: boolean) => {
         setSingnBunttonDisabled(result);
     }
-    const SigninButtonIsloadingInput = (result: boolean) => {
+    const signinButtonIsloadingInput = (result: boolean) => {
         setSigninButtonIsloading(result);
     }
+    const isDisabledInitialStateInput = (result: boolean) => {
+        setIsDisabledInitialState(result);
+    }
+    
 
     //CreateAccount.tsxの方が綺麗に書いてある
     const validateTextEmailInput = (textType: string) => {
@@ -198,8 +202,10 @@ const LoginScreen = (props: any) => {
     }
 
     const pushLogin = () => {
-
-        SigninButtonIsloadingInput(true);
+        signinButtonIsloadingInput(true);
+        isDisabledInitialStateInput(false);
+        signinButtonDisabledInput(true);
+        
 
             firebase.auth().signInWithEmailAndPassword(emailAsRendered, passwordAsRendered).catch(function (error) {
                 console.log(error.code)
@@ -223,7 +229,10 @@ const LoginScreen = (props: any) => {
                 } else {
                     console.log("loginScreen result.userがない");
                 }
-                SigninButtonIsloadingInput(false);
+                signinButtonIsloadingInput(false);
+                isDisabledInitialStateInput(true);
+                signinButtonDisabledInput(false);
+
             })
         }
     return (
@@ -286,12 +295,19 @@ const LoginScreen = (props: any) => {
                 style={{width: '80%'}}
             >
                 <ButtonElem
-                title="ログイン"
-                type="solid"
-                buttonStyle={styles.button}
-                onPress={pushLogin}
-                disabled={signinButtonDisabled}
-                accessibilityLabel="Learn more about this purple button"
+                        title="ログイン"
+                        type="solid"
+                        buttonStyle={styles.button}
+                        onPress={pushLogin}
+                        disabled={signinButtonDisabled}
+                        disabledStyle={
+                            _isDisabledInitialState
+                                ? 
+                                    null
+                                : {
+                                    backgroundColor: '5E9CFE'
+                                }
+                        }        
                 loading={signinButtonIsloading}
                     />
             </View>
