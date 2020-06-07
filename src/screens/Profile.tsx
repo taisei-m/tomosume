@@ -48,7 +48,7 @@ useEffect(() => {
 			let userProfileData = doc.data() as userDataDocResponse
 			return userProfileData
 		})
-		userProfileDocument.iconURL != 'test-url' ? setUserIcon(userProfileDocument.iconURL) : setUserIcon('file:///Users/oxyu8/Downloads/okuse_yuya.jpg')
+		userProfileDocument.iconURL != 'test-url' ? setUserIcon(userProfileDocument.iconURL) : setUserIcon('../../assets/icon.png')
 		})();
 	}, [])
 	// ユーザの名前を取得
@@ -163,89 +163,91 @@ useEffect(() => {
 
 	return (
 		<View style={styles.container}>
-		<View style={{flexDirection: 'row', justifyContent: 'center',}}>
-			<View>
-			<View style={{alignItems: 'center', marginTop: 50}}>
-				<TouchableOpacity
-				onPress={changeIcon}
-				>
-				<Image
-					source={{ uri: _userIcon }}
-					style = {styles.userIcon}
-				/>
-				</TouchableOpacity>
+			<View style={{flexDirection: 'row', justifyContent: 'center',}}>
+				<View>
+					<View style={{alignItems: 'center', marginTop: 60}}>
+						<TouchableOpacity
+							onPress={changeIcon}
+						>
+							<Image
+								source={{ uri: _userIcon }}
+								style = {styles.userIcon}
+							/>
+						</TouchableOpacity>
+					</View>
+				</View>
+				<View style={{marginLeft: 30}}>
+					<View
+						style={{
+							justifyContent: 'center',
+							flexDirection: 'row',
+							marginTop: 60,
+						}}
+					>
+						<ProfileNumber
+							number={_postNumber}
+							itemName='投稿'
+						/>
+						<ProfileNumber
+							number={_follower}
+							itemName="フォロー"
+							press={toFollowerList}
+							centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+						/>
+						<ProfileNumber
+							number={_followee}
+							itemName="フォロワー"
+							press={toFolloweeList}
+						/>
+					</View>
+					<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
+						<TouchableOpacity
+						style={styles.editButton}
+						onPress={tofindUser}
+						>
+						<Text
+							style={styles.editText}>
+							{'ユーザー検索'}
+						</Text>
+						</TouchableOpacity>
+						<Icon
+							size={20}
+							name='cog'
+							type='font-awesome'
+							color='black'
+							onPress={setting}
+						/>
+					</View>
+				</View>
 			</View>
-			<View style={{alignItems: 'center', marginTop: 10}}>
-				<Text
-				numberOfLines={2}
-				style={styles.userName}>{_userName}</Text>
-			</View>
-			</View>
-			<View style={{marginLeft: 30}}>
-			<View
-				style={{
-				justifyContent: 'center',
-				flexDirection: 'row',
-				marginTop: 70,
-				}}
-			>
-				<ProfileNumber
-				number={_postNumber}
-				itemName='post'
+			<View style={{marginTop: 15}}>
+						<Text
+							// numberOfLines={2}
+							style={styles.userName}>{_userName}
+						</Text>
+					</View>
+			<SafeAreaView style={styles.list}>
+				<FlatList
+				data={_allReviews}
+				renderItem={
+					({ item }) =>
+					<ProfileReviews
+						shopName={item.shopName}
+						shopAddress={item.shopAddress}
+						category={item.category}
+						price={item.price}
+						favorite={item.favoriteMenu}
+					/>
+				}
+				keyExtractor={item => item.shopId}
+				refreshing={refreshing}
+				onRefresh={handleRefresh}
 				/>
-				<ProfileNumber
-				number={_follower}
-				itemName="フォロー"
-				press={toFollowerList}
-				centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-				/>
-				<ProfileNumber
-				number={_followee}
-				itemName="フォロワー"
-				press={toFolloweeList}
-				/>
-			</View>
-			<View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
-				<TouchableOpacity
-				style={styles.editButton}
-				onPress={setting}
-				>
-				<Text
-					style={styles.editText}>
-					{'設定'}
-				</Text>
-				</TouchableOpacity>
-				<Icon
-				size={20}
-				name='search'
-				type='font-awesome'
-				color='black'
-				onPress={tofindUser}
-				/>
-			</View>
-			</View>
-		</View>
-		<SafeAreaView style={styles.list}>
-			<FlatList
-			data={_allReviews}
-			renderItem={
-				({ item }) =>
-				<ProfileReviews
-					shopName={item.shopName}
-					shopAddress={item.shopAddress}
-					category={item.category}
-					price={item.price}
-					favorite={item.favoriteMenu}
-				/>
-			}
-			keyExtractor={item => item.shopId}
-			refreshing={refreshing}
-            onRefresh={handleRefresh}
-			/>
-		</SafeAreaView>
+			</SafeAreaView>
 		</View>
 	);
 	}
+
 	const ProfileWrapper = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
@@ -266,9 +268,9 @@ useEffect(() => {
 	},
 	userName: {
 		color: 'black',
-		fontSize: 15,
+		fontSize: 13,
 		fontWeight: '700',
-		width: 90
+		marginLeft: '7%'
 	},
 	userIcon: {
 		width: 90,
@@ -307,10 +309,10 @@ useEffect(() => {
 	},
 	editText: {
 		color: 'black',
-		fontWeight: '500'
+		fontWeight: '500',
 	},
 	list: {
 		marginTop: 20,
-		marginBottom: 350
+		paddingBottom: 190
 	},
 	})

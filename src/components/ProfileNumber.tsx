@@ -25,7 +25,8 @@ export default ProfileNumber
 
 const styles = StyleSheet.create({
     number: {
-        fontSize: 28
+        fontSize: 28,
+        textAlign: 'center'
     },
     numberKey: {
         fontSize: 12,
