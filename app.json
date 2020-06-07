@@ -23,6 +23,15 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.bi17.tomosume",
+      "versionCode": 1,
+    },
+    "description": ""
   }
 }

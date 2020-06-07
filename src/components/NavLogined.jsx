@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import Top from './Top';
-import Search from './Search';
-import Post from './Post';
-import Profile from './Profile';
-import followTabList from './followTabList';
+import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import ProfileStack from './ProfileStack';
+import ProfileStack from '../Routes/ProfileStack';
+import topStack from '../Routes/topStack'
+import SearchStack from '../Routes/SearchStack'
 
 const Tab1 = createBottomTabNavigator();
 
@@ -20,10 +17,10 @@ export default Tab = () => {
         let iconName;
         if (route.name === 'Top') {
           iconName = focused
-            ? 'ios-information-circle'
-            : 'ios-information-circle-outline';
+            ? 'md-home'
+            : 'md-home';
         } else if (route.name === 'Post') {
-          iconName = focused ? 'ios-list-box' : 'ios-list';
+          iconName = focused ? 'ios-add-circle' : 'ios-add-circle-outline';
         } else if (route.name === 'Search') {
           iconName = focused ? 'ios-search' : 'ios-search'
         } else if (route.name === 'Profile') {
@@ -37,13 +34,10 @@ export default Tab = () => {
       inactiveTintColor: 'gray',
     }}
     >
-      <Tab1.Screen name="Top" component={Top} />
-      <Tab1.Screen name="Search" component={Search} />
-      <Tab1.Screen name="Post" component={Post} />
-      <Tab1.Screen name="Profile" component={ProfileStack} />
-      
-      {/* <Tab1.Screen name="Profile" component={Profile} />
-      <Tab1.Screen name="ProfollowTabListfile" component={followTabList} /> */}
+      <Tab1.Screen name="Top" component={topStack} options={{title: 'トップ'}}/>
+      <Tab1.Screen name="Search" component={SearchStack} options={{title: '検索'}}/>
+      <Tab1.Screen name="Post" component={Post} options={{title: '投稿'}}/>
+      <Tab1.Screen name="Profile" component={ProfileStack} options={{title: 'プロフィール'}}/>
     </Tab1.Navigator>
   );
 }
