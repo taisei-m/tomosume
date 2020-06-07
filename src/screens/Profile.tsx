@@ -232,11 +232,8 @@ const Profile = (props: any) => {
 				</View>
 			</View>
 			<View style={{marginTop: 15}}>
-						<Text
-							// numberOfLines={2}
-							style={styles.userName}>{_userName}
-						</Text>
-					</View>
+				<Text style={styles.userName}>{_userName}</Text>
+			</View>
 			<SafeAreaView style={styles.list}>
 				<FlatList
 				data={_allReviews}

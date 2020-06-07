@@ -144,9 +144,6 @@ const FriendProfile = (props: any) => {
 					style = {styles.userIcon}
 				/>
 				</View>
-				<View style={{alignItems: 'center', marginTop: 10}}>
-				<Text style={styles.userName}>{friendName}</Text>
-				</View>
 			</View>
 			<View style={{marginLeft: 30}}>
 				<View
@@ -172,7 +169,7 @@ const FriendProfile = (props: any) => {
 							press={toFolloweeList}
 				/>
 				</View>
-				<View style={{ alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+				<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
 				<TouchableOpacity
 					disabled={canPressFollowButton}
 					style={
@@ -191,6 +188,9 @@ const FriendProfile = (props: any) => {
             </View>
 			</View>
 		</View>
+		<View style={{marginTop: 10}}>
+					<Text style={styles.userName}>{friendName}</Text>
+				</View>
 			<SafeAreaView style={styles.list}>
 				<FlatList
 				data={allReviews}
@@ -228,8 +228,9 @@ const styles = StyleSheet.create({
 	},
 	userName: {
 		color: 'black',
-		fontSize: 18,
+		fontSize: 13,
 		fontWeight: '700',
+		marginLeft: '7%'
 	},
 	userIcon: {
 		width: 90,

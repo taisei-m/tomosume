@@ -117,7 +117,9 @@ const FindUser = (props) => {
                         <TouchableOpacity
                             onPress={() => {toUserDetailPage(item.uid)}}
                         >
-                        <Text style={styles.text}>{item.userName}</Text>
+                        <View style={{marginRight: '45%'}}>
+                            <Text style={styles.text} numberOfLines={1}　ellipsizeMode="tail">{item.userName}</Text>
+                        </View>
                         </TouchableOpacity>
                         <FollowButton
                             id={item.uid}
@@ -164,6 +166,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         marginLeft: 15,
-        marginTop: 15
+        marginTop: 15,
     },
 });

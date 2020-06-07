@@ -72,7 +72,9 @@ const FollowerList = (props) => {
                         source={{ uri: item.iconURL }}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
-                        <Text style={styles.text}>{item.userName}</Text>
+                        <View style={{marginRight: '45%'}}>
+                            <Text style={styles.text}　numberOfLines={1} ellipsizeMode="tail">{item.userName}</Text>
+                        </View>
                     </TouchableOpacity>
                     <FollowButton
                         id={item.uid}

@@ -25,6 +25,7 @@ const TopStack = (props) => {
             component={Top}
             options={{
                 headerShown: false,
+                title: 'トップ'
             }}
         />
         <TopNavStack.Screen
@@ -32,17 +33,24 @@ const TopStack = (props) => {
             component={friendProfile}
             options={{
                 headerShown: true,
+                title: 'プロフィール'
             }}
         />
         <TopNavStack.Screen
             name="friendFollowerList"
             component={friendFollowerList}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'フォローリスト'
+            }}
         />
         <TopNavStack.Screen
             name="friendFolloweeList"
             component={friendFolloweeList}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'フォロワーリスト'
+            }}
         />
     </TopNavStack.Navigator>
     )

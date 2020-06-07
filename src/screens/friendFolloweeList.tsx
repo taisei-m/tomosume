@@ -65,7 +65,9 @@ const FollowerList = (props) => {
                         rounded
                         containerStyle={{marginLeft: 20, marginTop: 9}}
                         source={{ uri: item.iconURL }}/>
-                    <Text style={styles.text}>{item.userName}</Text>
+                        <View style={{marginRight: '45%'}}>
+                            <Text style={styles.text}　numberOfLines={1} ellipsizeMode="tail">{item.userName}</Text>
+                        </View>
                     <FollowButton
                         id={item.uid}
                         isFollowExchange={item.followExchange}
