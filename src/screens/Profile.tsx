@@ -69,8 +69,8 @@ const Profile = (props: any) => {
 	useEffect(() => {
 		const userId = props.globalState.state.uid
 		let followeeArray:string[] = []
-		const unsubscribe = db.collection('userList').doc(userId).collection('followee')
-		.onSnapshot(function(querySnapshot) {
+		db.collection('userList').doc(userId).collection('followee')
+		.get().then(function(querySnapshot) {
 		// followeeArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
 		followeeArray = []
 		querySnapshot.forEach(function(doc) {
@@ -79,9 +79,6 @@ const Profile = (props: any) => {
 		let followeeNumber: number = followeeArray.length-1
 		setFollowee(followeeNumber)
 	})
-	return () => {
-		unsubscribe();
-	};
 	},[])
 	// ユーザのフォローしている人を取得
 	useEffect(() => {
@@ -174,6 +171,7 @@ const Profile = (props: any) => {
 			<ProgressDialog
 				visible={progressVisible}
 				title="アイコン画像を変更しています"
+				message="しばらくお待ちください"
 			/>
 			</View>
 			<View style={{flexDirection: 'row', justifyContent: 'center',}}>

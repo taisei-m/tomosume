@@ -11,7 +11,7 @@ interface ProfileNumberProps {
 const ProfileNumber = (props: ProfileNumberProps) => {
     return(
         <View style={props.centerClass}>
-            <TouchableOpacity onPress={() => props.press()}>
+            <TouchableOpacity onPress={props.press}>
                 <Text
                     style={styles.number}
                 >{props.number}</Text>
