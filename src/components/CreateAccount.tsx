@@ -17,6 +17,7 @@ const CreateAccount = (props: any) => {
     const [_passwordIconTypeVisible, setPasswordIconTypeVisible] = useState<string>('ios-eye-off');
     const [_signupButtonDisabled, setSignupButtonDisabled] = useState<boolean>(true);
     const [_signupButtonIsloading, setSignupButtonIsloading] = useState<boolean>(false);
+    const [_signupButtonDisabledInitialState, setSignupButtonDisabledInitialState] = useState<boolean>(true);
     //エラーメッセ―ジ
     const [_usernameErrorMessage, setUsernameErrorMessage] = useState<string>();
     const [_emailErrorMessage, setEmailErrorMessage] = useState<string>();
@@ -46,6 +47,9 @@ const CreateAccount = (props: any) => {
     }
     const signupButtonIsloadingInput = (passed: boolean) => {
         setSignupButtonIsloading(passed);
+    }
+    const signupButtonDisabledInitialStateInput = (result: boolean) => {
+        setSignupButtonDisabledInitialState(result);
     }
 
     const usernameErrorMessageInput = (passedErrorMessageType: string) => {
@@ -292,6 +296,8 @@ const CreateAccount = (props: any) => {
 
     const pushSignup = () => {
         signupButtonIsloadingInput(true);
+        signupButtonDisabledInitialStateInput(false);
+        signupButtonDisabledInput(true);
 
         firebase.auth().createUserWithEmailAndPassword(_email, _password).catch(function (error) {
             console.log("errorCode: " + error.code)
@@ -331,6 +337,8 @@ const CreateAccount = (props: any) => {
                 console.log("予期せぬエラーが発生しました CreateAccount.tsx");
             }
             signupButtonIsloadingInput(false);
+            signupButtonDisabledInitialStateInput(true);
+            signupButtonDisabledInput(false);
         })
     }
 
@@ -398,7 +406,13 @@ const CreateAccount = (props: any) => {
             type="solid"
             buttonStyle={styles.button}
             onPress={pushSignup}
-            disabled={_signupButtonDisabled}
+                        disabled={_signupButtonDisabled}
+                        disabledStyle={_signupButtonDisabledInitialState
+                            ? null
+                            : {
+                                backgroundColor: '5E9CFE'
+                            }
+                        }
             accessibilityLabel="Learn more about this purple button"
             loading={_signupButtonIsloading}
             />
