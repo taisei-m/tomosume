@@ -12,6 +12,7 @@ import {pickerResult} from '../types/types'
 import {userReviewDocResponse} from '../types/types'
 import {userDataDocResponse} from '../types/types'
 import {userReviewsType} from '../types/types'
+import { ProgressDialog } from 'react-native-simple-dialogs';
 
 const Profile = (props: any) => {
 	const [_userName, setUserName] = useState<string>()
@@ -21,7 +22,8 @@ const Profile = (props: any) => {
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [_userIcon, setUserIcon] = useState<string>();
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
-    const [refreshing, setRefreshing] = useState<boolean>(false)
+	const [refreshing, setRefreshing] = useState<boolean>(false)
+	const [progressVisible , setProgressVisible] = useState<boolean>(false)
   // ユーザが投稿したレビューの一覧と投稿数を取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
@@ -116,9 +118,11 @@ const Profile = (props: any) => {
 	}
 	const changeIcon = async() => {
 		try {
+			setProgressVisible(true)
 			const iconUrl = await changeIconUrl()
 			await setIconToFirestore(iconUrl);
 			imageInput(iconUrl);
+			setProgressVisible(false)
 		} catch(error) {
 			console.log(error)
 		}
@@ -129,6 +133,9 @@ const Profile = (props: any) => {
 			let data = ''
 			data = await uploadResult(result.uri, props.globalState.state.uid)
 			return data
+		} else {
+		// 画像の変更をキャンセルした際にダイアログの表示を消す
+			setProgressVisible(false)
 		}
 	}
 	// 写真の変更をキャンセルした際の処理を書く必要あり
@@ -163,6 +170,12 @@ const Profile = (props: any) => {
 
 	return (
 		<View style={styles.container}>
+			<View>
+			<ProgressDialog
+				visible={progressVisible}
+				title="アイコン画像を変更しています"
+			/>
+			</View>
 			<View style={{flexDirection: 'row', justifyContent: 'center',}}>
 				<View>
 					<View style={{alignItems: 'center', marginTop: 60}}>
