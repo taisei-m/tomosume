@@ -6,11 +6,18 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
+import * as Permissions from 'expo-permissions'
 
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
+
+    useEffect(() => {
+        (async() => {
+            Permissions.askAsync(Permissions.LOCATION);
+        })()
+    })
     useEffect(() => {
         (async () => {
             const uidArray = await getFollowingUid()
