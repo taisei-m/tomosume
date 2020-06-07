@@ -31,6 +31,7 @@ const Post = (props) => {
     const [isPressed , setIsPressed] = useState<boolean>(false);
     const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
     const [permissionDialogVisible , setPermissionDialogVisible] = useState<boolean>(false);
+    const [shareCompleteDialogVisible , setShareCompleteDialogVisible] = useState<boolean>(false);
     const [_latitude, setLatitude] = useState<number>(35.68123620000001);
     const [_longitude, setLongitude] = useState<number>(139.7671248);
     const categoryItemList = [
@@ -130,16 +131,15 @@ const Post = (props) => {
                     })
                 })
                 .then(function() {
-                    alert('投稿か完了しました')
+                    setShareCompleteDialogVisible(true)
                     setShopName('')
                     changeFavorite('')
                     changePrice('')
-                    selectCategory('選択してください')
+                    selectCategory('')
                 })
                 .then(() => {
                     setIsLoading(false)
                     setIsPressed(false)
-                    props.navigation.navigate('Top')
                 })
                 .catch(function(error: any) {
                     console.log(error)
@@ -167,6 +167,9 @@ const Post = (props) => {
     }
     const closePermissionDialog =() => {
         setPermissionDialogVisible(false)
+    }
+    const closeShareCompleteDialog = () => {
+        setShareCompleteDialogVisible(false)
     }
     return (
         <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
@@ -238,6 +241,7 @@ const Post = (props) => {
                     カテゴリー (必須)
                 </Text>
                 <RNPickerSelect
+                    doneText=''
                     items={categoryItemList}
                     style={pickerSelectStyles}
                     placeholder={{label: '選択してください', value: ''}}
@@ -291,6 +295,16 @@ const Post = (props) => {
                 >
                 <View>
                     <Text style={{textAlign: 'center'}}>店名を入力して下さい</Text>
+                </View>
+            </Dialog>
+        </View>
+        <View>
+            <Dialog
+                visible={shareCompleteDialogVisible}
+                onTouchOutside={closeShareCompleteDialog}
+                >
+                <View>
+                    <Text style={{textAlign: 'center'}}>投稿が完了しました</Text>
                 </View>
             </Dialog>
         </View>
