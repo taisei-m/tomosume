@@ -12,7 +12,10 @@ import {pickerResult} from '../types/types'
 import {userReviewDocResponse} from '../types/types'
 import {userDataDocResponse} from '../types/types'
 import {userReviewsType} from '../types/types'
+//@ts-ignore
 import { ProgressDialog } from 'react-native-simple-dialogs';
+
+//TODO: 初期のアイコン画像を設定する
 
 const Profile = (props: any) => {
 	const [_userName, setUserName] = useState<string>()
@@ -50,7 +53,7 @@ const Profile = (props: any) => {
 			let userProfileData = doc.data() as userDataDocResponse
 			return userProfileData
 		})
-		userProfileDocument.iconURL != 'test-url' ? setUserIcon(userProfileDocument.iconURL) : setUserIcon('../../assets/icon.png')
+		userProfileDocument.iconURL != 'test-url' ? setUserIcon(userProfileDocument.iconURL) : setUserIcon('../../assets/okuse_yuya.jpg')
 		})();
 	}, [])
 	// ユーザの名前を取得
@@ -278,7 +281,7 @@ const Profile = (props: any) => {
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '7%'
+		marginLeft: '14%',
 	},
 	userIcon: {
 		width: 90,

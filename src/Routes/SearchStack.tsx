@@ -26,22 +26,32 @@ const SearchStack = (props) => {
             component={search}
             options={{
                 headerShown: false,
+                title: '検索'
             }}
         />
         <SearchNavStack.Screen
             name="friendProfile"
             component={friendProfile}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'プロフィール'
+            }}
         />
         <SearchNavStack.Screen
             name="friendFollowerList"
             component={friendFollowerList}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'フォローリスト'
+            }}
         />
         <SearchNavStack.Screen
             name="friendFolloweeList"
             component={friendFolloweeList}
-            options={{ headerShown: true }}
+            options={{
+                headerShown: true,
+                title: 'フォロワーリスト'
+            }}
         />
     </SearchNavStack.Navigator>
     )

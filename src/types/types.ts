@@ -87,12 +87,12 @@ export type ReviewDocResponse = {
 
 export type ReviewsDocResponse = ReviewDocResponse[]
 
-// findUser.tsx
+// findUser.tsx changeUserName
 export type userProfileDataType = {
     userName: string
     uid: string
     iconURL: string
-    followExchange: boolean
+    followExchange?: boolean
 }
 
 export type candidateUesrsDataListType = userProfileDataType[]
@@ -114,3 +114,31 @@ export type friendDataDocResponse = {
 	uid: string
 }
 export type friendReviewsType = friendReviewDocResponse[]
+
+// search.tsx
+export type ReviewDocResponse = {
+	category: string,
+	createdAt: firebase.firestore.Timestamp,
+	favoriteMenu: string,
+	price: string,
+	shopAddress: string,
+	shopId: string,
+	shopName: string
+	user: firebase.firestore.DocumentReference
+	userName?: string
+	iconURL?: string
+	key?: string
+	userId: string
+}
+
+export type ShopDocResponse = {
+	address: string
+	latitude: number
+	longitude: number
+	shopName: string
+	reviews: firebase.firestore.CollectionReference
+	id: string
+}
+
+export type ReviewsDocResponse = ReviewDocResponse[]
+export type ShopsArrayType= ShopDocResponse[]

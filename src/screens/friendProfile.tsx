@@ -19,6 +19,9 @@ const FriendProfile = (props: any) => {
 	const [isFollow, setIsFollow] = useState(true)
 	const [image, setFriendIconUrl] = useState<string>();
 	const [canPressFollowButton, setCanPressFollowButton] = useState<boolean>(true)
+	const [refreshing, setRefreshing] = useState<boolean>(false)
+	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+
 
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
@@ -68,8 +71,9 @@ const FriendProfile = (props: any) => {
 			let reviewNumber: number = friendReviews.length
 			setPostNumber(reviewNumber)
 			setAllReviews(friendReviews)
+			setRefreshing(false)
     })
-	}, [])
+	}, [isRefreshed])
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -133,6 +137,10 @@ const FriendProfile = (props: any) => {
 	const toFollowerList = () => {
 		props.navigation.navigate('friendFollowerList')
 	}
+	const handleRefresh = () => {
+		setIsRefreshed(!isRefreshed)
+		setRefreshing(true)
+    }
 
 	return (
 	<View style={styles.container}>
@@ -205,6 +213,8 @@ const FriendProfile = (props: any) => {
 						/>
 				}
 				keyExtractor={item => item.shopId}
+				refreshing={refreshing}
+				onRefresh={handleRefresh}
 				/>
 			</SafeAreaView>
 	</View>
@@ -230,7 +240,7 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '7%'
+		marginLeft: '14%'
 	},
 	userIcon: {
 		width: 90,

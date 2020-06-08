@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from '../components/CreateAccount';
+import HomeScreen from '../screens/CreateAccount';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // function HomeScreen() {

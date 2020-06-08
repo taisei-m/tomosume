@@ -205,7 +205,6 @@ const LoginScreen = (props: any) => {
         signinButtonIsloadingInput(true);
         isDisabledInitialStateInput(false);
         signinButtonDisabledInput(true);
-        
 
             firebase.auth().signInWithEmailAndPassword(emailAsRendered, passwordAsRendered).catch(function (error) {
                 console.log(error.code)
