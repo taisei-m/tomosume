@@ -1,47 +1,19 @@
 import React, { useState, useEffect, useRef }from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View,　FlatList, TouchableOpacity} from 'react-native';
-import { Avatar, Card, } from 'react-native-elements'
+import { Avatar, Card, Icon } from 'react-native-elements'
 import firebase from 'firebase/app'
 import {db} from '../../firebaseConfig'
 import RBSheet from "react-native-raw-bottom-sheet";
 import GlobalStateContainer from '../containers/GlobalState';
 import { Subscribe } from 'unstated';
+import {ReviewDocResponse} from '../types/types'
+import {ShopDocResponse} from '../types/types'
+import {ReviewsDocResponse} from '../types/types'
+import {ShopsArrayType} from '../types/types'
 
-
-
-type ReviewDocResponse = {
-	category: string,
-	createdAt: firebase.firestore.Timestamp,
-	favoriteMenu: string,
-	price: string,
-	shopAddress: string,
-	shopId: string,
-	shopName: string
-	user: firebase.firestore.DocumentReference
-	userName?: string
-	iconURL?: string
-	key?: string
-	userId: string
-}
-
-type ShopDocResponse = {
-	address: string
-	latitude: number
-	longitude: number
-	shopName: string
-	reviews: firebase.firestore.CollectionReference
-	id: string
-}
-
-type ReviewsDocResponse = ReviewDocResponse[]
-type ShopsArrayType= ShopDocResponse[]
-
-
-// フォローしているユーザを判別する関数は独立させたい
-
-
-
+// TODO:フォローしているユーザを判別する関数は独立させたい
+// TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
@@ -136,6 +108,14 @@ const Search = (props: any) => {
 					longitudeDelta: 0.05,
 				}}
 				>
+				{/* <View style={{position : 'absolute', right : '10%'}}>
+					<Icon
+						size={20}
+						name='cog'
+						type='font-awesome'
+						color='black'
+					/>
+				</View> */}
 				{allShopsData.map((location) =>
 					<Marker
 						key={location.id}
@@ -235,9 +215,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	mapStyle: {
+		...StyleSheet.absoluteFillObject,
 		width: '100%',
 		height: '100%',
 		position: 'relative'
+	},
+	map: {
+		...StyleSheet.absoluteFillObject,
 	},
 	card: {
 		borderRadius: 10

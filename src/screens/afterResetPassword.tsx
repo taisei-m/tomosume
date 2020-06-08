@@ -21,7 +21,6 @@ const ResendEmail = (props:any) => {
         }
         setTitleText(titleText);
     }
-    
     useEffect(
         () => {
             let email: string = props.globalState.state.resetPasswordEmail;
@@ -35,7 +34,6 @@ const ResendEmail = (props:any) => {
             <View style={styles.titleTextView}>
                 <Text style={styles.titleText}>{_titleText}</Text>
             </View>
-            
             {/* テスト追加したかったらこれ使って */}
             {/* <View>
                 <Text style={styles.contentText}>{_contentText}</Text>
@@ -80,30 +78,8 @@ const styles = StyleSheet.create({
         color:"black",
         marginBottom:40
     },
-    contentText:{
-        fontSize:20,
-        color:"black",
-        marginBottom:40
-    },
-    forgot: {
-        margin: 20,
-        color: '#818181',
-        marginBottom: 60
-    },
-    button: {
-        backgroundColor:"#5E9CFE",
-        borderRadius: 25,
-        borderColor: 'black',
-        height: 50
-    },
-    buttonText: {
-        color: 'white'
-    },
     ToLoginText: {
         textDecorationLine: 'underline',
         marginTop: '5%',
     },
-    icon: {
-        marginRight: 10
-    }
 });

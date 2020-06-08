@@ -13,7 +13,7 @@ import {candidateUesrsDataListType} from '../types/types'
 const FindUser = (props) => {
     const [_searchedUserName, setSearchedUserName] = useState<string>('')
     // _searchUserNameの値が確定してから1秒後にvalueに_searchedUserNameを代入する
-    const [value] = useDebounce(_searchedUserName, 1000);
+    const [value] = useDebounce(_searchedUserName, 800);
     const [_isExistedCandidate, setIsExistedCandidate] = useState<boolean>(false)
     const [_candidateUsersList, setCandidateUsersList] = useState<candidateUesrsDataListType>()
 
@@ -73,7 +73,6 @@ const FindUser = (props) => {
         setSearchedUserName(userName)
     }
     const toUserDetailPage = (id) => {
-        console.log(id)
         props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
     }
