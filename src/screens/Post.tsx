@@ -215,7 +215,7 @@ const Post = (props) => {
                     >
                 </FlatList>
                 <Button
-                    title={'close'}
+                    title={'閉じる'}
                     type='outline'
                     buttonStyle={styles.closeButton}
                     onPress={close}
