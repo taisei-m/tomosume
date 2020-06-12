@@ -215,9 +215,10 @@ const Post = (props) => {
                     >
                 </FlatList>
                 <Button
-                    title={'close'}
+                    title={'閉じる'}
                     type='outline'
                     buttonStyle={styles.closeButton}
+                    titleStyle={{color: 'black'}}
                     onPress={close}
                 />
             </View>
@@ -367,7 +368,10 @@ searchButton: {
 },
 closeButton: {
     marginHorizontal: 20,
-    marginTop: 5
+    marginTop: 5,
+    borderColor: 'black',
+    color: 'black',
+    borderRadius: 25
 },
 inputText:{
     height:50,
@@ -390,8 +394,9 @@ input: {
 suggestion: {
     backgroundColor: 'white',
     padding: 5,
-    fontSize: 18,
-    borderWidth: 0.5,
+    fontSize: 14,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'black',
     marginRight: 5,
     marginLeft: 5
 }
