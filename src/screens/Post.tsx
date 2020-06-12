@@ -272,7 +272,7 @@ const Post = (props) => {
             </View>
             <View style={{marginTop: 30, width: '60%'}}>
                 <Button
-                    buttonStyle={{borderRadius: 20}}
+                    buttonStyle={{borderRadius: 20, backgroundColor: '#fbd01d'}}
                     title='投稿する'
                     type='solid'
                     onPress={share}
@@ -281,7 +281,7 @@ const Post = (props) => {
                     loading={isLoading}
                     disabledStyle={
                         isPressed ?
-                        {backgroundColor: '#4388D6'}
+                        {backgroundColor: '#fbd01d'}
                     :
                     null
                 }
@@ -342,7 +342,7 @@ container: {
     alignItems: 'center'
 },
 itemName: {
-    color: '#5E9CFE',
+    color: '#fbd01d',
 },
 searchResultArea: {
     width: 265,

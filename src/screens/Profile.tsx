@@ -324,6 +324,6 @@ const Profile = (props: any) => {
 	},
 	list: {
 		marginTop: 20,
-		paddingBottom: 190
+		marginBottom: 190
 	},
 	})

@@ -26,7 +26,7 @@ const FriendProfile = (props: any) => {
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
 		checkCanPressFollowButton()
-	},[])
+	},[props.globalState.state.friendId])
 
 	const checkCanPressFollowButton = () => {
 		const friendId = props.globalState.state.friendId
@@ -39,7 +39,7 @@ const FriendProfile = (props: any) => {
 	}
 	useEffect(() => {
 		checkFollowExchange()
-	},[])
+	},[props.globalState.state.friendId])
 	// ユーザをフォローしているかを確認する処理
 	const checkFollowExchange = async() => {
 		const friendId = props.globalState.state.friendId
@@ -73,7 +73,7 @@ const FriendProfile = (props: any) => {
 			setAllReviews(friendReviews)
 			setRefreshing(false)
     })
-	}, [isRefreshed])
+	}, [isRefreshed, props.globalState.state.friendId])
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -83,7 +83,7 @@ const FriendProfile = (props: any) => {
 			setFriendName(friendProfileData.userName)
 			setFriendIconUrl(friendProfileData.iconURL)
 		})
-	},[])
+	},[props.globalState.state.friendId])
 	// フォロワーの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -100,7 +100,7 @@ const FriendProfile = (props: any) => {
 	return () => {
 		unsubscribe();
 	};
-	},[])
+	},[props.globalState.state.friendId])
 	//フォローの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -117,7 +117,7 @@ const FriendProfile = (props: any) => {
 	return () => {
 		unsubscribe();
 	};
-	},[])
+	},[props.globalState.state.friendId])
 	//　フォロー状態を解除する
 	const pressFollowButton = () => {
 		const userId = props.globalState.state.uid
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '14%'
+		marginLeft: '12%'
 	},
 	userIcon: {
 		width: 90,
@@ -279,12 +279,12 @@ const styles = StyleSheet.create({
 	},
 	unFollowButton: {
 		width: 180,
-		backgroundColor:"#5E9CFE",
+		backgroundColor:"#fbd01d",
 		borderRadius:15,
 		height : 35,
 		alignItems:"center",
 		justifyContent:"center",
-		borderColor: '#5E9CFE',
+		borderColor: '#fbd01d',
 		borderWidth: 1,
 	},
 	followButtonText: {
