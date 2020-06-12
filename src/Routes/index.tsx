@@ -16,8 +16,6 @@ const Index = (props) => {
   if (props.globalState.state.isSplash == true || props.globalState.state.isSignout=="") {
     return <SplashScreen />;
   }
-  // if(props.globalState.state.isSplash==false&&props.globalState.state.isSignout!=""){
-    // console.log("to Nav");
       return (
           <NavigationContainer>
             <Stack.Navigator>
