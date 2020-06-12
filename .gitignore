@@ -12,5 +12,6 @@ web-report/
 .env
 tomosume.jks
 api
+app.json
 # macOS
 .DS_Store
