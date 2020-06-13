@@ -23,18 +23,21 @@ const Search = (props: any) => {
 	// const [longitude, changeLongitude] = useState<number>(137.7394095);
 	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);
-	const [_latitude, setLatitude] = useState<number>(34.7201152);
-    const [_longitude, setLongitude] = useState<number>(137.7394095);
+	const [_latitude, setLatitude] = useState<number>();
+    const [_longitude, setLongitude] = useState<number>();
 	const refRBSheet = useRef();
 
 	useEffect(() => {
         (async() => {
-            let {status} = await Permissions.askAsync(Permissions.LOCATION);
+			let {status} = await Permissions.askAsync(Permissions.LOCATION);
             if(status == 'granted') {
 				const location = await Location.getCurrentPositionAsync({});
 				setLatitude(location.coords.latitude)
 				setLongitude(location.coords.longitude)
-            }
+            } else {
+				setLatitude(34.7201152)
+				setLongitude(137.7394095)
+			}
         })()
     }, [])
 
