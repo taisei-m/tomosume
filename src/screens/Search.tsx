@@ -19,8 +19,8 @@ const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
 	const [latitude, changeLatitude] = useState<number>(34.7201152);
 	const [longitude, changeLongitude] = useState<number>(137.7394095);
-	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
-	const [isShownSheet, setIsShownSheet] = useState<boolean>()
+	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
+	const [_refresh, setRefresh] = useState<boolean>(false);
 	const refRBSheet = useRef();
 
 	//投稿されているお店の位置情報・店名を取得する
@@ -41,11 +41,8 @@ const Search = (props: any) => {
 				})
 			}))
 			setAllShopsData(shopDataArray)
-			// return () => {
-			// 	unsubscribe();
-			// };
 		})()
-	},[])
+	},[_refresh])
 	// 選択したお店の全レビューを取得する
 	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
 		let reviews: ReviewsDocResponse = []
@@ -96,6 +93,9 @@ const Search = (props: any) => {
 		refRBSheet.current.close()
 		props.navigation.navigate('friendProfile')
 	}
+	const reGetShopReviews = () => {
+		setRefresh(!_refresh)
+	}
 	return (
 		<View style={styles.container}>
 			<MapView
@@ -108,14 +108,6 @@ const Search = (props: any) => {
 					longitudeDelta: 0.05,
 				}}
 				>
-				{/* <View style={{position : 'absolute', right : '10%'}}>
-					<Icon
-						size={20}
-						name='cog'
-						type='font-awesome'
-						color='black'
-					/>
-				</View> */}
 				{allShopsData.map((location) =>
 					<Marker
 						key={location.id}
@@ -131,6 +123,15 @@ const Search = (props: any) => {
 					/>
 				)}
 			</MapView>
+			<View style={{position : 'absolute', right : '5%', top: '5%'}}>
+					<Icon
+						size={30}
+						name='refresh'
+						type='font-awesome'
+						color='black'
+						onPress={reGetShopReviews}
+					/>
+				</View>
 			<View
 				style={{
 					flex: 1,
@@ -220,9 +221,9 @@ const styles = StyleSheet.create({
 		height: '100%',
 		position: 'relative'
 	},
-	map: {
-		...StyleSheet.absoluteFillObject,
-	},
+	// map: {
+	// 	...StyleSheet.absoluteFillObject,
+	// },
 	card: {
 		borderRadius: 10
 	},

@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         position: 'absolute',
         top: 10,
-        right: 10
+        right: 10,
+        
     }
 });

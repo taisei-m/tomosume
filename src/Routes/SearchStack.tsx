@@ -42,7 +42,7 @@ const SearchStack = (props) => {
             component={friendFollowerList}
             options={{
                 headerShown: true,
-                title: 'フォローリスト'
+                title: 'フォローリスト',
             }}
         />
         <SearchNavStack.Screen
