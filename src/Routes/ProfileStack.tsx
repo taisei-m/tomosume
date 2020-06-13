@@ -24,12 +24,12 @@ const ProfileStack = (props) => {
     return (
     <ProfileNavStack.Navigator>
         <ProfileNavStack.Screen
-                name="ProfileTop"
-                component={Profile}
-                options={{
-                    headerShown: false,
-                    title: 'プロフィール'
-                }}
+            name="ProfileTop"
+            component={Profile}
+            options={{
+                headerShown: false,
+                title: 'プロフィール',
+            }}
         />
         <ProfileNavStack.Screen
             name="followerList"
@@ -68,7 +68,7 @@ const ProfileStack = (props) => {
             component={friendProfile}
             options={{
                 headerShown: true,
-                title: 'プロフィール'
+                title: 'プロフィール',
             }}
         />
         <ProfileNavStack.Screen
@@ -76,7 +76,7 @@ const ProfileStack = (props) => {
             component={changeUserName}
             options={{
                 headerShown: true,
-                title: 'ユーザー名変更'
+                title: 'ユーザー名変更',
             }}
         />
     </ProfileNavStack.Navigator>

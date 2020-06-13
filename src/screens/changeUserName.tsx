@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, FlatList, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
 import {db} from '../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
+import {userProfileDataType} from '../types/types'
 
 const ChangeUserName = (props) => {
     const [_userName, setUserName] = useState<string>('')
     useEffect(() => {
         db.collection('userList').doc(props.globalState.state.uid).get()
         .then((doc) => {
-            setUserName(doc.data().userName)
+            let userProfileData = doc.data() as userProfileDataType
+            setUserName(userProfileData.userName)
         })
     }, [])
 

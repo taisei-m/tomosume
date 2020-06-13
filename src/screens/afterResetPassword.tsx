@@ -8,7 +8,6 @@ const ResendEmail = (props:any) => {
     const [_navigation] = useState(props.navigation);
     const [_email, setEmail] = useState<string>('');
     const [_titleText, setTitleText] = useState<string>('');
-    //const [_contentText, setContentText] = useState<string>("メールを確認して本登録をしてください。");
     const emailInput = (text: string) => {
         setEmail(text)
     }
@@ -21,7 +20,6 @@ const ResendEmail = (props:any) => {
         }
         setTitleText(titleText);
     }
-    
     useEffect(
         () => {
             let email: string = props.globalState.state.resetPasswordEmail;
@@ -36,11 +34,6 @@ const ResendEmail = (props:any) => {
                 <Text style={styles.titleText}>{_titleText}</Text>
             </View>
             
-            {/* テスト追加したかったらこれ使って */}
-            {/* <View>
-                <Text style={styles.contentText}>{_contentText}</Text>
-            </View> */}
-
             <TouchableOpacity
                 onPress={() => { _navigation.navigate('LoginScreen') }}
             >
@@ -80,30 +73,8 @@ const styles = StyleSheet.create({
         color:"black",
         marginBottom:40
     },
-    contentText:{
-        fontSize:20,
-        color:"black",
-        marginBottom:40
-    },
-    forgot: {
-        margin: 20,
-        color: '#818181',
-        marginBottom: 60
-    },
-    button: {
-        backgroundColor:"#5E9CFE",
-        borderRadius: 25,
-        borderColor: 'black',
-        height: 50
-    },
-    buttonText: {
-        color: 'white'
-    },
     ToLoginText: {
         textDecorationLine: 'underline',
         marginTop: '5%',
     },
-    icon: {
-        marginRight: 10
-    }
 });

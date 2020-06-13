@@ -2,9 +2,9 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProfileStack from '../Routes/ProfileStack';
-import topStack from '../Routes/topStack'
-import SearchStack from '../Routes/SearchStack'
+import ProfileStack from './ProfileStack';
+import topStack from './topStack'
+import SearchStack from './SearchStack'
 
 const Tab1 = createBottomTabNavigator();
 
@@ -30,7 +30,7 @@ export default Tab = () => {
       },
     })}
     tabBarOptions={{
-      activeTintColor: '#5E9CFE',
+      activeTintColor: '#fbd01d',
       inactiveTintColor: 'gray',
     }}
     >

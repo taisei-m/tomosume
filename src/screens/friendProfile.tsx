@@ -19,11 +19,14 @@ const FriendProfile = (props: any) => {
 	const [isFollow, setIsFollow] = useState(true)
 	const [image, setFriendIconUrl] = useState<string>();
 	const [canPressFollowButton, setCanPressFollowButton] = useState<boolean>(true)
+	const [refreshing, setRefreshing] = useState<boolean>(false)
+	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+
 
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
 		checkCanPressFollowButton()
-	},[])
+	},[props.globalState.state.friendId])
 
 	const checkCanPressFollowButton = () => {
 		const friendId = props.globalState.state.friendId
@@ -36,7 +39,7 @@ const FriendProfile = (props: any) => {
 	}
 	useEffect(() => {
 		checkFollowExchange()
-	},[])
+	},[props.globalState.state.friendId])
 	// ユーザをフォローしているかを確認する処理
 	const checkFollowExchange = async() => {
 		const friendId = props.globalState.state.friendId
@@ -68,8 +71,9 @@ const FriendProfile = (props: any) => {
 			let reviewNumber: number = friendReviews.length
 			setPostNumber(reviewNumber)
 			setAllReviews(friendReviews)
+			setRefreshing(false)
     })
-	}, [])
+	}, [isRefreshed, props.globalState.state.friendId])
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -79,7 +83,7 @@ const FriendProfile = (props: any) => {
 			setFriendName(friendProfileData.userName)
 			setFriendIconUrl(friendProfileData.iconURL)
 		})
-	},[])
+	},[props.globalState.state.friendId])
 	// フォロワーの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -96,7 +100,7 @@ const FriendProfile = (props: any) => {
 	return () => {
 		unsubscribe();
 	};
-	},[])
+	},[props.globalState.state.friendId])
 	//フォローの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
@@ -113,7 +117,7 @@ const FriendProfile = (props: any) => {
 	return () => {
 		unsubscribe();
 	};
-	},[])
+	},[props.globalState.state.friendId])
 	//　フォロー状態を解除する
 	const pressFollowButton = () => {
 		const userId = props.globalState.state.uid
@@ -133,6 +137,10 @@ const FriendProfile = (props: any) => {
 	const toFollowerList = () => {
 		props.navigation.navigate('friendFollowerList')
 	}
+	const handleRefresh = () => {
+		setIsRefreshed(!isRefreshed)
+		setRefreshing(true)
+    }
 
 	return (
 	<View style={styles.container}>
@@ -205,6 +213,8 @@ const FriendProfile = (props: any) => {
 						/>
 				}
 				keyExtractor={item => item.shopId}
+				refreshing={refreshing}
+				onRefresh={handleRefresh}
 				/>
 			</SafeAreaView>
 	</View>
@@ -230,7 +240,7 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '7%'
+		marginLeft: '12%'
 	},
 	userIcon: {
 		width: 90,
@@ -269,12 +279,12 @@ const styles = StyleSheet.create({
 	},
 	unFollowButton: {
 		width: 180,
-		backgroundColor:"#5E9CFE",
+		backgroundColor:"#fbd01d",
 		borderRadius:15,
 		height : 35,
 		alignItems:"center",
 		justifyContent:"center",
-		borderColor: '#5E9CFE',
+		borderColor: '#fbd01d',
 		borderWidth: 1,
 	},
 	followButtonText: {

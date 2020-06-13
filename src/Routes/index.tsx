@@ -1,35 +1,27 @@
-import React, { useState, Component } from 'react';
+import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import NavLogined from '../components/NavLogined';
-import NavUnlogin from '../components/NavUnlogin';
+import NavLogined from './NavLogined';
+import NavUnlogin from './NavUnlogin';
 import { NavigationContainer } from '@react-navigation/native';
 import { Subscribe } from 'unstated'
 import GlobalStateContainer from '../containers/GlobalState';
-import SplashScreen from '../components/Splash'
+import SplashScreen from '../screens/Splash'
 
 const Index = (props) => {
-  // console.log("index//////////////////////////////////////////////////////");
-  // console.log(props.globalState.state);
   const [globalState, setGlobalState] = useState(props.globalState);
   const [isSplash, setIisSplash] = useState(props.globalState.state.isSplash);
   const [isSignout, setIsSignout] = useState(props.globalState.state.isSignout);
   const [user, setUser] = useState(props.globalState.state.user);
   const Stack = createStackNavigator();
-  
   if (props.globalState.state.isSplash == true || props.globalState.state.isSignout=="") {
     return <SplashScreen />;
   }
-
-  // if(props.globalState.state.isSplash==false&&props.globalState.state.isSignout!=""){ 
-    // console.log("to Nav");
       return (
           <NavigationContainer>
             <Stack.Navigator>
               {props.globalState.state.isSignout == "true" ? (
-                // No token found, user isn't signed in
                   <Stack.Screen name="NavUnlogin" component={NavUnlogin} options={{ headerShown: false }} />
               ) : (
-                  // User is signed in
                   <Stack.Screen name="NavLogined" component={NavLogined} options={{ headerShown: false }}/>
               )}
             </Stack.Navigator>

@@ -1,55 +1,45 @@
 import React, { useState, useEffect, useRef }from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View,　FlatList, TouchableOpacity} from 'react-native';
-import { Avatar, Card, } from 'react-native-elements'
+import { Avatar, Card, Icon } from 'react-native-elements'
 import firebase from 'firebase/app'
 import {db} from '../../firebaseConfig'
 import RBSheet from "react-native-raw-bottom-sheet";
 import GlobalStateContainer from '../containers/GlobalState';
 import { Subscribe } from 'unstated';
+import {ReviewDocResponse} from '../types/types'
+import {ShopDocResponse} from '../types/types'
+import {ReviewsDocResponse} from '../types/types'
+import {ShopsArrayType} from '../types/types'
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions'
 
-
-
-type ReviewDocResponse = {
-	category: string,
-	createdAt: firebase.firestore.Timestamp,
-	favoriteMenu: string,
-	price: string,
-	shopAddress: string,
-	shopId: string,
-	shopName: string
-	user: firebase.firestore.DocumentReference
-	userName?: string
-	iconURL?: string
-	key?: string
-	userId: string
-}
-
-type ShopDocResponse = {
-	address: string
-	latitude: number
-	longitude: number
-	shopName: string
-	reviews: firebase.firestore.CollectionReference
-	id: string
-}
-
-type ReviewsDocResponse = ReviewDocResponse[]
-type ShopsArrayType= ShopDocResponse[]
-
-
-// フォローしているユーザを判別する関数は独立させたい
-
-
-
+// TODO:フォローしているユーザを判別する関数は独立させたい
+// TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
-	const [latitude, changeLatitude] = useState<number>(34.7201152);
-	const [longitude, changeLongitude] = useState<number>(137.7394095);
-	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
-	const [isShownSheet, setIsShownSheet] = useState<boolean>()
+	// const [latitude, changeLatitude] = useState<number>(34.7201152);
+	// const [longitude, changeLongitude] = useState<number>(137.7394095);
+	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
+	const [_refresh, setRefresh] = useState<boolean>(false);
+	const [_latitude, setLatitude] = useState<number>();
+    const [_longitude, setLongitude] = useState<number>();
 	const refRBSheet = useRef();
+
+	useEffect(() => {
+        (async() => {
+			let {status} = await Permissions.askAsync(Permissions.LOCATION);
+            if(status == 'granted') {
+				const location = await Location.getCurrentPositionAsync({});
+				setLatitude(location.coords.latitude)
+				setLongitude(location.coords.longitude)
+            } else {
+				setLatitude(34.7201152)
+				setLongitude(137.7394095)
+			}
+        })()
+    }, [])
 
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
@@ -69,11 +59,8 @@ const Search = (props: any) => {
 				})
 			}))
 			setAllShopsData(shopDataArray)
-			// return () => {
-			// 	unsubscribe();
-			// };
 		})()
-	},[])
+	},[_refresh])
 	// 選択したお店の全レビューを取得する
 	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
 		let reviews: ReviewsDocResponse = []
@@ -124,14 +111,17 @@ const Search = (props: any) => {
 		refRBSheet.current.close()
 		props.navigation.navigate('friendProfile')
 	}
+	const reGetShopReviews = () => {
+		setRefresh(!_refresh)
+	}
 	return (
 		<View style={styles.container}>
 			<MapView
 				style={styles.mapStyle}
 				initialRegion={{
 					// 初期位置
-					latitude: latitude,
-					longitude: longitude,
+					latitude: _latitude,
+					longitude: _longitude,
 					latitudeDelta: 0.05,
 					longitudeDelta: 0.05,
 				}}
@@ -151,6 +141,15 @@ const Search = (props: any) => {
 					/>
 				)}
 			</MapView>
+			<View style={{position : 'absolute', right : '5%', top: '5%'}}>
+					<Icon
+						size={30}
+						name='refresh'
+						type='font-awesome'
+						color='black'
+						onPress={reGetShopReviews}
+					/>
+				</View>
 			<View
 				style={{
 					flex: 1,
@@ -235,10 +234,14 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	mapStyle: {
+		...StyleSheet.absoluteFillObject,
 		width: '100%',
 		height: '100%',
 		position: 'relative'
 	},
+	// map: {
+	// 	...StyleSheet.absoluteFillObject,
+	// },
 	card: {
 		borderRadius: 10
 	},

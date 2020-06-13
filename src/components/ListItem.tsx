@@ -10,7 +10,7 @@ interface ItemProps {
     address?: string
     category: string
     favorite: string
-    price: string
+    price: number
     userId?: string
     pressMethod: Function
 }

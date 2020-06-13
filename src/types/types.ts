@@ -69,7 +69,7 @@ export type structuredFormattingType = {
     main_text: string
 }
 
-// Top.tsx
+// Top.tsx search.tsx
 export type ReviewDocResponse = {
 	category: string,
 	createdAt: firebase.firestore.Timestamp,
@@ -87,12 +87,12 @@ export type ReviewDocResponse = {
 
 export type ReviewsDocResponse = ReviewDocResponse[]
 
-// findUser.tsx
+// findUser.tsx changeUserName
 export type userProfileDataType = {
     userName: string
     uid: string
     iconURL: string
-    followExchange: boolean
+    followExchange?: boolean
 }
 
 export type candidateUesrsDataListType = userProfileDataType[]
@@ -114,3 +114,15 @@ export type friendDataDocResponse = {
 	uid: string
 }
 export type friendReviewsType = friendReviewDocResponse[]
+
+// search.tsx
+export type ShopDocResponse = {
+	address: string
+	latitude: number
+	longitude: number
+	shopName: string
+	reviews: firebase.firestore.CollectionReference
+	id: string
+}
+
+export type ShopsArrayType= ShopDocResponse[]
