@@ -267,7 +267,7 @@ const Post = (props) => {
                 <TextInput
                     style={styles.input}
                     placeholder='価格を入力して下さい'
-                    value={price}
+                    price={price}
                     onChangeText={changePrice}
                 />
             </View>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, View, TextInput} from 'react-native';
 
 interface InputTextProps{
     holderName: string,
-    value: string,
+    price: string,
     change: any
     canEdit?: boolean
 }
@@ -16,8 +16,9 @@ const InputText = (props: InputTextProps) => {
                 placeholderTextColor="#818181"
                 style={styles.inputText}
                 placeholder={props.holderName}
-                value={props.value}
+                value={props.price}
                 onChangeText={props.change}
+                keyboardType="numeric"
             />
         </View>
     )
