@@ -138,7 +138,6 @@ const Profile = (props: any) => {
 			setProgressVisible(false)
 		}
 	}
-	// 写真の変更をキャンセルした際の処理を書く必要あり
 	const selectIconPicture = async(): Promise<ImagePicker.ImagePickerResult> => {
 		let result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
 		mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -177,65 +176,66 @@ const Profile = (props: any) => {
 				message="しばらくお待ちください"
 			/>
 			</View>
-			<View style={{flexDirection: 'row', justifyContent: 'center',}}>
-				<View>
-					<View style={{alignItems: 'center', marginTop: 60}}>
-						<TouchableOpacity
-							onPress={changeIcon}
+			<View style={{flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto'}}>
+				<View style={{ flexDirection: 'row', justifyContent: "flex-start", marginTop: 60}}>
+					<View>
+						<View style={{alignItems: 'center'}}>
+							<TouchableOpacity
+								onPress={changeIcon}
+							>
+								<Image
+									source={{ uri: _userIcon }}
+									style = {styles.userIcon}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+					<View style={{marginLeft: 30}}>
+						<View
+							style={{
+								justifyContent: 'center',
+								flexDirection: 'row'
+							}}
 						>
-							<Image
-								source={{ uri: _userIcon }}
-								style = {styles.userIcon}
+							<ProfileNumber
+								number={_postNumber}
+								itemName='投稿'
 							/>
-						</TouchableOpacity>
+							<ProfileNumber
+								number={_follower}
+								itemName="フォロー"
+								press={toFollowerList}
+								centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+							/>
+							<ProfileNumber
+								number={_followee}
+								itemName="フォロワー"
+								press={toFolloweeList}
+							/>
+						</View>
+						<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
+							<TouchableOpacity
+							style={styles.editButton}
+							onPress={tofindUser}
+							>
+							<Text
+								style={styles.editText}>
+								{'ユーザー検索'}
+							</Text>
+							</TouchableOpacity>
+							<Icon
+								size={20}
+								name='cog'
+								type='font-awesome'
+								color='black'
+								onPress={setting}
+							/>
+						</View>
 					</View>
 				</View>
-				<View style={{marginLeft: 30}}>
-					<View
-						style={{
-							justifyContent: 'center',
-							flexDirection: 'row',
-							marginTop: 60,
-						}}
-					>
-						<ProfileNumber
-							number={_postNumber}
-							itemName='投稿'
-						/>
-						<ProfileNumber
-							number={_follower}
-							itemName="フォロー"
-							press={toFollowerList}
-							centerClass={{width: 50, height: 50, marginHorizontal: 30}}
-						/>
-						<ProfileNumber
-							number={_followee}
-							itemName="フォロワー"
-							press={toFolloweeList}
-						/>
-					</View>
-					<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
-						<TouchableOpacity
-						style={styles.editButton}
-						onPress={tofindUser}
-						>
-						<Text
-							style={styles.editText}>
-							{'ユーザー検索'}
-						</Text>
-						</TouchableOpacity>
-						<Icon
-							size={20}
-							name='cog'
-							type='font-awesome'
-							color='black'
-							onPress={setting}
-						/>
-					</View>
+				<View style={{marginTop: 5, marginLeft: 4, flexDirection: 'row', justifyContent: "flex-start"}}>
+					<Text style={styles.userName}>{_userName}</Text>
 				</View>
-			</View>
-			<View style={{marginTop: 15}}>
-				<Text style={styles.userName}>{_userName}</Text>
 			</View>
 			<SafeAreaView style={styles.list}>
 				<FlatList
@@ -281,7 +281,6 @@ const Profile = (props: any) => {
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '14%',
 	},
 	userIcon: {
 		width: 90,
@@ -324,6 +323,6 @@ const Profile = (props: any) => {
 	},
 	list: {
 		marginTop: 20,
-		paddingBottom: 190
+		marginBottom: 190
 	},
 	})

@@ -35,7 +35,7 @@ const FollowerList = (props) => {
             setFollowerList(followerUserList)
         })();
     }, [])
-    const toProfileDetailPage = (id) => {
+    const toProfileDetailPage = (id: string):void => {
         props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
     }

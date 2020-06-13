@@ -215,9 +215,10 @@ const Post = (props) => {
                     >
                 </FlatList>
                 <Button
-                    title={'close'}
+                    title={'閉じる'}
                     type='outline'
                     buttonStyle={styles.closeButton}
+                    titleStyle={{color: 'black'}}
                     onPress={close}
                 />
             </View>
@@ -266,13 +267,13 @@ const Post = (props) => {
                 <TextInput
                     style={styles.input}
                     placeholder='価格を入力して下さい'
-                    value={price}
+                    price={price}
                     onChangeText={changePrice}
                 />
             </View>
             <View style={{marginTop: 30, width: '60%'}}>
                 <Button
-                    buttonStyle={{borderRadius: 20}}
+                    buttonStyle={{borderRadius: 20, backgroundColor: '#fbd01d'}}
                     title='投稿する'
                     type='solid'
                     onPress={share}
@@ -281,7 +282,7 @@ const Post = (props) => {
                     loading={isLoading}
                     disabledStyle={
                         isPressed ?
-                        {backgroundColor: '#4388D6'}
+                        {backgroundColor: '#fbd01d'}
                     :
                     null
                 }
@@ -342,7 +343,7 @@ container: {
     alignItems: 'center'
 },
 itemName: {
-    color: '#5E9CFE',
+    color: '#fbd01d',
 },
 searchResultArea: {
     width: 265,
@@ -367,7 +368,10 @@ searchButton: {
 },
 closeButton: {
     marginHorizontal: 20,
-    marginTop: 5
+    marginTop: 5,
+    borderColor: 'black',
+    color: 'black',
+    borderRadius: 25
 },
 inputText:{
     height:50,
@@ -390,8 +394,8 @@ input: {
 suggestion: {
     backgroundColor: 'white',
     padding: 5,
-    fontSize: 18,
-    borderWidth: 0.5,
+    fontSize: 14,
+
     marginRight: 5,
     marginLeft: 5
 }
