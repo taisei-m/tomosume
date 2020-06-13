@@ -395,8 +395,7 @@ suggestion: {
     backgroundColor: 'white',
     padding: 5,
     fontSize: 14,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'black',
+
     marginRight: 5,
     marginLeft: 5
 }
