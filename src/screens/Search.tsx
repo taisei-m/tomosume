@@ -11,17 +11,32 @@ import {ReviewDocResponse} from '../types/types'
 import {ShopDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import {ShopsArrayType} from '../types/types'
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions'
 
 // TODO:フォローしているユーザを判別する関数は独立させたい
 // TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
-	const [latitude, changeLatitude] = useState<number>(34.7201152);
-	const [longitude, changeLongitude] = useState<number>(137.7394095);
+	// const [latitude, changeLatitude] = useState<number>(34.7201152);
+	// const [longitude, changeLongitude] = useState<number>(137.7394095);
 	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);
+	const [_latitude, setLatitude] = useState<number>(34.7201152);
+    const [_longitude, setLongitude] = useState<number>(137.7394095);
 	const refRBSheet = useRef();
+
+	useEffect(() => {
+        (async() => {
+            let {status} = await Permissions.askAsync(Permissions.LOCATION);
+            if(status == 'granted') {
+				const location = await Location.getCurrentPositionAsync({});
+				setLatitude(location.coords.latitude)
+				setLongitude(location.coords.longitude)
+            }
+        })()
+    }, [])
 
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
@@ -102,8 +117,8 @@ const Search = (props: any) => {
 				style={styles.mapStyle}
 				initialRegion={{
 					// 初期位置
-					latitude: latitude,
-					longitude: longitude,
+					latitude: _latitude,
+					longitude: _longitude,
 					latitudeDelta: 0.05,
 					longitudeDelta: 0.05,
 				}}
