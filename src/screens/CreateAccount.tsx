@@ -26,7 +26,16 @@ const CreateAccount = (props: any) => {
     const [_emailErrorMessageIsRed, setEmailErrorMessageIsRed] = useState<boolean>();
     const [_passwordErrorMessageIsRed, setPasswordErrorMessageIsRed] = useState<boolean>();
     const [_signupErrorMessage, setSignupErrorMessage] = useState<string>();
+    const [_defaultIconUrl, setDefaultIconUrl] = useState<string>('');
 
+    // firebase storageから画像のurlを取得する処理
+    useEffect(() => {
+        (async() => {
+            const storageRef = firebase.storage().ref('user/icon/' + 'test-image');
+            const url = await storageRef.getDownloadURL()
+            setDefaultIconUrl(url)
+        })()
+    }, [])
 
     ////input関数
     const usernameInput = (passedUsername: string) => {
@@ -184,8 +193,7 @@ const CreateAccount = (props: any) => {
             setPasswordIconTypeVisible(iconName);
         }
     ,[_isUnvisiblePassword])
-    
-    
+
     //フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
     const inputUsername = (inputedUsername: string) => {
         usernameInput(inputedUsername);
@@ -203,7 +211,7 @@ const CreateAccount = (props: any) => {
     const autoValidation = (inputedText: string, inputedForm: string) => {
         //signinボタンの上のエラーメッセージを非表示にする
         signupErrorTextInput('refresh', '');
-        
+
         let username: string = '';
         let email: string = '';
         let password: string = '';
@@ -231,7 +239,7 @@ const CreateAccount = (props: any) => {
             } else {
                 return true;
             }
-        } 
+        }
         let emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
         let passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
         let isUsernameValid: boolean = usernamePattern(username);
@@ -325,7 +333,7 @@ const CreateAccount = (props: any) => {
                 let db = firebase.firestore().collection('userList').doc(user.uid)
                 db.set({
                     userName: _username,
-                    iconURL: 'test-url',
+                    iconURL: _defaultIconUrl,
                     uid: user.uid
                 })
                 db.collection('follower').doc('first').set({})

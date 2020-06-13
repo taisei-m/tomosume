@@ -138,7 +138,6 @@ const Profile = (props: any) => {
 			setProgressVisible(false)
 		}
 	}
-	// 写真の変更をキャンセルした際の処理を書く必要あり
 	const selectIconPicture = async(): Promise<ImagePicker.ImagePickerResult> => {
 		let result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
 		mediaTypes: ImagePicker.MediaTypeOptions.All,
