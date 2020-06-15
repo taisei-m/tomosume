@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity,Linking } from 'react-native';
 import { Text,  Input, Icon, Button as ButtonElem} from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { Subscribe } from 'unstated';
@@ -412,7 +412,7 @@ const CreateAccount = (props: any) => {
             />
         </View>
        {/* ボタンの上のエラーメッセージ */}
-       <View>
+        <View>
             <Text style={styles.aboveButtonMessage}>
                 {_signupErrorMessage}
             </Text>
@@ -443,6 +443,15 @@ const CreateAccount = (props: any) => {
         >
             <Text style={styles.AlreadyHaveAccountText}> 既にアカウントをお持ちの方はこちら </Text>
         </TouchableOpacity>
+        <View style={{marginLeft:40, marginRight: 30, marginTop: 80}}>
+                    <Text>登録することで、
+                    <Text style={{color: 'blue', textDecorationLine: 'underline'}}
+                            onPress={() => Linking.openURL('https://tomosume.flycricket.io/privacy.html')}>
+                    プライバシーポリシー
+                    </Text>
+                    に同意したことになります。</Text>
+        </View>
+
         </View>
         </KeyboardAwareScrollView>
     );

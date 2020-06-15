@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, } from 'react-native';
 import { Text, Tile, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
