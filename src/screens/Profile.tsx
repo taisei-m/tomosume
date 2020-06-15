@@ -22,8 +22,6 @@ const Profile = (props: any) => {
 	const [_postNumber, setPostNumber] = useState<number>(0)
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [_userIcon, setUserIcon] = useState<string>();
-	// const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
-	// const [refreshing, setRefreshing] = useState<boolean>(false)
 	const [progressVisible , setProgressVisible] = useState<boolean>(false)
 	const [userDataUpdate, setUserDataUpdate] = useState<boolean>(false);
 	const [refresh, setRefresh] = useState<boolean>(false)
