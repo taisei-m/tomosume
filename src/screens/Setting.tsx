@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacity, Text, Linking } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
@@ -42,7 +42,7 @@ const changeUserName = () => {
     props.navigation.navigate('changeUserName')
 }
 const showAppTerm = () => {
-    console.log('利用規約見るところ')
+        (() => Linking.openURL('https://tomosume.flycricket.io/privacy.html'))();
 }
 const itemList = [
     {
@@ -53,7 +53,7 @@ const itemList = [
     },
     {
         id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: '利用規約',
+        title: 'プライバシーポリシー',
         icon: 'book',
         method: showAppTerm
     },
