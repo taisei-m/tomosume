@@ -25,8 +25,10 @@ const FollowButton = (props: followButtonProps) => {
         // フォロー中であるかないかで場合分け
         if(_hasFollowd) {
             db.collection('userList').doc(props.userId).collection('follower').doc(id).delete()
+            db.collection('userList').doc(id).collection('followee').doc(props.userId).delete()
         } else {
             db.collection('userList').doc(props.userId).collection('follower').doc(id).set({})
+            db.collection('userList').doc(id).collection('followee').doc(props.userId).set({})
         }
         // ボタンの色を変更する
         setHasFollowed(!_hasFollowd)
