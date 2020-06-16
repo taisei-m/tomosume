@@ -95,9 +95,6 @@ const FindUser = (props) => {
                 />
             }
         />
-        {
-            _isExistedCandidate
-            ?
             <View>
             <FlatList
                 style={styles.container}
@@ -129,11 +126,6 @@ const FindUser = (props) => {
                 }
             />
             </View>
-            :
-            <View>
-                <Text>検索結果なし</Text>
-            </View>
-        }
         </>
     );
 }

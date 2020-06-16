@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { Text, } from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { Subscribe } from 'unstated';
@@ -35,7 +35,7 @@ const Splash = (props) => {
                 isnotAuthed = "true";
             }
             globalState.setSignout(isnotAuthed);
-            // return;
+            return;
         });
     }
 
@@ -49,9 +49,7 @@ const Splash = (props) => {
 
     return (
         <View style={styles.container}>
-            <View>
-                <Text style={styles.newAccountTitle}>Splash</Text>
-            </View>
+                <Text style={styles.splashText}>Loading...</Text>
         </View>
     );
 }
@@ -76,71 +74,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-    },
-    container1: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
         justifyContent: 'center'
     },
-    newAccountTitle: {
-        fontWeight:"bold",
-        fontSize:30,
+    splashText: {
+        fontSize:24,
         color:"black",
-        marginTop: 120,
-        marginBottom: 60
     },
-    logo:{
-        fontWeight:"bold",
-        fontSize:50,
-        color:"black",
-        marginBottom:100
-    },
-    inputView:{
-        width:"80%",
-        borderRadius:25,
-        borderColor: 'black',
-        height:50,
-        marginBottom:20,
-        justifyContent:"center",
-        padding:20,
-        color: 'black'
-    },
-    inputText:{
-        height:50,
-        color:"black",
-        borderColor: '#818181',
-        borderBottomWidth: 1,
-        padding: 5
-    },
-    forgot: {
-        margin: 20,
-        color: '#818181',
-        marginBottom: 30
-    },
-    signUpButton: {
-        width:"70%",
-        backgroundColor:"#5E9CFE",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop: 50,
-        marginBottom:30
-    },
-    button: {
-        width:"70%",
-        backgroundColor:"#5E9CFE",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginBottom:30
-    },
-    buttonText: {
-        color: 'white'
-    },
-    icon: {
-        marginRight: 10
-    }
 });

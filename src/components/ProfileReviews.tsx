@@ -7,7 +7,7 @@ interface ItemProps {
     shopAddress: string
     category: string
     favorite: string
-    price: number
+    price: string
 }
 
 const Item = (props: ItemProps) => {
