@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 50,
+    paddingTop: 100,
     alignItems: 'center'
 },
 itemName: {

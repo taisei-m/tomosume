@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,} from 'react-native';
+import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, ScrollView, RefreshControl} from 'react-native';
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
@@ -15,8 +15,6 @@ import {userReviewsType} from '../types/types'
 //@ts-ignore
 import { ProgressDialog } from 'react-native-simple-dialogs';
 
-//TODO: 初期のアイコン画像を設定する
-
 const Profile = (props: any) => {
 	const [_userName, setUserName] = useState<string>()
 	const [_followee, setFollowee] = useState<number>(0)
@@ -24,9 +22,9 @@ const Profile = (props: any) => {
 	const [_postNumber, setPostNumber] = useState<number>(0)
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([])
 	const [_userIcon, setUserIcon] = useState<string>();
-	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
-	const [refreshing, setRefreshing] = useState<boolean>(false)
 	const [progressVisible , setProgressVisible] = useState<boolean>(false)
+	const [userDataUpdate, setUserDataUpdate] = useState<boolean>(false);
+	const [refresh, setRefresh] = useState<boolean>(false)
   // ユーザが投稿したレビューの一覧と投稿数を取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
@@ -41,9 +39,8 @@ const Profile = (props: any) => {
 				let reviewNumber: number = userReviews.length
 				setPostNumber(reviewNumber)
 				setAllReviews(userReviews)
-				setRefreshing(false)
 			})
-		}, [isRefreshed])
+		}, [refresh])
 	// ユーザーのアイコン画像を取得
 	useEffect(() => {
 		(async () => {
@@ -82,7 +79,7 @@ const Profile = (props: any) => {
 		let followeeNumber: number = followeeArray.length-1
 		setFollowee(followeeNumber)
 	})
-	},[])
+	},[refresh])
 	// ユーザのフォローしている人を取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
@@ -162,13 +159,22 @@ const Profile = (props: any) => {
 		iconURL: url
 		}, {merge: true})
 	}
-	const handleRefresh = () => {
-		setIsRefreshed(!isRefreshed)
-		setRefreshing(true)
-    }
+	const updateProfileInfo = () => {
+		setUserDataUpdate(true)
+		setRefresh(!refresh)
+		setUserDataUpdate(false)
+	}
 
 	return (
 		<View style={styles.container}>
+			<ScrollView
+				refreshControl={
+					<RefreshControl
+						refreshing={userDataUpdate}
+						onRefresh={() => updateProfileInfo()}
+				/>
+				}
+			>
 			<View>
 			<ProgressDialog
 				visible={progressVisible}
@@ -251,10 +257,9 @@ const Profile = (props: any) => {
 					/>
 				}
 				keyExtractor={item => item.shopId}
-				refreshing={refreshing}
-				onRefresh={handleRefresh}
 				/>
 			</SafeAreaView>
+			</ScrollView>
 		</View>
 	);
 	}
@@ -323,6 +328,6 @@ const Profile = (props: any) => {
 	},
 	list: {
 		marginTop: 20,
-		marginBottom: 190
+		marginBottom: 10
 	},
 	})
