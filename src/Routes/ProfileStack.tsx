@@ -6,6 +6,8 @@ import followeeList from '../screens/followeeList'
 import Setting from '../screens/Setting'
 import findUser from '../screens/findUser'
 import friendProfile from '../screens/friendProfile'
+import friendFolloweeList from '../screens/friendFolloweeList';
+import friendFollowerList from '../screens/friendFollowerList'
 import changeUserName from '../screens/changeUserName'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -70,6 +72,22 @@ const ProfileStack = (props) => {
                 headerShown: true,
                 title: 'プロフィール',
             }}
+        />
+        <ProfileNavStack.Screen
+            name="friendFolloweeList"
+            component={friendFolloweeList}
+            options={{
+                headerShown: true,
+                title: 'フォロワーリスト',
+            }}
+        />
+        <ProfileNavStack.Screen
+        name="friendFollowerList"
+        component={friendFollowerList}
+        options={{
+            headerShown: true,
+            title: 'フォローリスト',
+        }}
         />
         <ProfileNavStack.Screen
             name="changeUserName"
