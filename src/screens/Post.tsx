@@ -4,7 +4,6 @@ import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'r
 import {Input} from 'react-native-elements'
 import { Button } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from '../../firebaseConfig'
 import apiKey from '../api/api_key';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -34,6 +33,8 @@ const Post = (props) => {
     const [shareCompleteDialogVisible , setShareCompleteDialogVisible] = useState<boolean>(false);
     const [_latitude, setLatitude] = useState<number>(35.68123620000001);
     const [_longitude, setLongitude] = useState<number>(139.7671248);
+    const [canPressSearchButton, setCanPressSearchButton] = useState<boolean>(false)
+    const [whileSearching, setWhileSearching] = useState<boolean>(false)
     const categoryItemList = [
         {label: '居酒屋', value: '居酒屋',},
         {label: 'カフェ', value: 'カフェ',},
@@ -75,6 +76,8 @@ const Post = (props) => {
         if (inputedShopName == '') {
             openDialog()
         } else {
+            setCanPressSearchButton(true)
+            setWhileSearching(true)
             const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
             &input=${inputedShopName}&location=${_latitude}, ${_longitude}
             &language=ja&radius=5000`;
@@ -84,6 +87,8 @@ const Post = (props) => {
                 //　検索結果の一覧を表示される
                 setIsShownPredictions(true)
                 setPredictions(json.predictions)
+                setCanPressSearchButton(false)
+                setWhileSearching(false)
             } catch (error) {
                 console.log(error)
             }
@@ -171,6 +176,7 @@ const Post = (props) => {
     const closeShareCompleteDialog = () => {
         setShareCompleteDialogVisible(false)
     }
+
     return (
         <KeyboardAwareScrollView style={{flex: 1, backgroundColor: 'white',}}>
         <View style={styles.container}>
@@ -178,21 +184,29 @@ const Post = (props) => {
                 <Text style={styles.itemName}>
                     店名検索
                 </Text>
-                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row', width: 250, alignContent: 'center'}}>
                     <Input
                         containerStyle={styles.searchResultArea}
                         placeholder="例）新宿　吉野家"
                         value={inputedShopName}
                         onChangeText={change}
-                        rightIcon={
-                        <Icon
-                            name="search"
-                            size={20}
-                            color="black"
-                            onPress={searchShop}
-                            />
-                        }
                     />
+                    <Button
+                        onPress={searchShop}
+                        title='検索'
+                        type='solid'
+                        buttonStyle={{borderRadius: 10, backgroundColor: 'white', borderColor: 'black', borderWidth: 1}}
+                        titleStyle={{color: 'black'}}
+                        disabled={canPressSearchButton}
+                        loading={whileSearching}
+                        disabledStyle={
+                            canPressSearchButton ?
+                            {backgroundColor: 'white'}
+                        :
+                            null
+                        }
+                    >
+                    </Button>
                 </View>
             </View>
             {
@@ -267,7 +281,7 @@ const Post = (props) => {
                 <TextInput
                     style={styles.input}
                     placeholder='価格を入力して下さい'
-                    price={price}
+                    value={price}
                     onChangeText={changePrice}
                 />
             </View>
@@ -277,15 +291,14 @@ const Post = (props) => {
                     title='投稿する'
                     type='solid'
                     onPress={share}
-                    // disabled={category == '' || shopName == ''}
                     disabled={canPress()}
                     loading={isLoading}
                     disabledStyle={
                         isPressed ?
                         {backgroundColor: '#fbd01d'}
                     :
-                    null
-                }
+                        null
+                    }
                 />
             </View>
         </View>
@@ -346,11 +359,12 @@ itemName: {
     color: '#fbd01d',
 },
 searchResultArea: {
-    width: 265,
+    // width: 265,
     backgroundColor: 'white',
     height: 40,
     padding: 5,
-    borderColor: 'black'
+    borderColor: 'black',
+    width: 200
 },
 inputView:{
     borderRadius:25,
@@ -361,10 +375,6 @@ inputView:{
     color: 'black',
     alignContent: 'center',
     marginHorizontal: 40
-},
-searchButton: {
-    width: 50,
-    marginLeft: 5
 },
 closeButton: {
     marginHorizontal: 20,
