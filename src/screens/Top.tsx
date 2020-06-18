@@ -12,6 +12,7 @@ const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
+    const userId = props.globalState.state.uid
 
     useEffect(() => {
         (async() => {
@@ -22,7 +23,7 @@ const Top = (props) => {
         (async () => {
             const uidArray = await getFollowingUid()
             // 自分の投稿も表示されるように自分のuidを追加する
-            uidArray.push(props.globalState.state.uid)
+            uidArray.push(userId)
             const convertedUidArray = await convertTypeToReference(uidArray)
             let reviewArray: ReviewsDocResponse = []
             const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', convertedUidArray).orderBy('createdAt', 'desc').get()
@@ -55,7 +56,7 @@ const Top = (props) => {
     const getFollowingUid = async():Promise<string[]> => {
         let followingUidList: string[] = []
         // この書き方がsubcollectionの展開の仕方のはず
-        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('follower').get()
+        const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
         followingUidList =  querySnapshot.docs.map((doc) => {
             return doc.id
         })
