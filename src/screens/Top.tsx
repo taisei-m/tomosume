@@ -40,13 +40,13 @@ const Top = (props) => {
                 review.userId = profile.id
                 return review
             }))
-            setAllReviews(reviewArray)
-            if (allReviews.length == 0) {
+            if (reviewArray.length == 0) {
                 setIsReview(false)
                 setPageDescription('ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。')
             } else {
                 setIsReview(true)
             }
+            setAllReviews(reviewArray)
             setRefreshing(false)
         })()
     }, [isRefreshed])
