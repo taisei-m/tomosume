@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList} from 'react-native';
+import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, ScrollView, RefreshControl} from 'react-native';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
@@ -144,6 +144,14 @@ const FriendProfile = (props: any) => {
 
 	return (
 	<View style={styles.container}>
+		<ScrollView
+			refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={handleRefresh}
+				/>
+			}
+		>
 		<View style={{flexDirection: 'row', justifyContent: 'center',}}>
 			<View>
 				<View style={{alignItems: 'center', marginTop: 10}}>
@@ -213,10 +221,9 @@ const FriendProfile = (props: any) => {
 						/>
 				}
 				keyExtractor={item => item.shopId}
-				refreshing={refreshing}
-				onRefresh={handleRefresh}
 				/>
 			</SafeAreaView>
+		</ScrollView>
 	</View>
 	);
 }
