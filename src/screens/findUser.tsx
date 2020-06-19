@@ -80,18 +80,18 @@ const FindUser = (props) => {
     return (
         <>
         <SearchBar
-            placeholder="ユーザ検索"
+            placeholder="ユーザ名を入力してください"
             placeholderTextColor="black"
             onChangeText={searchUsers}
             value={_searchedUserName}
-            placeholderTextColor='white'
+            placeholderTextColor='grey'
             lightTheme
             containerStyle={{backgroundColor: 'white'}}
             inputContainerStyle={{backgroundColor: 'white'}}
             searchIcon={
                 <Icon
                     name='search'
-                    color='black'
+                    color='#fbd01d'
                 />
             }
         />
