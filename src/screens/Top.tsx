@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
 import {db} from '../../firebaseConfig'
 import ListItem from '../components/ListItem';
 import { Subscribe } from 'unstated';
@@ -7,11 +7,14 @@ import GlobalStateContainer from '../containers/GlobalState';
 import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
+    const [isReview , setIsReview] = useState<boolean>(true)
+    const [pageDescription, setPageDescription] = useState<string>('')
     const userId = props.globalState.state.uid
 
     useEffect(() => {
@@ -38,6 +41,12 @@ const Top = (props) => {
                 return review
             }))
             setAllReviews(reviewArray)
+            if (allReviews.length == 0) {
+                setIsReview(false)
+                setPageDescription('ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。')
+            } else {
+                setIsReview(true)
+            }
             setRefreshing(false)
         })()
     }, [isRefreshed])
@@ -72,9 +81,14 @@ const Top = (props) => {
         setIsRefreshed(!isRefreshed)
         setRefreshing(true)
     }
+    const updateReview = () => {
+        setIsRefreshed(!isRefreshed)
+        setRefreshing(true)
+    }
 
     return(
         <View style={styles.container}>
+            { isReview ?
             <FlatList
             data={allReviews}
             renderItem={
@@ -94,6 +108,40 @@ const Top = (props) => {
             refreshing={refreshing}
             onRefresh={handleRefresh}
             />
+            :
+            <View>
+                <ScrollView
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={() => updateReview()}
+				/>
+				}
+			>
+                <View style={styles.descriptionPosition}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, justifyContent: 'center'}}>
+                        <Icon
+                            name='hand-o-up'
+                            color='#fbd01d'
+                            size={40}
+                        />
+                        <Icon
+                            name='arrow-down'
+                            color='black'
+                            size={25}
+                            style={
+                                {
+                                    marginTop: 10,
+                                    marginLeft: 5
+                                }
+                            }
+                        />
+                    </View>
+                    <Text style={styles.description}>{pageDescription}</Text>
+                </View>
+            </ScrollView>
+            </View>
+        }
         </View>
     )
 }
@@ -116,4 +164,12 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         flex: 1
     },
+    descriptionPosition: {
+        marginHorizontal: 30,
+        marginTop: 30,
+    },
+    description: {
+        fontSize: 18,
+        marginTop: 10
+    }
 });
