@@ -30,7 +30,7 @@
         "ACCESS_FINE_LOCATION"
       ],
       "package": "com.bi17.tomosume",
-      "versionCode": 12,
+      "versionCode": 17,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAh3MVH7HGvzEBsv_y3hkpVgaUwZJMkssw"
