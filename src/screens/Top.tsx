@@ -9,6 +9,7 @@ import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)

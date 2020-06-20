@@ -4,8 +4,8 @@ import Top from '../screens/Top';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import friendProfile from '../screens/friendProfile';
-import friendFollowerList from '../screens/friendFolloweeList';
-import friendFolloweeList from '../screens/friendFollowerList'
+import friendFolloweeList from '../screens/friendFolloweeList';
+import friendFollowerList from '../screens/friendFollowerList'
 
 const TopNavStack = createStackNavigator();
 
