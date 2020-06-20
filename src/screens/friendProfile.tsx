@@ -86,15 +86,15 @@ const FriendProfile = (props: any) => {
 	// フォロワーの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
-		let followeeArray:string[] = []
-		const unsubscribe = db.collection('userList').doc(friendId).collection('followee')
+		let followerArray:string[] = []
+		const unsubscribe = db.collection('userList').doc(friendId).collection('follower')
 		.onSnapshot(function(querySnapshot) {
-			followeeArray = []
+			followerArray = []
 			querySnapshot.forEach(function(doc) {
-			followeeArray.push(doc.id)
+			followerArray.push(doc.id)
 			})
-		let followeeNumber: number = followeeArray.length-1
-		setFollowee(followeeNumber)
+		let followerNumber: number = followerArray.length-1
+		setFollower(followerNumber)
 	})
 	return () => {
 		unsubscribe();
@@ -103,15 +103,15 @@ const FriendProfile = (props: any) => {
 	//フォローの数を取得する
 	useEffect(() => {
 		const friendId = props.globalState.state.friendId
-		let followerArray:string[] = []
-		const unsubscribe = db.collection('userList').doc(friendId).collection('follower')
+		let followeeArray:string[] = []
+		const unsubscribe = db.collection('userList').doc(friendId).collection('followee')
 		.onSnapshot(function(querySnapshot:any) {
-			followerArray = []
+			followeeArray = []
 			querySnapshot.forEach(function(doc:any) {
-			followerArray.push(doc.id)
+			followeeArray.push(doc.id)
 			})
-			let followerNumber: number = followerArray.length-1
-			setFollower(followerNumber)
+			let followeeNumber: number = followeeArray.length-1
+			setFollowee(followeeNumber)
 	})
 	return () => {
 		unsubscribe();
@@ -175,8 +175,8 @@ const FriendProfile = (props: any) => {
 				<ProfileNumber
 					number={follower}
 					itemName="フォロワー"
-							centerClass={{width: 60, height: 50, marginHorizontal: 30}}
-							press={toFollowerList}
+					centerClass={{width: 60, height: 50, marginHorizontal: 30}}
+					press={toFollowerList}
 				/>
 				<ProfileNumber
 					number={followee}

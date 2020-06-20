@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowColor: "#000",
         shadowOffset: { width: 3, height: 3 },
-        shadowRadius: 1,
+        shadowRadius: 3,
+        elevation: 5
     },
     shopName: {
         fontSize: 18,
