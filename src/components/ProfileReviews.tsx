@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 5
+        marginBottom: 7
     },
     card: {
         borderRadius: 25,
