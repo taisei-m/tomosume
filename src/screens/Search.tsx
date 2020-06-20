@@ -43,8 +43,8 @@ const Search = (props: any) => {
 				setRegion({
 					latitude: 35.67832667,
 					longitude: 139.77044378,
-					latitudeDelta: 0.05,
-					longitudeDelta: 0.05
+					latitudeDelta: 0.08,
+					longitudeDelta: 0.08
 				})
 			}
         })()
@@ -70,7 +70,13 @@ const Search = (props: any) => {
 		})()
 	},[_refresh])
 	// 選択したお店の全レビューを取得する
-	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
+	const getAllReviews = async(id: string, latitude: number, longitude: number): Promise<ReviewsDocResponse> => {
+		setRegion({
+			latitude: latitude,
+			longitude: longitude,
+			latitudeDelta: 0.05,
+			longitudeDelta: 0.05
+		})
 		let reviews: ReviewsDocResponse = []
 		const followrIdList = await getFollowingUid()
 		followrIdList.push(props.globalState.state.uid)
@@ -92,7 +98,7 @@ const Search = (props: any) => {
 	const getFollowingUid = async():Promise<string[]> => {
         let followingUidList: string[] = []
         // この書き方がsubcollectionの展開の仕方のはず
-        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('follower').get()
+        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('followee').get()
         followingUidList =  querySnapshot.docs.map((doc) => {
             return doc.id
         })
@@ -109,9 +115,9 @@ const Search = (props: any) => {
         })
         return convertedArray
     }
-	const showShopReviews = async (id: string) => {
+	const showShopReviews = async (id: string, latitude: number, longitude: number) => {
 		refRBSheet.current.open()
-		const _reviews = await getAllReviews(id)
+		const _reviews = await getAllReviews(id, latitude, longitude)
 		setAllReviews(_reviews)
 	}
 	const toProfilePage = (id: string) => {
@@ -126,10 +132,6 @@ const Search = (props: any) => {
 		<View style={styles.container}>
 			<MapView
 				style={styles.mapStyle}
-				// initialRegion={
-				// 	// 初期位置
-				// 	region
-				// }
 				region={region}
 				>
 				{allShopsData.map((location) =>
@@ -137,7 +139,7 @@ const Search = (props: any) => {
 						key={location.id}
 						title={location.shopName}
 						description={location.address}
-						onPress={() => showShopReviews(location.id)}
+						onPress={() => showShopReviews(location.id, location.latitude, location.longitude)}
 						coordinate={
 							{
 								latitude: location.latitude,
@@ -147,7 +149,7 @@ const Search = (props: any) => {
 					/>
 				)}
 			</MapView>
-			<View style={{position : 'absolute', right : '5%', top: '5%'}}>
+			<View style={{position : 'absolute', right : '7%', top: '5%'}}>
 					<Icon
 						size={30}
 						name='refresh'
@@ -245,9 +247,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 		position: 'relative'
 	},
-	// map: {
-	// 	...StyleSheet.absoluteFillObject,
-	// },
 	card: {
 		borderRadius: 10
 	},
