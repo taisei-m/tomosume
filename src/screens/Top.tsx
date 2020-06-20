@@ -14,7 +14,7 @@ const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [isReview , setIsReview] = useState<boolean>(false)
+    const [isReview , setIsReview] = useState<boolean>(true)
     const [pageDescription, setPageDescription] = useState<string>('')
     const userId = props.globalState.state.uid
 

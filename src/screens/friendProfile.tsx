@@ -122,10 +122,12 @@ const FriendProfile = (props: any) => {
 		const userId = props.globalState.state.uid
 		const friendId = props.globalState.state.friendId
 		if (isFollow) {
-			db.collection('userList').doc(userId).collection('follower').doc(friendId).delete()
+			db.collection('userList').doc(userId).collection('followee').doc(friendId).delete()
+			db.collection('userList').doc(friendId).collection('follower').doc(userId).delete()
 			setIsFollow(false)
 		} else {
-			db.collection('userList').doc(userId).collection('follower').doc(friendId).set({})
+			db.collection('userList').doc(userId).collection('followee').doc(friendId).set({})
+			db.collection('userList').doc(friendId).collection('follower').doc(userId).set({})
 			setIsFollow(true)
 		}
 	}
