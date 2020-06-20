@@ -36,21 +36,22 @@ const FollowerList = (props) => {
             setFollowerList(checkedFollowExchangeArray)
         })();
     }, [])
-    const checkFollowExchange = async(followeeList: followerListType): Promise<followerListType> => {
+    const checkFollowExchange = async(followerList: followerListType): Promise<followerListType> => {
         const userId = props.globalState.state.uid
         const followerUserList: string[] = []
-        const followerList = await db.collection('userList').doc(userId).collection('follower').get()
-        followerList.forEach((data) => {
+        //使用ユーザのフォローリスト
+        const userFolloweeList = await db.collection('userList').doc(userId).collection('followee').get()
+        userFolloweeList.forEach((data) => {
             followerUserList.push(data.id)
         })
         //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
-        followeeList.forEach((item) => {
+        followerList.forEach((item) => {
             let followeeUserId = item.uid
             let isFollowExchange = followerUserList.includes(followeeUserId)
         // 相互フォローの場合true, 相互フォローしていない場合falseを代入
             isFollowExchange ? item.followExchange = true : item.followExchange = false
         })
-        return followeeList
+        return followerList
     }
     const toProfileDetailPage = (id: string) => {
         props.globalState.setFriendId(id)

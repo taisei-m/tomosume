@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import friendProfile from '../screens/friendProfile';
-import friendFollowerList from '../screens/friendFollowerList';
-import friendFolloweeList from '../screens/friendFolloweeList'
+import friendFolloweeList from '../screens/friendFolloweeList';
+import friendFollowerList from '../screens/friendFollowerList'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 
