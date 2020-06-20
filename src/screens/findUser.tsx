@@ -27,13 +27,6 @@ const FindUser = (props) => {
                     candidateUsersIdList.push(doc.id)
                 })
         })
-        .then(() => {
-            if(candidateUsersIdList != []) {
-                setIsExistedCandidate(true)
-            } else {
-                setIsExistedCandidate(false)
-            }
-        })
         .then(async() => {
             candidateUesrsDataList = await Promise.all(candidateUsersIdList.map(async(userId) => {
                 let userProfileData
@@ -54,15 +47,15 @@ const FindUser = (props) => {
     // 検索結果のユーザをフォローしているかどうかの確認をする処理
     const checkFollowExchange = async(candidateUesrsDataList: candidateUesrsDataListType): Promise<candidateUesrsDataListType> => {
         const userId = props.globalState.state.uid
-        const followerUserIdList: string[] = []
-        const followerList = await db.collection('userList').doc(userId).collection('follower').get()
-        followerList.forEach((data) => {
-            followerUserIdList.push(data.id)
+        const followeeUserIdList: string[] = []
+        const followeeList = await db.collection('userList').doc(userId).collection('followee').get()
+        followeeList.forEach((data) => {
+            followeeUserIdList.push(data.id)
         })
         //　自分のフォローリストと検索結果のユーザリストを比べる。　検索結果のユーザリストのユーザを一人一人取り出し、そのユーザが自分のフォローリストに含まれるかを検証する
         candidateUesrsDataList.forEach((doc) => {
             let candidateUserId = doc.uid
-            let isFollowExchange = followerUserIdList.includes(candidateUserId)
+            let isFollowExchange = followeeUserIdList.includes(candidateUserId)
         // フォローしている場合true, フォローしていない場合falseを代入
             isFollowExchange ? doc.followExchange = true : doc.followExchange = false
         })
