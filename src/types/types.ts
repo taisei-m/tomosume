@@ -126,3 +126,11 @@ export type ShopDocResponse = {
 }
 
 export type ShopsArrayType= ShopDocResponse[]
+
+// Search.tsx
+export type regionType = {
+    latitude: number,
+	longitude: number,
+	latitudeDelta: number,
+	longitudeDelta: number,
+}

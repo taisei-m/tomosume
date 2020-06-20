@@ -22,7 +22,6 @@ const FriendProfile = (props: any) => {
 	const [refreshing, setRefreshing] = useState<boolean>(false)
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
 
-
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
 		checkCanPressFollowButton()
@@ -44,13 +43,13 @@ const FriendProfile = (props: any) => {
 	const checkFollowExchange = async() => {
 		const friendId = props.globalState.state.friendId
 		const userId = props.globalState.state.uid
-		let followerIdArray: string[] = []
-		const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
+		let followeeIdArray: string[] = []
+		const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get()
 		querySnapshot.forEach((doc) => {
-			followerIdArray.push(doc.id)
+			followeeIdArray.push(doc.id)
 		})
-		followerIdArray = followerIdArray.filter(n => n !== 'first')
-		if (followerIdArray.includes(friendId)) {
+		followeeIdArray = followeeIdArray.filter(n => n !== 'first')
+		if (followeeIdArray.includes(friendId)) {
 			setIsFollow(true)
 		} else {
 			setIsFollow(false)
@@ -152,9 +151,10 @@ const FriendProfile = (props: any) => {
 				/>
 			}
 		>
-		<View style={{flexDirection: 'row', justifyContent: 'center',}}>
+		<View style={{flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto'}}>
+		<View style={{ flexDirection: 'row', justifyContent: "flex-start", marginTop: 20}}>
 			<View>
-				<View style={{alignItems: 'center', marginTop: 10}}>
+				<View style={{alignItems: 'center'}}>
 				<Image
 					source={{ uri: image }}
 					style = {styles.userIcon}
@@ -166,23 +166,22 @@ const FriendProfile = (props: any) => {
 				style={{
 					justifyContent: 'center',
 					flexDirection: 'row',
-					marginTop: 20,
 				}}
 				>
 				<ProfileNumber
 					number={postNumber}
-					itemName='post'
+					itemName='投稿'
 				/>
 				<ProfileNumber
 					number={follower}
-					itemName="フォロー"
-							centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+					itemName="フォロワー"
+							centerClass={{width: 60, height: 50, marginHorizontal: 30}}
 							press={toFollowerList}
 				/>
 				<ProfileNumber
 					number={followee}
-							itemName="フォロワー"
-							press={toFolloweeList}
+					itemName="フォロー"
+					press={toFolloweeList}
 				/>
 				</View>
 				<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
@@ -205,8 +204,9 @@ const FriendProfile = (props: any) => {
 			</View>
 		</View>
 		<View style={{marginTop: 10}}>
-					<Text style={styles.userName}>{friendName}</Text>
-				</View>
+			<Text style={styles.userName}>{friendName}</Text>
+		</View>
+		</View>
 			<SafeAreaView style={styles.list}>
 				<FlatList
 				data={allReviews}
@@ -241,13 +241,14 @@ export default FriendProfileWrapper;
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#fff'
+		backgroundColor: '#fff',
+		flex: 1
+
 	},
 	userName: {
 		color: 'black',
 		fontSize: 13,
 		fontWeight: '700',
-		marginLeft: '12%'
 	},
 	userIcon: {
 		width: 90,

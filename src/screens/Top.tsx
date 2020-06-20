@@ -13,7 +13,7 @@ const Top = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [isReview , setIsReview] = useState<boolean>(true)
+    const [isReview , setIsReview] = useState<boolean>(false)
     const [pageDescription, setPageDescription] = useState<string>('')
     const userId = props.globalState.state.uid
 
@@ -65,7 +65,7 @@ const Top = (props) => {
     const getFollowingUid = async():Promise<string[]> => {
         let followingUidList: string[] = []
         // この書き方がsubcollectionの展開の仕方のはず
-        const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
+        const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get()
         followingUidList =  querySnapshot.docs.map((doc) => {
             return doc.id
         })
