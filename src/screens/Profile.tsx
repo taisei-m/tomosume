@@ -68,31 +68,31 @@ const Profile = (props: any) => {
 	// ユーザのフォロワーを取得
 	useEffect(() => {
 		const userId = props.globalState.state.uid
-		let followeeArray:string[] = []
-		db.collection('userList').doc(userId).collection('followee')
+		let followerArray:string[] = []
+		db.collection('userList').doc(userId).collection('follower')
 		.get().then(function(querySnapshot) {
 		// followeeArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
-		followeeArray = []
-		querySnapshot.forEach(function(doc) {
-			followeeArray.push(doc.id)
-		})
-		let followeeNumber: number = followeeArray.length-1
-		setFollowee(followeeNumber)
-	})
-	},[refresh])
-	// ユーザのフォローしている人を取得
-	useEffect(() => {
-		const userId = props.globalState.state.uid
-		let followerArray:string[] = []
-		const unsubscribe = db.collection('userList').doc(userId).collection('follower')
-		.onSnapshot(function(querySnapshot) {
-		// followerArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
 		followerArray = []
 		querySnapshot.forEach(function(doc) {
 			followerArray.push(doc.id)
 		})
 		let followerNumber: number = followerArray.length-1
 		setFollower(followerNumber)
+	})
+	},[refresh])
+	// ユーザのフォローしている人を取得
+	useEffect(() => {
+		const userId = props.globalState.state.uid
+		let followeeArray:string[] = []
+		const unsubscribe = db.collection('userList').doc(userId).collection('followee')
+		.onSnapshot(function(querySnapshot) {
+		// followerArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
+		followeeArray = []
+		querySnapshot.forEach(function(doc) {
+			followeeArray.push(doc.id)
+		})
+		let followeeNumber: number = followeeArray.length-1
+		setFollowee(followeeNumber)
 	})
 	return () => {
 		unsubscribe();
@@ -183,7 +183,7 @@ const Profile = (props: any) => {
 			/>
 			</View>
 			<View style={{flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto'}}>
-				<View style={{ flexDirection: 'row', justifyContent: "flex-start", marginTop: 60}}>
+				<View style={{ flexDirection: 'row', justifyContent: "flex-start", marginTop: 50}}>
 					<View>
 						<View style={{alignItems: 'center'}}>
 							<TouchableOpacity
@@ -209,13 +209,13 @@ const Profile = (props: any) => {
 							/>
 							<ProfileNumber
 								number={_follower}
-								itemName="フォロー"
+								itemName="フォロワー"
 								press={toFollowerList}
-								centerClass={{width: 50, height: 50, marginHorizontal: 30}}
+								centerClass={{width: 60, height: 50, marginHorizontal: 30}}
 							/>
 							<ProfileNumber
 								number={_followee}
-								itemName="フォロワー"
+								itemName="フォロー"
 								press={toFolloweeList}
 							/>
 						</View>

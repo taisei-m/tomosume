@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Profile from '../screens/Profile';
-import followerList from '../screens/followerList';
-import followeeList from '../screens/followeeList'
+import followeeList from '../screens/followeeList';
+import followerList from '../screens/followerList'
 import Setting from '../screens/Setting'
 import findUser from '../screens/findUser'
 import friendProfile from '../screens/friendProfile'
-import friendFolloweeList from '../screens/friendFolloweeList';
-import friendFollowerList from '../screens/friendFollowerList'
+import friendFollowerList from '../screens/friendFollowerList';
+import friendFolloweeList from '../screens/friendFolloweeList'
 import changeUserName from '../screens/changeUserName'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -38,7 +38,7 @@ const ProfileStack = (props) => {
             component={followerList}
             options={{
                 headerShown: true,
-                title: 'フォローリスト'
+                title: 'フォロワーリスト'
             }}
         />
         <ProfileNavStack.Screen
@@ -46,7 +46,7 @@ const ProfileStack = (props) => {
             component={followeeList}
             options={{
                 headerShown: true,
-                title: 'フォロワーリスト'
+                title: 'フォローリスト'
             }}
         />
         <ProfileNavStack.Screen
@@ -78,7 +78,7 @@ const ProfileStack = (props) => {
             component={friendFolloweeList}
             options={{
                 headerShown: true,
-                title: 'フォロワーリスト',
+                title: 'フォローリスト',
             }}
         />
         <ProfileNavStack.Screen
@@ -86,7 +86,7 @@ const ProfileStack = (props) => {
         component={friendFollowerList}
         options={{
             headerShown: true,
-            title: 'フォローリスト',
+            title: 'フォロワーリスト',
         }}
         />
         <ProfileNavStack.Screen

@@ -13,34 +13,42 @@ import {ReviewsDocResponse} from '../types/types'
 import {ShopsArrayType} from '../types/types'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
+import {regionType} from '../types/types'
 
 // TODO:フォローしているユーザを判別する関数は独立させたい
 // TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
-	// const [latitude, changeLatitude] = useState<number>(34.7201152);
-	// const [longitude, changeLongitude] = useState<number>(137.7394095);
 	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);
-	const [_latitude, setLatitude] = useState<number>();
-    const [_longitude, setLongitude] = useState<number>();
+	const [region, setRegion] = useState<regionType>({
+		latitude: 10,
+		longitude: 90,
+		latitudeDelta: 0.05,
+		longitudeDelta: 0.05,})
 	const refRBSheet = useRef();
-
 	useEffect(() => {
         (async() => {
 			let {status} = await Permissions.askAsync(Permissions.LOCATION);
             if(status == 'granted') {
 				const location = await Location.getCurrentPositionAsync({});
-				setLatitude(location.coords.latitude)
-				setLongitude(location.coords.longitude)
+				setRegion({
+					latitude: location.coords.latitude,
+					longitude: location.coords.longitude,
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05
+				})
             } else {
-				setLatitude(34.7201152)
-				setLongitude(137.7394095)
+				setRegion({
+					latitude: 35.67832667,
+					longitude: 139.77044378,
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05
+				})
 			}
         })()
-    }, [])
-
+	}, [])
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
 		(async() => {
@@ -118,13 +126,11 @@ const Search = (props: any) => {
 		<View style={styles.container}>
 			<MapView
 				style={styles.mapStyle}
-				initialRegion={{
-					// 初期位置
-					latitude: _latitude,
-					longitude: _longitude,
-					latitudeDelta: 0.05,
-					longitudeDelta: 0.05,
-				}}
+				// initialRegion={
+				// 	// 初期位置
+				// 	region
+				// }
+				region={region}
 				>
 				{allShopsData.map((location) =>
 					<Marker

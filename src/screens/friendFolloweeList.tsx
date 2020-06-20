@@ -40,15 +40,16 @@ const FollowerList = (props) => {
     //相互フォローをしているかのチェックをする
     const checkFollowExchange = async(followeeList: followeeListType): Promise<followeeListType> => {
         const userId = props.globalState.state.uid
-        const followerUserList: string[] = []
-        const followerList = await db.collection('userList').doc(userId).collection('follower').get()
-        followerList.forEach((data) => {
-            followerUserList.push(data.id)
+        const followeeUserList: string[] = []
+        //使用ユーザのフォローリスト
+        const userFolloweeList = await db.collection('userList').doc(userId).collection('followee').get()
+        userFolloweeList.forEach((data) => {
+            followeeUserList.push(data.id)
         })
         //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
         followeeList.forEach((item) => {
             let followeeUserId = item.uid
-            let isFollowExchange = followerUserList.includes(followeeUserId)
+            let isFollowExchange = followeeUserList.includes(followeeUserId)
         // 相互フォローの場合true, 相互フォローしていない場合falseを代入
             isFollowExchange ? item.followExchange = true : item.followExchange = false
         })

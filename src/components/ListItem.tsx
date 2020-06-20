@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, } from 'react-native';
 import { Avatar, Card, } from 'react-native-elements'
 
 interface ItemProps {
@@ -10,7 +10,7 @@ interface ItemProps {
     address?: string
     category: string
     favorite: string
-    price: number
+    price: string
     userId?: string
     pressMethod: Function
 }
@@ -63,15 +63,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 5
+        marginBottom: 7
     },
     card: {
         borderRadius: 25,
         width: '95%',
-        shadowOpacity: 0.3,
-        shadowColor: "#000",
-        shadowOffset: { width: 3, height: 3 },
-        shadowRadius: 1,
+        ...Platform.select({
+            ios: {
+                shadowOpacity: 0.3,
+                shadowColor: "#000",
+                shadowOffset: { width: 3, height: 3 },
+                shadowRadius: 3,
+            },
+        })
     },
     userInfomation: {
         flexDirection: 'row',

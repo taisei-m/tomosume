@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet,FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
@@ -14,16 +14,16 @@ const FollowerList = (props) => {
         (async () => {
             const userId = props.globalState.state.uid
             let followerIdList: string[] = []
-            let followerUserList: followerListType = []
-            let followerProfileData: followerProfileType
-            // フォローしているユーザのuidをfollowerIdListへ追加
+            // 自分をフォローしているユーザのuidを取得してfolloweeIdListへ追加する
             const querySnapshot = await db.collection('userList').doc(userId).collection('follower').get()
             querySnapshot.forEach((data) => {
                 followerIdList.push(data.id)
             })
             //firstを削除しないとuidがundefinedというエラーが発生する
             followerIdList = followerIdList.filter(id => id != 'first')
-            // フォローしているユーザのデータをオブジェクトの配列として返す
+            // フォロワーのユーザデータのオブジェクトの配列を返す
+            let followerUserList: followerListType = []
+            let followerProfileData: followerProfileType
             followerUserList = await Promise.all(followerIdList.map(async (item) => {
                 //awaitしないと先にreturnが実行される
                 await db.collection('userList').doc(item).get()
@@ -32,10 +32,29 @@ const FollowerList = (props) => {
                 })
                 return followerProfileData;
             }))
-            setFollowerList(followerUserList)
+            // 相互フォローをしているかの真偽値を含むオブジェクトの配列
+            const checkedFollowExchangeArray =  await checkFollowExchange(followerUserList)
+            setFollowerList(checkedFollowExchangeArray)
         })();
     }, [])
-    const toProfileDetailPage = (id: string):void => {
+    //相互フォローをしているかのチェックをする
+    const checkFollowExchange = async(followerList: followerListType): Promise<followerListType> => {
+        const userId = props.globalState.state.uid
+        const followeeUserList: string[] = []
+        const followeeList = await db.collection('userList').doc(userId).collection('followee').get()
+        followeeList.forEach((data) => {
+            followeeUserList.push(data.id)
+        })
+        //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
+        followerList.forEach((item) => {
+            let followerUserId = item.uid
+            let isFollowExchange = followeeUserList.includes(followerUserId)
+        // 相互フォローの場合true, 相互フォローしていない場合falseを代入
+            isFollowExchange ? item.followExchange = true : item.followExchange = false
+        })
+        return followerList
+    }
+    const toProfileDetailPage = (id) => {
         props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
     }
@@ -47,10 +66,10 @@ const FollowerList = (props) => {
             renderItem={({item}) =>
                 <View style={styles.cell}>
                     <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
-                        <Avatar
-                            rounded
-                            containerStyle={{marginLeft: 20, marginTop: 9}}
-                            source={{ uri: item.iconURL }}/>
+                    <Avatar
+                        rounded
+                        containerStyle={{marginLeft: 20, marginTop: 9}}
+                        source={{ uri: item.iconURL }}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
                         <View style={{marginRight: '45%'}}>
@@ -59,8 +78,7 @@ const FollowerList = (props) => {
                     </TouchableOpacity>
                     <FollowButton
                         id={item.uid}
-                        //自分がフォローしているので必ずtrueとして渡す
-                        isFollowExchange={true}
+                        isFollowExchange={item.followExchange}
                         userId = {props.globalState.state.uid}
                     />
                 </View>
@@ -97,6 +115,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         marginLeft: 15,
-        marginTop: 15,
+        marginTop: 15
     },
 });
