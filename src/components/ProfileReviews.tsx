@@ -46,10 +46,15 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 7
     },
     card: {
         borderRadius: 25,
-        width: '95%'
+        width: '95%',
+        shadowOpacity: 0.3,
+        shadowColor: "#000",
+        shadowOffset: { width: 3, height: 3 },
+        shadowRadius: 3,
     },
     shopName: {
         fontSize: 18,

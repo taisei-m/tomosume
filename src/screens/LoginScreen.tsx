@@ -319,8 +319,6 @@ const LoginScreen = (props: any) => {
             <TouchableOpacity
                 onPress={() => { props.navigation.navigate('ResendEmail') }}
             >
-
-                <Text style={styles.resendEmailText}> メールの再送信 </Text>
             </TouchableOpacity>
         </View>
                 </KeyboardAwareScrollView>
@@ -394,9 +392,6 @@ const styles = StyleSheet.create({
         color: 'black',
         textDecorationLine: 'underline',
         marginTop: '5%',
-    },
-    resendEmailText: {
-        color: 'black',
     },
 	aboveButtonMessage: {
 		marginTop: '3%',

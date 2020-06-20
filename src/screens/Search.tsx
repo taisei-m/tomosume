@@ -13,34 +13,42 @@ import {ReviewsDocResponse} from '../types/types'
 import {ShopsArrayType} from '../types/types'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
+import {regionType} from '../types/types'
 
 // TODO:フォローしているユーザを判別する関数は独立させたい
 // TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search = (props: any) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
-	// const [latitude, changeLatitude] = useState<number>(34.7201152);
-	// const [longitude, changeLongitude] = useState<number>(137.7394095);
 	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);
-	const [_latitude, setLatitude] = useState<number>();
-    const [_longitude, setLongitude] = useState<number>();
+	const [region, setRegion] = useState<regionType>({
+		latitude: 10,
+		longitude: 90,
+		latitudeDelta: 0.05,
+		longitudeDelta: 0.05,})
 	const refRBSheet = useRef();
-
 	useEffect(() => {
         (async() => {
 			let {status} = await Permissions.askAsync(Permissions.LOCATION);
             if(status == 'granted') {
 				const location = await Location.getCurrentPositionAsync({});
-				setLatitude(location.coords.latitude)
-				setLongitude(location.coords.longitude)
+				setRegion({
+					latitude: location.coords.latitude,
+					longitude: location.coords.longitude,
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05
+				})
             } else {
-				setLatitude(34.7201152)
-				setLongitude(137.7394095)
+				setRegion({
+					latitude: 35.67832667,
+					longitude: 139.77044378,
+					latitudeDelta: 0.08,
+					longitudeDelta: 0.08
+				})
 			}
         })()
-    }, [])
-
+	}, [])
 	//投稿されているお店の位置情報・店名を取得する
 	useEffect(() => {
 		(async() => {
@@ -62,7 +70,13 @@ const Search = (props: any) => {
 		})()
 	},[_refresh])
 	// 選択したお店の全レビューを取得する
-	const getAllReviews = async(id: string): Promise<ReviewsDocResponse> => {
+	const getAllReviews = async(id: string, latitude: number, longitude: number): Promise<ReviewsDocResponse> => {
+		setRegion({
+			latitude: latitude,
+			longitude: longitude,
+			latitudeDelta: 0.05,
+			longitudeDelta: 0.05
+		})
 		let reviews: ReviewsDocResponse = []
 		const followrIdList = await getFollowingUid()
 		followrIdList.push(props.globalState.state.uid)
@@ -84,7 +98,7 @@ const Search = (props: any) => {
 	const getFollowingUid = async():Promise<string[]> => {
         let followingUidList: string[] = []
         // この書き方がsubcollectionの展開の仕方のはず
-        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('follower').get()
+        const querySnapshot = await db.collection('userList').doc(props.globalState.state.uid).collection('followee').get()
         followingUidList =  querySnapshot.docs.map((doc) => {
             return doc.id
         })
@@ -101,9 +115,9 @@ const Search = (props: any) => {
         })
         return convertedArray
     }
-	const showShopReviews = async (id: string) => {
+	const showShopReviews = async (id: string, latitude: number, longitude: number) => {
 		refRBSheet.current.open()
-		const _reviews = await getAllReviews(id)
+		const _reviews = await getAllReviews(id, latitude, longitude)
 		setAllReviews(_reviews)
 	}
 	const toProfilePage = (id: string) => {
@@ -118,20 +132,14 @@ const Search = (props: any) => {
 		<View style={styles.container}>
 			<MapView
 				style={styles.mapStyle}
-				initialRegion={{
-					// 初期位置
-					latitude: _latitude,
-					longitude: _longitude,
-					latitudeDelta: 0.05,
-					longitudeDelta: 0.05,
-				}}
+				region={region}
 				>
 				{allShopsData.map((location) =>
 					<Marker
 						key={location.id}
 						title={location.shopName}
 						description={location.address}
-						onPress={() => showShopReviews(location.id)}
+						onPress={() => showShopReviews(location.id, location.latitude, location.longitude)}
 						coordinate={
 							{
 								latitude: location.latitude,
@@ -141,7 +149,7 @@ const Search = (props: any) => {
 					/>
 				)}
 			</MapView>
-			<View style={{position : 'absolute', right : '5%', top: '5%'}}>
+			<View style={{position : 'absolute', right : '7%', top: '5%'}}>
 					<Icon
 						size={30}
 						name='refresh'
@@ -239,9 +247,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 		position: 'relative'
 	},
-	// map: {
-	// 	...StyleSheet.absoluteFillObject,
-	// },
 	card: {
 		borderRadius: 10
 	},
