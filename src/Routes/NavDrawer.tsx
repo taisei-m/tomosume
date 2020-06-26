@@ -26,7 +26,7 @@ function NotificationsScreen() {
 
 export default function NavDrawer() {
   //  console.log("nanndeyanen")
-   const Drawer = createBottomTabNavigator();
+  const Drawer = createBottomTabNavigator();
 
   //  console.log("nanndeyanen222")
 
