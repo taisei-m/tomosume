@@ -3,18 +3,6 @@ import { Button, View } from 'react-native';
 import HomeScreen from '../screens/CreateAccount';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-// function HomeScreen() {
-//    console.log("yoiyoi")
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Button
-//         onPress={() => navigation.navigate('Notifications')}
-//         title="Go to notifications"
-//       />
-//     </View>
-//   );
-// }
-
 function NotificationsScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -25,11 +13,7 @@ function NotificationsScreen() {
 
 
 export default function NavDrawer() {
-  //  console.log("nanndeyanen")
   const Drawer = createBottomTabNavigator();
-
-  //  console.log("nanndeyanen222")
-
 
   return (
       <Drawer.Navigator initialRouteName="Home">

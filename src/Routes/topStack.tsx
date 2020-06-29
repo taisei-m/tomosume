@@ -41,7 +41,7 @@ const TopStack = (props) => {
             component={friendFollowerList}
             options={{
                 headerShown: true,
-                title: 'フォローリスト'
+                title: 'フォロワーリスト'
             }}
         />
         <TopNavStack.Screen
@@ -49,7 +49,7 @@ const TopStack = (props) => {
             component={friendFolloweeList}
             options={{
                 headerShown: true,
-                title: 'フォロワーリスト'
+                title: 'フォローリスト'
             }}
         />
     </TopNavStack.Navigator>
