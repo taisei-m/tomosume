@@ -11,7 +11,6 @@ function NotificationsScreen() {
   );
 }
 
-
 export default function NavDrawer() {
   const Drawer = createBottomTabNavigator();
 
