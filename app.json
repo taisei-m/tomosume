@@ -9,7 +9,7 @@
     ],
     "version": "1.1.5",
     "orientation": "portrait",
-    "icon": "./assets/Mac-1024.png",
+    "icon": "./assets/tomosume2.png",
     "splash": {
       "image": "./assets/tomosume_splash_new.png",
       "resizeMode": "contain",
@@ -23,7 +23,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.bi17.tomosume",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1",
       "supportsTablet": true
     },
     "android": {
