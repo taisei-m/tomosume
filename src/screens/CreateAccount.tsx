@@ -339,16 +339,15 @@ const CreateAccount = (props: any) => {
                 db.collection('follower').doc('first').set({})
                 db.collection('followee').doc('first').set({})
                 firebase.auth().languageCode = "ja";
-                let sentEmail: boolean = false;
+                let sentEmail: boolean | undefined
                 //なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
                 await user.sendEmailVerification().then(function () {
                     //※errorがある場合でもthenの中身も実行される?
                     sentEmail = true;
                 })
-                .catch(function (error) {
+                .catch(function() {
                     sentEmail = false;
                 });
-                //　ここは最終的には直したい
                 if (sentEmail == true) {
                     _navigation.navigate('ResendEmail');
                 }
