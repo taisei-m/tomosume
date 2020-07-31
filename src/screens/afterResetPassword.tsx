@@ -33,7 +33,6 @@ const ResendEmail = (props:any) => {
             <View style={styles.titleTextView}>
                 <Text style={styles.titleText}>{_titleText}</Text>
             </View>
-            
             <TouchableOpacity
                 onPress={() => { _navigation.navigate('LoginScreen') }}
             >

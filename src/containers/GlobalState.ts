@@ -1,9 +1,18 @@
 import { Container } from "unstated";
 
-export default class GlobalContainer extends Container {
+type ContainerState = {
+   isSplash: boolean
+   isSignout: string
+   uid: string
+   itemId: string
+   friendId: string
+   createAccountEmail: string
+   resetPasswordEmail: string
+}
+export default class GlobalContainer extends Container<ContainerState> {
    state = {
       isSplash: true,
-      isSighout: '',
+      isSignout: '',
       uid: '',
       itemId: '',
       friendId: '',

@@ -14,7 +14,6 @@ const FindUser = (props) => {
     const [_searchedUserName, setSearchedUserName] = useState<string>('')
     // _searchUserNameの値が確定してから1秒後にvalueに_searchedUserNameを代入する
     const [value] = useDebounce(_searchedUserName, 800);
-    const [_isExistedCandidate, setIsExistedCandidate] = useState<boolean>(false)
     const [_candidateUsersList, setCandidateUsersList] = useState<candidateUesrsDataListType>()
 
     //async-awaitに書き換える
