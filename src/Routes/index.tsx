@@ -8,10 +8,6 @@ import GlobalStateContainer from '../containers/GlobalState';
 import SplashScreen from '../screens/Splash'
 
 const Index = (props) => {
-  const [globalState, setGlobalState] = useState(props.globalState);
-  const [isSplash, setIisSplash] = useState(props.globalState.state.isSplash);
-  const [isSignout, setIsSignout] = useState(props.globalState.state.isSignout);
-  const [user, setUser] = useState(props.globalState.state.user);
   const Stack = createStackNavigator();
   if (props.globalState.state.isSplash == true || props.globalState.state.isSignout=="") {
     return <SplashScreen />;
@@ -28,7 +24,6 @@ const Index = (props) => {
           </NavigationContainer>
       )
 }
-
 
 const indexWrapper = () => {
   return (
