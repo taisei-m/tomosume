@@ -9,8 +9,9 @@ import ProfileReviews from '../components/ProfileReviews';
 import {friendReviewDocResponse} from '../types/types'
 import {friendDataDocResponse} from '../types/types'
 import {friendReviewsType} from '../types/types'
+import {StackProps} from '../types/types'
 
-const FriendProfile = (props: any) => {
+const FriendProfile = (props:StackProps) => {
 	const [friendName, setFriendName] = useState<string>()
 	const [followee, setFollowee] = useState<number>(0)
 	const [follower, setFollower] = useState<number>(0)

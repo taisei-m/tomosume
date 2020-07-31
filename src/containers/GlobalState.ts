@@ -1,15 +1,7 @@
 import { Container } from "unstated";
+import {ContainerType} from "../types/types"
 
-type ContainerState = {
-   isSplash: boolean
-   isSignout: string
-   uid: string
-   itemId: string
-   friendId: string
-   createAccountEmail: string
-   resetPasswordEmail: string
-}
-export default class GlobalContainer extends Container<ContainerState> {
+export default class GlobalContainer extends Container<ContainerType> {
    state = {
       isSplash: true,
       isSignout: '',

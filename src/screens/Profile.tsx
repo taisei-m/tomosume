@@ -14,8 +14,9 @@ import {userDataDocResponse} from '../types/types'
 import {userReviewsType} from '../types/types'
 //@ts-ignore
 import { ProgressDialog } from 'react-native-simple-dialogs';
+import {StackProps} from '../types/types'
 
-const Profile = (props: any) => {
+const Profile = (props:StackProps) => {
 	const [_userName, setUserName] = useState<string>()
 	const [_followee, setFollowee] = useState<number>(0)
 	const [_follower, setFollower] = useState<number>(0)

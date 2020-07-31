@@ -3,8 +3,9 @@ import { StyleSheet, View, TouchableOpacity,} from 'react-native';
 import { Text } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
+import {StackProps} from '../types/types'
 
-const ResendEmail = (props:any) => {
+const ResendEmail = (props:StackProps) => {
     const [_navigation] = useState(props.navigation);
     const [_email, setEmail] = useState<string>('');
     const [_titleText, setTitleText] = useState<string>('');

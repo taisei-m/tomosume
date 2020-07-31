@@ -4,8 +4,9 @@ import {db} from '../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {userProfileDataType} from '../types/types'
+import {StackProps} from '../types/types'
 
-const ChangeUserName = (props) => {
+const ChangeUserName = (props:StackProps) => {
     const [_userName, setUserName] = useState<string>('')
     useEffect(() => {
         db.collection('userList').doc(props.globalState.state.uid).get()

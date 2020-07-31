@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, TouchableOpacity,} from 'react-native';
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {StackProps} from '../types/types'
 
-const SelectLoginOrSignup = (props: any) => {
+const SelectLoginOrSignup = (props: StackProps) => {
     return(
     <View style={styles.container}>
         <View>

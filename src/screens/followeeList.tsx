@@ -7,8 +7,9 @@ import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
 import {followeeProfileType} from '../types/types'
 import {followeeListType} from '../types/types'
+import {StackProps} from '../types/types'
 
-const FolloweeList = (props) => {
+const FolloweeList = (props:StackProps) => {
     const [_followeeList, setFolloweeList] = useState<followeeListType>();
     useEffect(() => {
         (async () => {

@@ -15,8 +15,9 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
 //@ts-ignore
 import { Dialog } from 'react-native-simple-dialogs';
+import {StackProps} from '../types/types'
 
-const Post = (props) => {
+const Post = (props:StackProps) => {
     const [shopName, setShopName] = useState<string>('');
     const [favoriteMenu, changeFavorite] = useState<string>('');
     // 最終的にはnumber型にする。　その際に該当するファイルの型を変更する
