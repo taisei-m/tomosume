@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
-import { Avatar,  } from 'react-native-elements'
+import { Avatar } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'

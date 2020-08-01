@@ -9,20 +9,21 @@ import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
 import changeUserName from '../screens/changeUserName'
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
 
-const ProfileNavStack = createStackNavigator();
+type ProfileStackParamList = {
+    ProfileTop: undefined
+    followerList: undefined
+    followeeList: undefined
+    toSettingPage: undefined
+    findUser: undefined
+    friendProfile: undefined
+    friendFolloweeList: undefined
+    friendFollowerList: undefined
+    changeUserName: undefined
+}
+const ProfileNavStack = createStackNavigator<ProfileStackParamList>();
 
-const ProfileStack = (props) => {
-    let navigation = props.navigation;
-    React.useEffect(( ) => {
-        const unsubscribe = navigation.addListener('tabPress', e => {
-            navigation.navigate('ProfileTop')
-        });
-        return unsubscribe;
-    }, [navigation]);
-
+export const ProfileStack:React.FC = () => {
     return (
     <ProfileNavStack.Navigator>
         <ProfileNavStack.Screen
@@ -100,15 +101,3 @@ const ProfileStack = (props) => {
     </ProfileNavStack.Navigator>
     )
 };
-
-const ProfileStackWrapper = ({ navigation }) => {
-    return (
-        <Subscribe to={[GlobalStateContainer]}>
-            {
-                globalState => <ProfileStack globalState={globalState} navigation = {navigation} />
-            }
-        </Subscribe>
-    );
-}
-
-export default ProfileStackWrapper;

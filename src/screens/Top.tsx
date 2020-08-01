@@ -8,7 +8,7 @@ import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {StackProps} from '../types/types'
+
 
 const Top = (props:StackProps) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])

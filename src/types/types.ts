@@ -145,10 +145,7 @@ export type ContainerType = {
     resetPasswordEmail: string
 }
 
-export type ContainerStateType = {
-    state: ContainerType
-}
-
-export type StackProps = {
-    globalState: ContainerStateType
+export type IndexParamList = {
+    NavUnlogin: undefined
+    NavLogined: undefined
 }

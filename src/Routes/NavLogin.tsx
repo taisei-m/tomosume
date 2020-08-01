@@ -2,15 +2,21 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Post from '../screens/Post';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProfileStack from './ProfileStack';
-import topStack from './topStack'
-import SearchStack from './SearchStack'
+import {ProfileStack} from './ProfileStack';
+import {TopStack} from './topStack'
+import {SearchStack} from './SearchStack'
 
-const Tab1 = createBottomTabNavigator();
+type NavLoginParamList = {
+  Top: undefined
+  Search: undefined
+  Post: undefined
+  Profile: undefined
+}
+const ButtonTab = createBottomTabNavigator<NavLoginParamList>();
 
-export default Tab = () => {
+export const NavLogin:React.FC = () => {
   return (
-    <Tab1.Navigator
+    <ButtonTab.Navigator
     initialRouteName = "Top"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -34,10 +40,10 @@ export default Tab = () => {
       inactiveTintColor: 'gray',
     }}
     >
-      <Tab1.Screen name="Top" component={topStack} options={{title: 'トップ'}}/>
-      <Tab1.Screen name="Search" component={SearchStack} options={{title: '検索'}}/>
-      <Tab1.Screen name="Post" component={Post} options={{title: '投稿'}}/>
-      <Tab1.Screen name="Profile" component={ProfileStack} options={{title: 'プロフィール'}}/>
-    </Tab1.Navigator>
+      <ButtonTab.Screen name="Top" component={TopStack} options={{title: 'トップ'}}/>
+      <ButtonTab.Screen name="Search" component={SearchStack} options={{title: '検索'}}/>
+      <ButtonTab.Screen name="Post" component={Post} options={{title: '投稿'}}/>
+      <ButtonTab.Screen name="Profile" component={ProfileStack} options={{title: 'プロフィール'}}/>
+    </ButtonTab.Navigator>
   );
 }
