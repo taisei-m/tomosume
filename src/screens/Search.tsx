@@ -14,11 +14,12 @@ import {ShopsArrayType} from '../types/types'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
 import {regionType} from '../types/types'
+import {StackProps} from '../types/types'
 
 // TODO:フォローしているユーザを判別する関数は独立させたい
 // TODO:新しく投稿したお店が自動で更新されるようにしたい
 
-const Search = (props: any) => {
+const Search = (props:StackProps) => {
 	const [allShopsData, setAllShopsData] = useState<ShopsArrayType>([])
 	const [_allReviews, setAllReviews] = useState<ReviewsDocResponse>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);

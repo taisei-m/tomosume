@@ -4,21 +4,17 @@ import search from '../screens/Search'
 import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFolloweeList';
 import friendFolloweeList from '../screens/friendFollowerList'
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
 
-const SearchNavStack = createStackNavigator();
+type SearchStackParamList = {
+    search: undefined
+    friendProfile: undefined
+    friendFollowerList: undefined
+    friendFolloweeList: undefined
+}
 
-const SearchStack = (props) => {
-    let navigation = props.navigation;
-    // ページを移動してstackgがたまった状態でtabをタップするとsearchに遷移する
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('tabPress', e => {
-            navigation.navigate('seaerch')
-        });
-        return unsubscribe;
-    }, [navigation]);
+const SearchNavStack = createStackNavigator<SearchStackParamList>();
 
+export const SearchStack: React.FC = () => {
     return (
     <SearchNavStack.Navigator>
         <SearchNavStack.Screen
@@ -57,14 +53,4 @@ const SearchStack = (props) => {
     )
 };
 
-const ProfileStackWrapper = ({ navigation }) => {
-    return (
-        <Subscribe to={[GlobalStateContainer]}>
-            {
-                globalState => <SearchStack globalState={globalState} navigation = {navigation} />
-            }
-        </Subscribe>
-    );
-}
 
-export default ProfileStackWrapper;

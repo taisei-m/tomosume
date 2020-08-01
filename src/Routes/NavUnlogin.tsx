@@ -5,14 +5,23 @@ import CreateAccount from '../screens/CreateAccount';
 import ResetPassword from '../screens/ResetPassword';
 import afterResetEmail from '../screens/afterResetPassword';
 import ResendEmail from '../screens/ResendEmail';
-import NavLogined from './NavLogined';
+import {NavLogin} from './NavLogin';
 import { createStackNavigator } from '@react-navigation/stack';
 
-const TabUnlogin = createStackNavigator();
+type NavUnloginParamList = {
+  SelectLoginOrSignup: undefined
+  LoginScreen: undefined
+  CreateAccount: undefined
+  ResetPassword: undefined
+  afterResetEmail: undefined
+  ResendEmail: undefined
+  NavLogin: undefined
+}
+const TabUnlogin = createStackNavigator<NavUnloginParamList>()
 
-export default Unlogin = () => {
+export const NavUnlogin: React.FC = () => {
   return (
-    <TabUnlogin.Navigator initialRouteName="LoginScreen"
+    <TabUnlogin.Navigator
     initialRouteName = "SelectLoginOrSignup"
     >
       <TabUnlogin.Screen name="SelectLoginOrSignup" component={SelectLoginOrSignup} options={{ headerShown: false }}/>
@@ -21,7 +30,7 @@ export default Unlogin = () => {
       <TabUnlogin.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
       <TabUnlogin.Screen name="afterResetEmail" component={afterResetEmail} options={{ headerShown: false }} />
       <TabUnlogin.Screen name="ResendEmail" component={ResendEmail} options={{ headerShown: false }} />
-      <TabUnlogin.Screen name="NavLogined" component={NavLogined} options={{ headerShown: false }} />
+      <TabUnlogin.Screen name="NavLogin" component={NavLogin} options={{ headerShown: false }} />
     </TabUnlogin.Navigator>
   );
 }

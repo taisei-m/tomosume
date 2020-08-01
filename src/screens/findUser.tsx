@@ -9,8 +9,9 @@ import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {userProfileDataType} from '../types/types'
 import {candidateUesrsDataListType} from '../types/types'
+import {StackProps} from '../types/types'
 
-const FindUser = (props) => {
+const FindUser = (props:StackProps) => {
     const [_searchedUserName, setSearchedUserName] = useState<string>('')
     // _searchUserNameの値が確定してから1秒後にvalueに_searchedUserNameを代入する
     const [value] = useDebounce(_searchedUserName, 800);

@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
-import { Avatar,  } from 'react-native-elements'
+import { Avatar } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
 import {followeeProfileType} from '../types/types'
 import {followeeListType} from '../types/types'
+import {StackProps} from '../types/types'
 
-const FolloweeList = (props) => {
+const FolloweeList = (props:StackProps) => {
     const [_followeeList, setFolloweeList] = useState<followeeListType>();
     useEffect(() => {
         (async () => {

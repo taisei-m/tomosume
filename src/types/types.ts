@@ -134,3 +134,18 @@ export type regionType = {
 	latitudeDelta: number,
 	longitudeDelta: number,
 }
+
+export type ContainerType = {
+    isSplash: boolean
+    isSignout: string
+    uid: string
+    itemId: string
+    friendId: string
+    createAccountEmail: string
+    resetPasswordEmail: string
+}
+
+export type IndexParamList = {
+    NavUnlogin: undefined
+    NavLogined: undefined
+}

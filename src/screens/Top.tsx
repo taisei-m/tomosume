@@ -10,7 +10,7 @@ import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-const Top = (props) => {
+const Top = (props:StackProps) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
