@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import {db} from '../../firebaseConfig'
 import ListItem from '../components/ListItem';
 import { Subscribe } from 'unstated';
@@ -9,7 +8,7 @@ import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {TopStackParamList} from '../types/types'
+import {TopStackNavProps} from '../types/types'
 
 type GlobalStateProps = {
     globalState: {
@@ -20,7 +19,7 @@ type GlobalStateProps = {
     }
 }
 
-const Top:React.FC<NavigationProps & GlobalStateProps> = (props) => {
+const Top:React.FC<TopStackNavProps<'Top'> & GlobalStateProps> = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -157,13 +156,7 @@ const Top:React.FC<NavigationProps & GlobalStateProps> = (props) => {
     )
 }
 
-
-type TopScreenNavigationProp = StackNavigationProp<TopStackParamList, 'Top'>
-type NavigationProps = {
-    navigation: TopScreenNavigationProp
-}
-
-const ProfileWrapper: React.FC<NavigationProps> = ({ navigation }) => {
+const ProfileWrapper: React.FC<TopStackNavProps<'Top'>> = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalContainer]}>
             {

@@ -2,14 +2,24 @@ import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalContainer from '../containers/GlobalState';
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
 import {followerProfileType} from '../types/types'
 import {followerListType} from '../types/types'
-import {StackProps} from '../types/types'
+import {TopStackNavProps} from '../types/types'
 
-const FollowerList = (props:StackProps) => {
+type GlobalStateProps = {
+    globalState: {
+        state: {
+            friendId: string
+            uid: string
+        }
+        setFriendId: (id: string) => void
+    }
+}
+
+const FollowerList:React.FC<TopStackNavProps<'friendFollowerList'> & GlobalStateProps> = (props) => {
     const [_followerList, setFollowerList] = useState<followerListType>();
     useEffect(() => {
         (async () => {
@@ -88,11 +98,11 @@ const FollowerList = (props:StackProps) => {
     )
 }
 
-const followerListWrapper = ({ navigation }) => {
+const followerListWrapper:React.FC<TopStackNavProps<'friendFollowerList'>> = ({ navigation }) => {
     return (
-        <Subscribe to={[GlobalStateContainer]}>
+        <Subscribe to={[GlobalContainer]}>
             {
-                globalState => <FollowerList globalState={globalState} navigation = {navigation} />
+                (globalState:GlobalContainer) => <FollowerList globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
