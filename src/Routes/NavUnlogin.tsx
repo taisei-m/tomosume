@@ -7,16 +7,8 @@ import afterResetEmail from '../screens/afterResetPassword';
 import ResendEmail from '../screens/ResendEmail';
 import {NavLogin} from './NavLogin';
 import { createStackNavigator } from '@react-navigation/stack';
+import {NavUnloginParamList} from '../types/types'
 
-type NavUnloginParamList = {
-  SelectLoginOrSignup: undefined
-  LoginScreen: undefined
-  CreateAccount: undefined
-  ResetPassword: undefined
-  afterResetEmail: undefined
-  ResendEmail: undefined
-  NavLogin: undefined
-}
 const TabUnlogin = createStackNavigator<NavUnloginParamList>()
 
 export const NavUnlogin: React.FC = () => {
