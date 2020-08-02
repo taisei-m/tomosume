@@ -4,13 +4,7 @@ import Top from '../screens/Top';
 import friendProfile from '../screens/friendProfile';
 import friendFolloweeList from '../screens/friendFolloweeList';
 import friendFollowerList from '../screens/friendFollowerList'
-
-type TopStackParamList = {
-    Top: undefined
-    friendProfile: undefined
-    friendFollowerList: undefined
-    friendFolloweeList: undefined
-}
+import {TopStackParamList} from '../types/types'
 
 const TopNavStack = createStackNavigator<TopStackParamList>();
 

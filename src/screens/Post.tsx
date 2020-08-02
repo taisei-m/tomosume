@@ -1,12 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import {NavLoginParamList} from '../types/types'
 import {Input} from 'react-native-elements'
 import { Button } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import firebase from '../../firebaseConfig'
 import apiKey from '../api/api_key';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalContainer from '../containers/GlobalState';
 import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'
@@ -15,12 +17,17 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
 //@ts-ignore
 import { Dialog } from 'react-native-simple-dialogs';
-import {StackProps} from '../types/types'
 
-const Post = (props:StackProps) => {
+type GlobalStateProps = {
+    globalState: {
+        state: {
+            uid: string
+        }
+    }
+}
+const Post:React.FC<NavigationProps & GlobalStateProps> = (props) => {
     const [shopName, setShopName] = useState<string>('');
     const [favoriteMenu, changeFavorite] = useState<string>('');
-    // 最終的にはnumber型にする。　その際に該当するファイルの型を変更する
     const [price, changePrice] = useState<string>('');
     const [category, setCategory] = useState<string>('');
     const [address, setShopAddress] = useState<string>('');
@@ -337,11 +344,17 @@ const Post = (props:StackProps) => {
     );
 }
 
-const PostWrapper = ({ navigation }) => {
+type PostScreenNavigationProps = BottomTabNavigationProp<NavLoginParamList, 'Post'>;
+
+type NavigationProps = {
+    navigation: PostScreenNavigationProps
+}
+
+const PostWrapper:React.FC<NavigationProps> = ({ navigation }) => {
 	return (
-			<Subscribe to={[GlobalStateContainer]}>
+			<Subscribe to={[GlobalContainer]}>
 				{
-					globalState => <Post globalState={globalState} navigation = {navigation} />
+					(globalState:GlobalContainer) => <Post globalState={globalState} navigation = {navigation} />
 				}
 			</Subscribe>
 	);

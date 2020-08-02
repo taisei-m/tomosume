@@ -146,6 +146,68 @@ export type ContainerType = {
 }
 
 export type IndexParamList = {
-    NavUnlogin: undefined
-    NavLogined: undefined
+    NavUnlogin: {
+        headerShown: boolean
+    }
+    NavLogined: {
+        headerShown: boolean
+    }
+}
+
+export type NavUnloginParamList = {
+    SelectLoginOrSignup: {
+        headerShwon: boolean
+    }
+    LoginScreen: {
+        headerShwon: boolean
+    }
+    CreateAccount: {
+        headerShwon: boolean
+    }
+    ResetPassword: {
+        headerShwon: boolean
+    }
+    afterResetEmail: {
+        headerShwon: boolean
+    }
+    ResendEmail: {
+        headerShwon: boolean
+    }
+    NavLogin: {
+        headerShwon: boolean
+    }
+}
+
+export type NavLoginParamList = {
+    Top: {
+        title: string
+    }
+    Search: {
+        title: string
+    }
+    Post: {
+        title: string
+    }
+    Profile: {
+        title: string
+    }
+}
+
+export type TopStackParamList = {
+    Top: {
+        headerShown: boolean
+        title: string
+    }
+    friendProfile: {
+        headerShown: boolean
+        title: string
+    }
+    friendFollowerList: {
+        headerShown: boolean
+        title: string
+    }
+    friendFolloweeList: {
+        headerShown: boolean
+        title: string
+    }
 }

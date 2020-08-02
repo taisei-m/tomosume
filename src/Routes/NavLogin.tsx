@@ -5,13 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {ProfileStack} from './ProfileStack';
 import {TopStack} from './topStack'
 import {SearchStack} from './SearchStack'
+import {NavLoginParamList} from '../types/types'
 
-type NavLoginParamList = {
-  Top: undefined
-  Search: undefined
-  Post: undefined
-  Profile: undefined
-}
 const ButtonTab = createBottomTabNavigator<NavLoginParamList>();
 
 export const NavLogin:React.FC = () => {

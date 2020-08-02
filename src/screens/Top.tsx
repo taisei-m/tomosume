@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import {db} from '../../firebaseConfig'
 import ListItem from '../components/ListItem';
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalContainer from '../containers/GlobalState';
 import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {TopStackParamList} from '../types/types'
 
+type GlobalStateProps = {
+    globalState: {
+        state: {
+            uid: string
+        }
+    setFriendId: (friendId: string) => void
+    }
+}
 
-const Top = (props:StackProps) => {
+const Top:React.FC<NavigationProps & GlobalStateProps> = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -52,7 +62,7 @@ const Top = (props:StackProps) => {
         })()
     }, [isRefreshed])
     //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
-    const convertTypeToReference = (array: string[]):Promise<firebase.firestore.DocumentReference[]> => {
+    const convertTypeToReference = (array: string[]):firebase.firestore.DocumentReference[]=> {
         let reference: firebase.firestore.DocumentReference
         // 文字列firstを削除する
         array = array.filter(n => n !== 'first')
@@ -147,11 +157,17 @@ const Top = (props:StackProps) => {
     )
 }
 
-const ProfileWrapper = ({ navigation }) => {
+
+type TopScreenNavigationProp = StackNavigationProp<TopStackParamList, 'Top'>
+type NavigationProps = {
+    navigation: TopScreenNavigationProp
+}
+
+const ProfileWrapper: React.FC<NavigationProps> = ({ navigation }) => {
     return (
-        <Subscribe to={[GlobalStateContainer]}>
+        <Subscribe to={[GlobalContainer]}>
             {
-                globalState => <Top globalState={globalState} navigation = {navigation} />
+                (globalState:GlobalContainer) => <Top globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
