@@ -3,15 +3,24 @@ import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalContainer from '../containers/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import ProfileReviews from '../components/ProfileReviews';
 import {friendReviewDocResponse} from '../types/types'
 import {friendDataDocResponse} from '../types/types'
 import {friendReviewsType} from '../types/types'
-import {StackProps} from '../types/types'
+import {TopStackNavProps} from '../types/types'
 
-const FriendProfile = (props:StackProps) => {
+type GlobalStateProps = {
+    globalState: {
+        state: {
+			uid: string
+			friendId: string
+        }
+    }
+}
+
+const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & GlobalStateProps> = (props) => {
 	const [friendName, setFriendName] = useState<string>()
 	const [followee, setFollowee] = useState<number>(0)
 	const [follower, setFollower] = useState<number>(0)
@@ -230,11 +239,12 @@ const FriendProfile = (props:StackProps) => {
 	</View>
 	);
 }
-const FriendProfileWrapper = ({ navigation }) => {
+
+const FriendProfileWrapper:React.FC<TopStackNavProps<'friendProfile'>> = ({ navigation }) => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
+		<Subscribe to={[GlobalContainer]}>
 			{
-				globalState => <FriendProfile globalState={globalState} navigation = {navigation} />
+				(globalState:GlobalContainer) => <FriendProfile globalState={globalState} navigation = {navigation} />
 			}
 		</Subscribe>
 	);

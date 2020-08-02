@@ -1,3 +1,4 @@
+import {StackNavigationProp} from '@react-navigation/stack'
 // Profile.tsx
 export type pickerResult = {
     cancelled: boolean
@@ -210,4 +211,7 @@ export type TopStackParamList = {
         headerShown: boolean
         title: string
     }
+}
+export type TopStackNavProps<T extends keyof TopStackParamList> = {
+    navigation: StackNavigationProp<TopStackParamList, T>
 }
