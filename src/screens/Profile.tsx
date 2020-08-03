@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
 import * as ImagePicker from 'expo-image-picker';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import ProfileReviews from '../components/ProfileReviews';
 import {pickerResult} from '../types/types'
@@ -14,9 +14,8 @@ import {userDataDocResponse} from '../types/types'
 import {userReviewsType} from '../types/types'
 //@ts-ignore
 import { ProgressDialog } from 'react-native-simple-dialogs';
-import {StackProps} from '../types/types'
 
-const Profile = (props:StackProps) => {
+const Profile = (props) => {
 	const [_userName, setUserName] = useState<string>()
 	const [_followee, setFollowee] = useState<number>(0)
 	const [_follower, setFollower] = useState<number>(0)

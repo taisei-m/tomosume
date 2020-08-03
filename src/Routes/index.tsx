@@ -4,7 +4,7 @@ import { NavLogin } from './NavLogin';
 import {NavUnlogin} from './NavUnlogin';
 import { NavigationContainer } from '@react-navigation/native';
 import { Subscribe } from 'unstated'
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import SplashScreen from '../screens/Splash'
 import {IndexParamList} from '../types/types'
 

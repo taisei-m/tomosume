@@ -8,7 +8,7 @@ import { Button } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import firebase from '../../firebaseConfig'
 import apiKey from '../api/api_key';
-import GlobalContainer from '../containers/GlobalState';
+import GlobalContainer from '../store/GlobalState';
 import { Subscribe } from 'unstated';
 import {PredictionJsonType} from '../types/types'
 import {predictionsArrayType} from '../types/types'

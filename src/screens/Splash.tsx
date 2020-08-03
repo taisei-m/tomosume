@@ -4,7 +4,7 @@ import { StyleSheet, View, Image } from 'react-native';
 import { Text, } from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import { useEffect } from 'react';
 
 const Splash = (props) => {

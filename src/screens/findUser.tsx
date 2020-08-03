@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import {userProfileDataType} from '../types/types'
 import {candidateUesrsDataListType} from '../types/types'
 import {StackProps} from '../types/types'
@@ -74,7 +74,6 @@ const FindUser = (props:StackProps) => {
         <>
         <SearchBar
             placeholder="ユーザ名を入力してください"
-            placeholderTextColor="black"
             onChangeText={searchUsers}
             value={_searchedUserName}
             placeholderTextColor='grey'

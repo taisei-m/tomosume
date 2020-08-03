@@ -3,7 +3,7 @@ import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList,
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
 import {db} from '../../firebaseConfig'
-import GlobalContainer from '../containers/GlobalState';
+import GlobalContainer from '../store/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import ProfileReviews from '../components/ProfileReviews';
 import {friendReviewDocResponse} from '../types/types'

@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList, Text, ScrollView, RefreshControl } from 're
 import {db} from '../../firebaseConfig'
 import ListItem from '../components/ListItem';
 import { Subscribe } from 'unstated';
-import GlobalContainer from '../containers/GlobalState';
+import GlobalContainer from '../store/GlobalState';
 import {ReviewDocResponse} from '../types/types'
 import {ReviewsDocResponse} from '../types/types'
 import * as Permissions from 'expo-permissions'

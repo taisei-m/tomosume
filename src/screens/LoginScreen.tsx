@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage} from 'reac
 import { Text, Button as ButtonElem} from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig'
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const LoginScreen = (props: any) => {

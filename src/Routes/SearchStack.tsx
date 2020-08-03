@@ -18,7 +18,7 @@ export const SearchStack: React.FC = () => {
     return (
     <SearchNavStack.Navigator>
         <SearchNavStack.Screen
-            name="seaerch"
+            name="search"
             component={search}
             options={{
                 headerShown: false,

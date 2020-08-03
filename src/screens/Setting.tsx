@@ -3,7 +3,7 @@ import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacit
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 //@ts-ignore
 import { ConfirmDialog } from 'react-native-simple-dialogs';
 
