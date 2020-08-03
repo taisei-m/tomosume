@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import { View, StyleSheet,FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
-import GlobalContainer from '../containers/GlobalState';
+import GlobalContainer from '../store/GlobalState';
 import {db} from '../../firebaseConfig'
 import FollowButton from '../components/FollowButton'
 import {followeeProfileType} from '../types/types'
 import {followeeListType} from '../types/types'
 import {TopStackNavProps} from '../types/types'
+
 type GlobalStateProps = {
     globalState: {
         state: {

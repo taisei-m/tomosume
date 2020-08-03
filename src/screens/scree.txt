@@ -1,0 +1,5 @@
+/screens/XXX
+container: index.tsx
+- business logic for component
+presentation: XXX.tsx
+- styling for component

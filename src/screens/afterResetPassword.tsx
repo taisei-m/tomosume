@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity,} from 'react-native';
 import { Text } from 'react-native-elements';
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import {StackProps} from '../types/types'
 
 const ResendEmail = (props:StackProps) => {

@@ -5,7 +5,7 @@ import { Avatar, Card, Icon } from 'react-native-elements'
 import firebase from 'firebase/app'
 import {db} from '../../firebaseConfig'
 import RBSheet from "react-native-raw-bottom-sheet";
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import { Subscribe } from 'unstated';
 import {ReviewDocResponse} from '../types/types'
 import {ShopDocResponse} from '../types/types'

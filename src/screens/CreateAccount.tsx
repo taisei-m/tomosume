@@ -4,7 +4,7 @@ import { StyleSheet, View, TouchableOpacity,Linking } from 'react-native';
 import { Text,  Input, Icon, Button as ButtonElem} from 'react-native-elements'
 import firebase from '../../firebaseConfig'
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import GlobalStateContainer from '../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const CreateAccount = (props: any) => {
