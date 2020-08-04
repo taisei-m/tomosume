@@ -196,7 +196,6 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps
 	);
 }
 
-
 export const ProfileWrapper:React.FC<ProfileStackNavProps<'ProfileTop'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
