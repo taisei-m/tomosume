@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 interface ProfileNumberProps {
     number: number
-    press?: Function
+    press?: () => void
     itemName: string
     centerClass?: object
 }

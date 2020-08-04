@@ -215,3 +215,44 @@ export type TopStackParamList = {
 export type TopStackNavProps<T extends keyof TopStackParamList> = {
     navigation: StackNavigationProp<TopStackParamList, T>
 }
+export type ProfileStackParamList = {
+    ProfileTop: {
+        headerShown: boolean
+        title: string
+    }
+    followerList: {
+        headerShown: boolean
+        title: string
+    }
+    followeeList: {
+        headerShown: boolean
+        title: string
+    }
+    toSettingPage: {
+        headerShown: boolean
+        title: string
+    }
+    findUser: {
+        headerShown: boolean
+        title: string
+    }
+    friendProfile: {
+        headerShown: boolean
+        title: string
+    }
+    friendFolloweeList: {
+        headerShown: boolean
+        title: string
+    }
+    friendFollowerList: {
+        headerShown: boolean
+        title: string
+    }
+    changeUserName: {
+        headerShown: boolean
+        title: string
+    }
+}
+export type ProfileStackNavProps<T extends keyof ProfileStackParamList> ={
+    navigation: StackNavigationProp<ProfileStackParamList, T>
+}

@@ -10,7 +10,7 @@ import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TopStackNavProps} from '../types/types'
 
-type GlobalStateProps = {
+type GlobalContainerProps = {
     globalState: {
         state: {
             uid: string
@@ -19,7 +19,7 @@ type GlobalStateProps = {
     }
 }
 
-const Top:React.FC<TopStackNavProps<'Top'> & GlobalStateProps> = (props) => {
+const Top:React.FC<TopStackNavProps<'Top'> & GlobalContainerProps> = (props) => {
     const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)

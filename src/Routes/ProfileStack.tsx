@@ -9,18 +9,8 @@ import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
 import changeUserName from '../screens/changeUserName'
+import {ProfileStackParamList} from '../types/types'
 
-type ProfileStackParamList = {
-    ProfileTop: undefined
-    followerList: undefined
-    followeeList: undefined
-    toSettingPage: undefined
-    findUser: undefined
-    friendProfile: undefined
-    friendFolloweeList: undefined
-    friendFollowerList: undefined
-    changeUserName: undefined
-}
 const ProfileNavStack = createStackNavigator<ProfileStackParamList>();
 
 export const ProfileStack:React.FC = () => {
