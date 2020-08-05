@@ -3,9 +3,10 @@ import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacit
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
-import GlobalStateContainer from '../store/GlobalState';
+import GlobalContainer from '../../store/GlobalState';
 //@ts-ignore
 import { ConfirmDialog } from 'react-native-simple-dialogs';
+import { ProfileStackNavProps } from 'src/types/types';
 
 const Setting = (props) => {
     const [_dialogVisible, setDialogVisible] = useState<boolean>(false)
@@ -102,9 +103,9 @@ const itemList = [
     );
 }
 
-const SettingWrapper = ({ navigation }) => {
+const SettingWrapper:React.FC<ProfileStackNavProps<'toSettingPage'>> = ({ navigation }) => {
     return (
-        <Subscribe to={[GlobalStateContainer]}>
+        <Subscribe to={[GlobalContainer]}>
             {
                 globalState => <Setting globalState={globalState} navigation = {navigation} />
             }
@@ -113,19 +114,3 @@ const SettingWrapper = ({ navigation }) => {
 }
 
 export default SettingWrapper;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center'
-    },
-    itemName: {
-        fontSize: 25,
-        marginHorizontal: 10,
-        marginVertical: 6
-    },
-    icon: {
-        marginVertical: 6
-    }
-})

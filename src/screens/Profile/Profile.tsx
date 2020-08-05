@@ -162,7 +162,7 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> 
 								name='cog'
 								type='font-awesome'
 								color='black'
-								onPress={() => props.navigation.navigate('toSettingPage')}
+								onPress={() => props.navigation.navigate('setting')}
 							/>
 						</View>
 					</View>
