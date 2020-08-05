@@ -146,6 +146,29 @@ export type ContainerType = {
     resetPasswordEmail: string
 }
 
+export type ContainerProps = {
+    globalState: {
+        state: {
+            isSplash: boolean
+            isSignout: string
+            uid: string
+            itemId: string
+            friendId: string
+            createAccountEmail: string
+            resetPasswordEmail: string
+        }
+        setSplashFalse: () => void
+        setSignout: (result: string) => void
+        login: (uid: string) => void
+        logout: () => void
+        setItemId: (id: string) => void
+        setFriendId: (friendId: string) => void
+        setCreateAccountEmail: (userEmail: string) => void
+        setResetPasswordEmail: (userEmail: string) => void
+        setUid: (uid: string) => void
+    }
+}
+
 export type IndexParamList = {
     NavUnlogin: {
         headerShown: boolean
@@ -216,7 +239,7 @@ export type TopStackNavProps<T extends keyof TopStackParamList> = {
     navigation: StackNavigationProp<TopStackParamList, T>
 }
 export type ProfileStackParamList = {
-    ProfileTop: {
+    ProfileWrapper: {
         headerShown: boolean
         title: string
     }

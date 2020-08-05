@@ -6,7 +6,10 @@ import friendFollowerList from '../screens/friendFolloweeList';
 import friendFolloweeList from '../screens/friendFollowerList'
 
 type SearchStackParamList = {
-    search: undefined
+    search: {
+        headerShown: boolean
+        title: string
+    }
     friendProfile: undefined
     friendFollowerList: undefined
     friendFolloweeList: undefined
