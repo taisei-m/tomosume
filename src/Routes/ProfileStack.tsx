@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {ProfileWrapper} from '../screens/Profile/Profile';
-import followeeList from '../screens/followeeList';
+import {FollowerListWrapper} from '../screens/FolloweeList/FolloweeList';
 import followerList from '../screens/followerList'
 import Setting from '../screens/Setting'
 import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
@@ -34,7 +34,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
             name="followeeList"
-            component={followeeList}
+            component={FollowerListWrapper}
             options={{
                 headerShown: true,
                 title: 'フォローリスト'

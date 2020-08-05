@@ -36,15 +36,8 @@ export type followerProfileType = {
 
 export type followerListType = followerProfileType[]
 
-// followeeList.tsx
-export type followeeProfileType = {
-    userName: string
-    iconURL: string
-    uid: string
-    followExchange: boolean
-}
 
-export type followeeListType = followeeProfileType[]
+export type followeesType = userDescriptionType[]
 
 // followButton.tsx
 export type followButtonProps = {
