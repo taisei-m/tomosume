@@ -4,7 +4,7 @@ import {ProfileWrapper} from '../screens/Profile/Profile';
 import followeeList from '../screens/followeeList';
 import followerList from '../screens/followerList'
 import Setting from '../screens/Setting'
-import findUser from '../screens/findUser'
+import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
 import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
@@ -49,8 +49,8 @@ export const ProfileStack:React.FC = () => {
             }}
         />
         <ProfileNavStack.Screen
-            name="findUser"
-            component={findUser}
+            name="UserSearchWrapper"
+            component={UserSearchWrapper}
             options={{
                 headerShown: true,
                 title: 'ユーザー検索'

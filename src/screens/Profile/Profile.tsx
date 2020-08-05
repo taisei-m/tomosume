@@ -150,7 +150,7 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> 
 						<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
 							<TouchableOpacity
 							style={styles.editButton}
-							onPress={() => props.navigation.navigate('findUser')}
+							onPress={() => props.navigation.navigate('UserSearchWrapper')}
 							>
 							<Text
 								style={styles.editText}>
@@ -192,7 +192,7 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> 
 	);
 }
 
-export const ProfileWrapper:React.FC<ProfileStackNavProps<'ProfileTop'>> = ({ navigation }) => {
+export const ProfileWrapper:React.FC<ProfileStackNavProps<'ProfileWrapper'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
 			{
