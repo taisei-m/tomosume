@@ -5,7 +5,7 @@ import {FolloweeListWrapper} from '../screens/FolloweeList/FolloweeList';
 import {FollowerListWrapper} from '../screens/FollowerList/FollowerList'
 import {SettingWrapper} from '../screens/Setting/Setting'
 import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
-import friendProfile from '../screens/friendProfile'
+import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
 import changeUserName from '../screens/changeUserName'
@@ -58,7 +58,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
             name="friendProfile"
-            component={friendProfile}
+            component={FriendProfileWrapper}
             options={{
                 headerShown: true,
                 title: 'プロフィール',

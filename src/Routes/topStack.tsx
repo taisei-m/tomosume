@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Top from '../screens/Top';
-import friendProfile from '../screens/friendProfile';
+import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile';
 import friendFolloweeList from '../screens/friendFolloweeList';
 import friendFollowerList from '../screens/friendFollowerList'
 import {TopStackParamList} from '../types/types'
@@ -21,7 +21,7 @@ export const TopStack: React.FC = () => {
         />
         <TopNavStack.Screen
             name="friendProfile"
-            component={friendProfile}
+            component={FriendProfileWrapper}
             options={{
                 headerShown: true,
                 title: 'プロフィール'

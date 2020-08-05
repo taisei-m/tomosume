@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import search from '../screens/Search'
-import friendProfile from '../screens/friendProfile'
+import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile'
 import friendFollowerList from '../screens/friendFolloweeList';
 import friendFolloweeList from '../screens/friendFollowerList'
 
@@ -30,7 +30,7 @@ export const SearchStack: React.FC = () => {
         />
         <SearchNavStack.Screen
             name="friendProfile"
-            component={friendProfile}
+            component={FriendProfileWrapper}
             options={{
                 headerShown: true,
                 title: 'プロフィール'
