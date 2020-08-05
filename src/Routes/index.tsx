@@ -9,6 +9,7 @@ import SplashScreen from '../screens/Splash'
 import {IndexParamList} from '../types/types'
 
 const Stack = createStackNavigator<IndexParamList>();
+
 type IndexProps = {
   globalState: {
     state: {

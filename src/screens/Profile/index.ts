@@ -4,10 +4,10 @@ import * as ImagePicker from 'expo-image-picker';
 import { userDataDocResponse, userReviewDocResponse, userReviewsType, pickerResult } from '../../types/types';
 
 // ユーザが投稿したレビューの一覧と投稿数を取得
-export const fetchAllUserReviews = (uid: string): userReviewsType => {
+export const fetchAllUserReviews = async(uid: string):Promise<userReviewsType> => {
     const userFirestoreDocument = db.collection('userList').doc(uid)
     let userReviews: userReviewsType = []
-    db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
+    await db.collectionGroup('reviews').where('user', '==', userFirestoreDocument).orderBy('createdAt', 'desc').get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
             let userReview = doc.data() as userReviewDocResponse
@@ -25,17 +25,17 @@ export const fetchUserIconImage = async(uid: string):Promise<userDataDocResponse
     })
 }
 
-export const fetchFollowers = (uid: string): number => {
+export const fetchFollowers = async(uid: string): Promise<number> => {
     let followers: string[] = []
     let followerNumber = 0
-    db.collection('userList').doc(uid).collection('follower').get().then(querySnapshot => {
+    //ここでawaitをしないとreturnにで返される値はforEachが実行される前のものとなるので0となる.
+    await db.collection('userList').doc(uid).collection('follower').get().then(querySnapshot => {
         // followeeArrayの配列をこのタイミングでゼロにしないとフォロー数が変動するたびに累積されて出力される
         followers = []
         querySnapshot.forEach(doc => {
             followers.push(doc.id)
         })
     followerNumber = followers.length - 1
-        // setFollower(followerNumber)
     })
     return followerNumber
 }

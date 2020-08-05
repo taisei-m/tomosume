@@ -4,23 +4,15 @@ import { Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, ScrollView
 import { Icon } from 'react-native-elements'
 import ProfileNumber from '../../components/ProfileNumber';
 import ProfileReviews from '../../components/ProfileReviews';
-import { fetchAllUserReviews, fetchUserIconImage, fetchFollowers, setIconUrlOnFirestore, changeIconUrl } from '../../screens/Profile/index'
+import { fetchAllUserReviews, fetchUserIconImage, fetchFollowers, setIconUrlOnFirestore, changeIconUrl } from './index'
 import GlobalContainer from '../../store/GlobalState';
-import { ProfileStackNavProps, userDataDocResponse, userReviewsType } from '../../types/types';
+import { ProfileStackNavProps, userDataDocResponse, userReviewsType, ContainerProps } from '../../types/types';
 import { Subscribe } from 'unstated';
 import { styles } from './style'
 //@ts-ignore
 import { ProgressDialog } from 'react-native-simple-dialogs';
 
-type GlobalContainerProps = {
-    globalState: {
-        state: {
-            uid: string
-        }
-    }
-}
-
-const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps> = (props) => {
+const Profile:React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> = (props) => {
     const [_userName, setUserName] = useState<string>()
 	const [_followee, setFollowee] = useState<number>(0)
 	const [_follower, setFollower] = useState<number>(0)
@@ -32,9 +24,11 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps
     const [refresh, setRefresh] = useState<boolean>(false)
 
     useEffect(() => {
-        const allUserReviews = fetchAllUserReviews(props.globalState.state.uid)
-        setAllReviews(allUserReviews)
-        setPostNumber(allUserReviews.length)
+		(async() => {
+			const allUserReviews = await fetchAllUserReviews(props.globalState.state.uid)
+			setAllReviews(allUserReviews)
+			setPostNumber(allUserReviews.length)
+		})()
 		}, [refresh])
 	// ユーザーのアイコン画像を取得
 	useEffect(() => {
@@ -56,8 +50,10 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps
 	},[])
 	// ユーザのfollowerを取得
 	useEffect(() => {
-        const followerNumber = fetchFollowers(props.globalState.state.uid)
-        setFollower(followerNumber)
+		(async() => {
+			const followerNumber = await fetchFollowers(props.globalState.state.uid)
+			setFollower(followerNumber)
+		})()
 	},[refresh])
 	// ユーザのfolloweeを取得
 	useEffect(() => {
@@ -96,7 +92,7 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps
 		} catch(error) {
 			console.log(error)
 		}
-    }
+	}
     return (
 		<View style={styles.container}>
 			<ScrollView
@@ -195,7 +191,6 @@ const Profile:React.FC<ProfileStackNavProps<'ProfileTop'> & GlobalContainerProps
 		</View>
 	);
 }
-
 
 export const ProfileWrapper:React.FC<ProfileStackNavProps<'ProfileTop'>> = ({ navigation }) => {
 	return (

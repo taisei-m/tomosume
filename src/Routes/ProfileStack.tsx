@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Profile from '../screens/Profile';
+import {ProfileWrapper} from '../screens/Profile/Profile';
 import followeeList from '../screens/followeeList';
 import followerList from '../screens/followerList'
 import Setting from '../screens/Setting'
@@ -17,8 +17,8 @@ export const ProfileStack:React.FC = () => {
     return (
     <ProfileNavStack.Navigator>
         <ProfileNavStack.Screen
-            name="ProfileTop"
-            component={Profile}
+            name="ProfileWrapper"
+            component={ProfileWrapper}
             options={{
                 headerShown: false,
                 title: 'プロフィール',
