@@ -27,7 +27,7 @@ export const showFrinedCandidates = async(inputedName: string): Promise<candidat
         })
     })
     candidateFriendsDescriptions = await Promise.all(candidateFriendIds.map(async(uid) => {
-        let userDescription!: userDescriptionType
+        let userDescription = {}
         await db.collection('userList').doc(uid).get()
         .then(doc => {
             userDescription = doc.data() as userDescriptionType

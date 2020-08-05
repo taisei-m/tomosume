@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, AsyncStorage, FlatList, SafeAreaView, TouchableOpacity, Text, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, SafeAreaView, TouchableOpacity, Text, Linking } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { Subscribe } from 'unstated';
-import firebase from '../../firebaseConfig';
 import GlobalContainer from '../../store/GlobalState';
+import { styles } from './style'
 //@ts-ignore
 import { ConfirmDialog } from 'react-native-simple-dialogs';
-import { ProfileStackNavProps } from 'src/types/types';
+import { ContainerProps, ProfileStackNavProps, ItemProps } from 'src/types/types';
+import { logout } from './index'
 
-const Setting = (props) => {
+const Setting:React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (props) => {
     const [_dialogVisible, setDialogVisible] = useState<boolean>(false)
 
-const Item = (props) => {
+const Item = (props:ItemProps) => {
     return (
         <View>
-            <TouchableOpacity style={{flexDirection: 'row'}} onPress={props.itemMethod}>
+            <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.itemMethod()}>
                 <Icon containerStyle={styles.icon} name={props.iconName} type='font-awesome'/>
                 <Text style={styles.itemName}>{props.title}</Text>
             </TouchableOpacity>
@@ -22,29 +23,13 @@ const Item = (props) => {
     )
 }
 
-const logout = () => {
-    firebase.auth().signOut().then(function() {
-        AsyncStorage.setItem('Authenticated', 'false', () => {
-        props.globalState.logout();
-    });
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
-}
-const openDialog = () => {
-    setDialogVisible(true)
-}
-const closeDialob = () => {
-    setDialogVisible(false)
-}
 const changeUserName = () => {
-    console.log('change')
     props.navigation.navigate('changeUserName')
 }
 const showAppTerm = () => {
-        (() => Linking.openURL('https://tomosume.flycricket.io/privacy.html'))();
+    (() => Linking.openURL('https://tomosume.flycricket.io/privacy.html'))();
 }
+
 const itemList = [
     {
         id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -62,7 +47,7 @@ const itemList = [
         id: '58694a0f-3da1-471f-bd96-145571e29d72',
         title: 'ログアウト',
         icon: 'sign-out',
-        method: openDialog
+        method: () => setDialogVisible(true)
     },
 ]
     return (
@@ -71,14 +56,14 @@ const itemList = [
             <ConfirmDialog
                 visible={_dialogVisible}
                 title="確認画面"
-                onTouchOutside={closeDialob}
+                onTouchOutside={() => setDialogVisible(false)}
                 positiveButton={{
                     title: "はい",
-                    onPress: () => logout()
+                    onPress: () => logout(props)
                 }}
                 negativeButton={{
                     title: "いいえ",
-                    onPress: () => closeDialob()
+                    onPress: () => setDialogVisible(false)
                 }}
                 >
             <View>
@@ -103,14 +88,13 @@ const itemList = [
     );
 }
 
-const SettingWrapper:React.FC<ProfileStackNavProps<'toSettingPage'>> = ({ navigation }) => {
+export const SettingWrapper:React.FC<ProfileStackNavProps<'setting'>> = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalContainer]}>
             {
-                globalState => <Setting globalState={globalState} navigation = {navigation} />
+                (globalState:GlobalContainer) => <Setting globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
 }
 
-export default SettingWrapper;

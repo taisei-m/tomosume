@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {ProfileWrapper} from '../screens/Profile/Profile';
 import {FolloweeListWrapper} from '../screens/FolloweeList/FolloweeList';
 import {FollowerListWrapper} from '../screens/FollowerList/FollowerList'
-import Setting from '../screens/Setting'
+import {SettingWrapper} from '../screens/Setting/Setting'
 import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
 import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
@@ -41,8 +41,8 @@ export const ProfileStack:React.FC = () => {
             }}
         />
         <ProfileNavStack.Screen
-            name="toSettingPage"
-            component={Setting}
+            name="setting"
+            component={SettingWrapper}
             options={{
                 headerShown: true,
                 title: '設定'

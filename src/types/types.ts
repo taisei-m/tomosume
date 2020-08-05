@@ -236,7 +236,7 @@ export type ProfileStackParamList = {
         headerShown: boolean
         title: string
     }
-    toSettingPage: {
+    setting: {
         headerShown: boolean
         title: string
     }
@@ -263,4 +263,10 @@ export type ProfileStackParamList = {
 }
 export type ProfileStackNavProps<T extends keyof ProfileStackParamList> ={
     navigation: StackNavigationProp<ProfileStackParamList, T>
+}
+
+export type ItemProps = {
+    title: string
+    iconName: string
+    itemMethod: Function
 }
