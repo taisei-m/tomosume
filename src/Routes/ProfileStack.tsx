@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {ProfileWrapper} from '../screens/Profile/Profile';
-import followeeList from '../screens/followeeList';
-import followerList from '../screens/followerList'
+import {FolloweeListWrapper} from '../screens/FolloweeList/FolloweeList';
+import {FollowerListWrapper} from '../screens/FollowerList/FollowerList'
 import Setting from '../screens/Setting'
-import findUser from '../screens/findUser'
+import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
 import friendProfile from '../screens/friendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
 import friendFolloweeList from '../screens/friendFolloweeList'
@@ -26,7 +26,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
             name="followerList"
-            component={followerList}
+            component={FollowerListWrapper}
             options={{
                 headerShown: true,
                 title: 'フォロワーリスト'
@@ -34,7 +34,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
             name="followeeList"
-            component={followeeList}
+            component={FolloweeListWrapper}
             options={{
                 headerShown: true,
                 title: 'フォローリスト'
@@ -49,8 +49,8 @@ export const ProfileStack:React.FC = () => {
             }}
         />
         <ProfileNavStack.Screen
-            name="findUser"
-            component={findUser}
+            name="UserSearchWrapper"
+            component={UserSearchWrapper}
             options={{
                 headerShown: true,
                 title: 'ユーザー検索'

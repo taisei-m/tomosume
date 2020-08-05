@@ -26,30 +26,15 @@ export type userDataDocResponse = {
 
 export type userReviewsType = userReviewDocResponse[]
 
-// followerList.tsx
-export type followerProfileType = {
-    userName: string
-    iconURL: string
-    uid: string
-    followExchange: boolean
-}
+export type followersType = userDescriptionType[]
 
-export type followerListType = followerProfileType[]
 
-// followeeList.tsx
-export type followeeProfileType = {
-    userName: string
-    iconURL: string
-    uid: string
-    followExchange: boolean
-}
-
-export type followeeListType = followeeProfileType[]
+export type followeesType = userDescriptionType[]
 
 // followButton.tsx
 export type followButtonProps = {
     id: string
-    isFollowExchange: boolean
+    isFollowExchange: boolean | undefined
     userId: string
 }
 
@@ -89,14 +74,14 @@ export type ReviewDocResponse = {
 export type ReviewsDocResponse = ReviewDocResponse[]
 
 // findUser.tsx changeUserName
-export type userProfileDataType = {
+export type userDescriptionType = {
     userName: string
     uid: string
     iconURL: string
     followExchange?: boolean
 }
 
-export type candidateUesrsDataListType = userProfileDataType[]
+export type candidateUserDescriptionsType = userDescriptionType[]
 
 // friendProfile.tsx
 export type friendReviewDocResponse = {
@@ -255,7 +240,7 @@ export type ProfileStackParamList = {
         headerShown: boolean
         title: string
     }
-    findUser: {
+    UserSearchWrapper: {
         headerShown: boolean
         title: string
     }

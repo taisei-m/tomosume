@@ -1,75 +1,35 @@
 import React, {useState, useEffect } from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
-import { SearchBar, Avatar } from 'react-native-elements';
-import { Icon } from 'react-native-elements'
+import {View, Text, FlatList, TouchableOpacity} from 'react-native'
+import { SearchBar, Avatar, Icon } from 'react-native-elements';
 import { useDebounce } from "use-debounce";
-import {db} from '../../firebaseConfig'
-import FollowButton from '../components/FollowButton'
+import FollowButton from '../../components/FollowButton'
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../store/GlobalState';
-import {userProfileDataType} from '../types/types'
-import {candidateUesrsDataListType} from '../types/types'
+import GlobalContainer from '../../store/GlobalState';
+import {candidateUserDescriptionsType, ProfileStackNavProps, ContainerProps } from '../../types/types'
 import {styles} from './style'
-import {toUserDetailPage} from './index'
+import { checkFollowExchange, showFrinedCandidates } from './index'
 
-const FindUser = (props) => {
+const UserSearch:React.FC<ProfileStackNavProps<'UserSearchWrapper'> & ContainerProps> = (props) => {
     const [_searchedUserName, setSearchedUserName] = useState<string>('')
     // _searchUserNameの値が確定してから1秒後にvalueに_searchedUserNameを代入する
     const [value] = useDebounce(_searchedUserName, 800);
-    const [_candidateUsersList, setCandidateUsersList] = useState<candidateUesrsDataListType>()
+    const [_candidateUsersList, setCandidateUsersList] = useState<candidateUserDescriptionsType>()
 
-    //async-awaitに書き換える
     useEffect(() => {
-        let candidateUsersIdList:string[] = []
-        let candidateUesrsDataList: candidateUesrsDataListType = []
-        db.collection('userList').where('userName', '==', value).get()
-        .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    candidateUsersIdList.push(doc.id)
-                })
-        })
-        .then(async() => {
-            candidateUesrsDataList = await Promise.all(candidateUsersIdList.map(async(userId) => {
-                let userProfileData
-                await db.collection('userList').doc(userId).get()
-                .then((doc) => {
-                    userProfileData = doc.data() as userProfileDataType
-                })
-                return userProfileData
-            }))
-        })
-        .then(async() => {
-            candidateUesrsDataList = await checkFollowExchange(candidateUesrsDataList)
-        })
-        .then(() => {
-            setCandidateUsersList(candidateUesrsDataList)
-        })
+        (async() => {
+            const candidateUserDescriptions = await showFrinedCandidates(value)
+            const candidates = await checkFollowExchange(props.globalState.state.uid, candidateUserDescriptions)
+            setCandidateUsersList(candidates)
+        })()
     },[value])
-    // 検索結果のユーザをフォローしているかどうかの確認をする処理
-    const checkFollowExchange = async(candidateUesrsDataList: candidateUesrsDataListType): Promise<candidateUesrsDataListType> => {
-        const userId = props.globalState.state.uid
-        const followeeUserIdList: string[] = []
-        const followeeList = await db.collection('userList').doc(userId).collection('followee').get()
-        followeeList.forEach((data) => {
-            followeeUserIdList.push(data.id)
-        })
-        //　自分のフォローリストと検索結果のユーザリストを比べる。　検索結果のユーザリストのユーザを一人一人取り出し、そのユーザが自分のフォローリストに含まれるかを検証する
-        candidateUesrsDataList.forEach((doc) => {
-            let candidateUserId = doc.uid
-            let isFollowExchange = followeeUserIdList.includes(candidateUserId)
-        // フォローしている場合true, フォローしていない場合falseを代入
-            isFollowExchange ? doc.followExchange = true : doc.followExchange = false
-        })
-        return candidateUesrsDataList
-    }
 
     const searchUsers = (userName: string) => {
         setSearchedUserName(userName)
     }
-    // const toUserDetailPage = (id) => {
-    //     props.globalState.setFriendId(id)
-    //     props.navigation.navigate('friendProfile')
-    // }
+    const toUserDetailPage = (uid: string) => {
+        props.globalState.setFriendId(uid)
+        props.navigation.navigate('friendProfile')
+    }
     return (
         <>
         <SearchBar
@@ -95,7 +55,7 @@ const FindUser = (props) => {
                 renderItem={({item}) =>
                     <View style={styles.cell}>
                         <TouchableOpacity
-                            onPress={() => {toUserDetailPage(item.uid, props)}}
+                            onPress={() => {toUserDetailPage(item.uid)}}
                         >
                         <Avatar
                             rounded
@@ -103,7 +63,7 @@ const FindUser = (props) => {
                             source={{ uri: item.iconURL }}/>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => {toUserDetailPage(item.uid, props)}}
+                            onPress={() => {toUserDetailPage(item.uid)}}
                         >
                         <View style={{marginRight: '45%'}}>
                             <Text style={styles.text} numberOfLines={1}　ellipsizeMode="tail">{item.userName}</Text>
@@ -122,14 +82,13 @@ const FindUser = (props) => {
     );
 }
 
-const FindUserWrapper = ({ navigation }) => {
+export const UserSearchWrapper:React.FC<ProfileStackNavProps<'UserSearchWrapper'>> = ({ navigation }) => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
+		<Subscribe to={[GlobalContainer]}>
 			{
-				globalState => <FindUser globalState={globalState} navigation = {navigation} />
+				(globalState:GlobalContainer) => <UserSearch globalState={globalState} navigation = {navigation} />
 			}
 		</Subscribe>
 	);
 	}
 
-export default FindUserWrapper
