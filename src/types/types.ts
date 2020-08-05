@@ -26,15 +26,7 @@ export type userDataDocResponse = {
 
 export type userReviewsType = userReviewDocResponse[]
 
-// followerList.tsx
-export type followerProfileType = {
-    userName: string
-    iconURL: string
-    uid: string
-    followExchange: boolean
-}
-
-export type followerListType = followerProfileType[]
+export type followersType = userDescriptionType[]
 
 
 export type followeesType = userDescriptionType[]

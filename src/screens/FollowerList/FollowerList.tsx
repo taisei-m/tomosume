@@ -2,39 +2,41 @@ import React, {useState, useEffect} from 'react';
 import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements'
 import { Subscribe } from 'unstated';
-import FollowButton from '../../components/FollowButton'
-import { ContainerProps, followeesType, ProfileStackNavProps } from '../../types/types'
-import { fetchFollowees, getFolloweeDescriptions } from './index'
-import { styles } from './style'
 import GlobalContainer from '../../store/GlobalState';
+import FollowButton from '../../components/FollowButton'
+import { styles } from './style'
+import { fetchFollowers, getFollowerDescriptions } from './index'
+import { ContainerProps, followersType, ProfileStackNavProps } from '../../types/types'
+import { checkFollowExchange } from './index';
 
-const FolloweeList:React.FC<ProfileStackNavProps<'followeeList'> & ContainerProps> = (props) => {
-    const [_followeeList, setFolloweeList] = useState<followeesType>();
+const FollowerList:React.FC<ProfileStackNavProps<'followerList'> & ContainerProps> = (props) => {
+    const [_followerList, setFollowerList] = useState<followersType>();
 
     useEffect(() => {
         (async () => {
-            const followeeIds = await fetchFollowees(props.globalState.state.uid)
+            const followerIds = await fetchFollowers(props.globalState.state.uid)
             // フォローしているユーザのデータをオブジェクトの配列として返す
-            const followeeDescriptions = await getFolloweeDescriptions(followeeIds)
-            setFolloweeList(followeeDescriptions)
+            const followerDescriptions = await getFollowerDescriptions(followerIds)
+            const checkedFollowers = await checkFollowExchange(followerDescriptions, props.globalState.state.uid)
+            setFollowerList(checkedFollowers)
         })();
     }, [])
-    const toProfileDetailPage = (id: string):void => {
+    const toProfileDetailPage = (id: string) => {
         props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
     }
     return(
         <FlatList
             style={styles.container}
-            data={_followeeList}
+            data={_followerList}
             keyExtractor={item => item.uid}
             renderItem={({item}) =>
                 <View style={styles.cell}>
                     <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
-                        <Avatar
-                            rounded
-                            containerStyle={{marginLeft: 20, marginTop: 9}}
-                            source={{ uri: item.iconURL }}/>
+                    <Avatar
+                        rounded
+                        containerStyle={{marginLeft: 20, marginTop: 9}}
+                        source={{ uri: item.iconURL }}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {toProfileDetailPage(item.uid)}}>
                         <View style={{marginRight: '45%'}}>
@@ -43,8 +45,7 @@ const FolloweeList:React.FC<ProfileStackNavProps<'followeeList'> & ContainerProp
                     </TouchableOpacity>
                     <FollowButton
                         id={item.uid}
-                        //自分がフォローしているので必ずtrueとして渡す
-                        isFollowExchange={true}
+                        isFollowExchange={item.followExchange}
                         userId = {props.globalState.state.uid}
                     />
                 </View>
@@ -53,11 +54,11 @@ const FolloweeList:React.FC<ProfileStackNavProps<'followeeList'> & ContainerProp
     )
 }
 
-export const FolloweeListWrapper:React.FC<ProfileStackNavProps<'followeeList'>> = ({ navigation }) => {
+export const FollowerListWrapper:React.FC<ProfileStackNavProps<'followerList'>> = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalContainer]}>
             {
-                (globalState: GlobalContainer) => <FolloweeList globalState={globalState} navigation = {navigation} />
+                (globalState: GlobalContainer) => <FollowerList globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );

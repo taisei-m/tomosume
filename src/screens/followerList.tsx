@@ -38,7 +38,7 @@ const FollowerList = (props) => {
         })();
     }, [])
     //相互フォローをしているかのチェックをする
-    const checkFollowExchange = async(followerList: followerListType): Promise<followerListType> => {
+    const checkFollowExchange = async(followerList: followersType): Promise<followerListType> => {
         const userId = props.globalState.state.uid
         const followeeUserList: string[] = []
         const followeeList = await db.collection('userList').doc(userId).collection('followee').get()
