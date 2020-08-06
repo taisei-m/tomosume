@@ -3,8 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import search from '../screens/Search'
 import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile'
 import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList';
-import friendFolloweeList from '../screens/friendFollowerList'
-
+import {FriendFollowerListWrapper} from '../screens/FriendFollowerList/FriendFollowerList'
 type SearchStackParamList = {
     search: {
         headerShown: boolean
@@ -38,7 +37,7 @@ export const SearchStack: React.FC = () => {
         />
         <SearchNavStack.Screen
             name="friendFollowerList"
-            component={FriendFolloweeListWrapper}
+            component={FriendFollowerListWrapper}
             options={{
                 headerShown: true,
                 title: 'フォローリスト',

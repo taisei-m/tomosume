@@ -6,7 +6,7 @@ import {FollowerListWrapper} from '../screens/FollowerList/FollowerList'
 import {SettingWrapper} from '../screens/Setting/Setting'
 import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
 import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile'
-import friendFollowerList from '../screens/friendFollowerList';
+import {FriendFollowerListWrapper} from '../screens/FriendFollowerList/FriendFollowerList';
 import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList'
 import {NameEditorWrapper} from '../screens/NameEditor/NameEditor'
 import {ProfileStackParamList} from '../types/types'
@@ -74,7 +74,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
         name="friendFollowerList"
-        component={friendFollowerList}
+        component={FriendFollowerListWrapper}
         options={{
             headerShown: true,
             title: 'フォロワーリスト',

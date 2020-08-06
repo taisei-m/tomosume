@@ -4,20 +4,23 @@ import { Avatar,  } from 'react-native-elements'
 import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import FollowButton from '../../components/FollowButton'
-import { TopStackNavProps, ContainerProps, UserDescriptionsType } from 'src/types/types'
+import {TopStackNavProps, UserDescriptionsType} from '../../types/types'
 import { styles } from './style'
-import { fetchFolloweeIds, fetchFriendFolloweeDescriptions, checkFollowExchange } from './index'
+import { ContainerProps } from 'src/types/types';
+import { fetchFollowerIds, fetchFriendFollowerDescriptions, checkFollowExchange } from './index'
 
-const FriendFolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & ContainerProps> = (props) => {
-    const [_followeeList, setFolloweeList] = useState<UserDescriptionsType>();
+const FriendFollowerList:React.FC<TopStackNavProps<'friendFollowerList'> & ContainerProps> = (props) => {
+    const [_followerList, setFollowerList] = useState<UserDescriptionsType>();
+
     useEffect(() => {
         (async () => {
-            const followeeIds = await fetchFolloweeIds(props.globalState.state.friendId)
-            const friendFolloweeDescriptions = await fetchFriendFolloweeDescriptions(followeeIds)
-            const checkedFriendFolloweeDescriptions =  await checkFollowExchange(props.globalState.state.uid, friendFolloweeDescriptions)
-            setFolloweeList(checkedFriendFolloweeDescriptions)
+            const followerIds = await fetchFollowerIds(props.globalState.state.friendId)
+            const friendFollowerDescriptions = await fetchFriendFollowerDescriptions(followerIds)
+            const checkedFriendFollowerDescriptions =  await checkFollowExchange(props.globalState.state.uid, friendFollowerDescriptions)
+            setFollowerList(checkedFriendFollowerDescriptions)
         })();
     }, [])
+
     const toProfileDetailPage = (id: string) => {
         props.globalState.setFriendId(id)
         props.navigation.navigate('friendProfile')
@@ -25,7 +28,7 @@ const FriendFolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & Conta
     return(
         <FlatList
             style={styles.container}
-            data={_followeeList}
+            data={_followerList}
             keyExtractor={item => item.uid}
             renderItem={({item}) =>
                 <View style={styles.cell}>
@@ -52,13 +55,15 @@ const FriendFolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & Conta
     )
 }
 
-export const FriendFolloweeListWrapper:React.FC<TopStackNavProps<'friendFolloweeList'>> = ({ navigation }) => {
+export const FriendFollowerListWrapper:React.FC<TopStackNavProps<'friendFollowerList'>> = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalContainer]}>
             {
-                (globalState:GlobalContainer) => <FriendFolloweeList globalState={globalState} navigation = {navigation} />
+                (globalState:GlobalContainer) => <FriendFollowerList globalState={globalState} navigation = {navigation} />
             }
         </Subscribe>
     );
 }
+
+
 

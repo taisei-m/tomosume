@@ -142,7 +142,7 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 					number={follower}
 					itemName="フォロワー"
 					centerClass={{width: 60, height: 50, marginHorizontal: 30}}
-					press={() => props.navigation.navigate('friendFolloweeList')}
+					press={() => props.navigation.navigate('friendFollowerList')}
 				/>
 				<ProfileNumber
 					number={followee}
