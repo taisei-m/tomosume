@@ -1,6 +1,6 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import Post from '../screens/Post';
+import {PostScreenWrapper} from '../screens/PostScreen/PostScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {ProfileStack} from './ProfileStack';
 import {TopStack} from './topStack'
@@ -37,7 +37,7 @@ export const NavLogin:React.FC = () => {
     >
       <ButtonTab.Screen name="Top" component={TopStack} options={{title: 'トップ'}}/>
       <ButtonTab.Screen name="Search" component={SearchStack} options={{title: '検索'}}/>
-      <ButtonTab.Screen name="Post" component={Post} options={{title: '投稿'}}/>
+      <ButtonTab.Screen name="Post" component={PostScreenWrapper} options={{title: '投稿'}}/>
       <ButtonTab.Screen name="Profile" component={ProfileStack} options={{title: 'プロフィール'}}/>
     </ButtonTab.Navigator>
   );
