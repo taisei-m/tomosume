@@ -271,3 +271,26 @@ export type ItemProps = {
     iconName: string
     itemMethod: Function
 }
+
+export type SearchStackParamList = {
+    search: {
+        headerShown: boolean
+        title: string
+    }
+    friendProfile: {
+        headerShown: boolean
+        title: string
+    }
+    friendFollowerList: {
+        headerShown: boolean
+        title: string
+    }
+    friendFolloweeList: {
+        headerShown: boolean
+        title: string
+    }
+}
+
+export type SearchStackNavProps<T extends keyof SearchStackParamList> ={
+    navigation: StackNavigationProp<SearchStackParamList, T>
+}
