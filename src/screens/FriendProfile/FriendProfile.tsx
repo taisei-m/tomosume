@@ -10,8 +10,6 @@ import { ContainerProps, TopStackNavProps, friendReviewsType } from 'src/types/t
 import { fetchFolloweeIds, fetchFriendDescription, fetchReviews, pressFollowButton } from './index'
 
 const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps> = (props) => {
-    const uid: string = (props.globalState.state.uid)
-    const friendId: string = (props.globalState.state.friendId)
 	const [friendName, setFriendName] = useState<string>()
 	const [followee, setFollowee] = useState<number>(0)
 	const [follower, setFollower] = useState<number>(0)
@@ -26,10 +24,10 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
 		checkCanPressFollowButton()
-	},[friendId])
+	},[props.globalState.state.friendId])
 
 	const checkCanPressFollowButton = () => {
-		if(uid == friendId) {
+		if(props.globalState.state.uid == props.globalState.state.friendId) {
 			setCanPressFollowButton(true)
 		} else {
 			setCanPressFollowButton(false)
@@ -37,11 +35,11 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 	}
 	useEffect(() => {
 		checkFollowExchange()
-	},[friendId])
+	},[props.globalState.state.friendId])
 	// ユーザをフォローしているかを確認する処理
 	const checkFollowExchange = async() => {
-        const followeeIds = await fetchFolloweeIds(uid)
-		if (followeeIds.includes(friendId)) {
+        const followeeIds = await fetchFolloweeIds(props.globalState.state.uid)
+		if (followeeIds.includes(props.globalState.state.friendId)) {
 			setIsFollow(true)
 		} else {
 			setIsFollow(false)
@@ -50,26 +48,26 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 	// 投稿されたレビューを取得する
 	useEffect(() => {
         (async() => {
-            const reviews = await fetchReviews(friendId)
+            const reviews = await fetchReviews(props.globalState.state.friendId)
             setPostNumber(reviews.length)
             setAllReviews(reviews)
             setRefreshing(false)
         })()
-	}, [isRefreshed, friendId])
+	}, [isRefreshed, props.globalState.state.friendId])
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
         (async() => {
-            const friendDescription = await fetchFriendDescription(friendId)
+            const friendDescription = await fetchFriendDescription(props.globalState.state.friendId)
             setFriendName(friendDescription.userName)
             setFriendIconUrl(friendDescription.iconURL)
-        })
-    },[friendId])
+        })()
+    },[props.globalState.state.friendId])
 
 	// フォロワーの数を取得する
 	useEffect(() => {
-		const friendId = props.globalState.state.friendId
+
 		let followers:string[] = []
-		const unsubscribe = db.collection('userList').doc(friendId).collection('follower')
+		const unsubscribe = db.collection('userList').doc(props.globalState.state.friendId).collection('follower')
 		.onSnapshot(function(querySnapshot) {
 			followers = []
 			querySnapshot.forEach(function(doc) {
@@ -81,11 +79,11 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 	return () => {
 		unsubscribe();
 	};
-	},[friendId])
+	},[props.globalState.state.friendId])
 	//フォローの数を取得する
 	useEffect(() => {
 		let followees:string[] = []
-		const unsubscribe = db.collection('userList').doc(friendId).collection('followee')
+		const unsubscribe = db.collection('userList').doc(props.globalState.state.friendId).collection('followee')
 		.onSnapshot(function(querySnapshot:any) {
 			followees = []
 			querySnapshot.forEach(function(doc:any) {
@@ -97,11 +95,11 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 	return () => {
 		unsubscribe();
 	};
-    },[friendId])
+    },[props.globalState.state.friendId])
 
 	//　フォロー状態を解除する
-	const handlePress = (uid: string, friendId:string, isFollow:boolean) => {
-        setIsFollow(pressFollowButton(uid, friendId, isFollow))
+	const handlePress = () => {
+        setIsFollow(pressFollowButton(props.globalState.state.uid, props.globalState.state.friendId, isFollow))
     }
 
 	const handleRefresh = () => {
@@ -144,12 +142,12 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 					number={follower}
 					itemName="フォロワー"
 					centerClass={{width: 60, height: 50, marginHorizontal: 30}}
-					press={() => props.navigation.navigate('friendFolloweeList')}
+					press={() => props.navigation.navigate('friendFollowerList')}
 				/>
 				<ProfileNumber
 					number={followee}
 					itemName="フォロー"
-					press={() => props.navigation.navigate('friendFollowerList')}
+					press={() => props.navigation.navigate('friendFolloweeList')}
 				/>
 				</View>
 				<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
@@ -160,7 +158,7 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 						? styles.followButton
 						: styles.unFollowButton
 							}
-							onPress={()=> {handlePress(uid, friendId, isFollow)}}
+							onPress={()=> {handlePress()}}
 				>
 				{
 				isFollow

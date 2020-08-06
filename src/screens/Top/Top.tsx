@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
-import {db} from '../../firebaseConfig'
-import ListItem from '../components/ListItem';
+import { View, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
+import ListItem from '../../components/ListItem';
 import { Subscribe } from 'unstated';
-import GlobalContainer from '../store/GlobalState';
-import {ReviewDocResponse} from '../types/types'
-import {ReviewsDocResponse} from '../types/types'
+import GlobalContainer from '../../store/GlobalState';
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {TopStackNavProps} from '../types/types'
+import { ContainerProps, TopStackNavProps } from 'src/types/types';
+import { styles } from './style'
+import {db} from '../../../firebaseConfig'
+import { fetchFolloweeIds, convertToReference, fetchReviews } from './index'
 
-type GlobalContainerProps = {
-    globalState: {
-        state: {
-            uid: string
-        }
-    setFriendId: (friendId: string) => void
-    }
-}
-
-const Top:React.FC<TopStackNavProps<'Top'> & GlobalContainerProps> = (props) => {
-    const [allReviews, setAllReviews] = useState<ReviewsDocResponse>([])
+const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
+    const [allReviews, setAllReviews] = useState<any>([])
     const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [isReview , setIsReview] = useState<boolean>(true)
@@ -34,53 +25,23 @@ const Top:React.FC<TopStackNavProps<'Top'> & GlobalContainerProps> = (props) => 
     })
     useEffect(() => {
         (async () => {
-            const uidArray = await getFollowingUid()
+            const followeeIds = await fetchFolloweeIds(userId)
             // 自分の投稿も表示されるように自分のuidを追加する
-            uidArray.push(userId)
-            const convertedUidArray = await convertTypeToReference(uidArray)
-            let reviewArray: ReviewsDocResponse = []
+            followeeIds.push(userId)
+            const convertedUidArray = await convertToReference(followeeIds)
             const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', convertedUidArray).orderBy('createdAt', 'desc').get()
             const queryDocsSnapshot = querySnapshot.docs
-            reviewArray = await Promise.all(queryDocsSnapshot.map(async (item) => {
-                let review = item.data() as ReviewDocResponse
-                review.key = item.id
-                const profile = await (review.user).get()
-                review.userName = profile.get('userName')
-                review.iconURL = profile.get('iconURL')
-                review.userId = profile.id
-                return review
-            }))
-            if (reviewArray.length == 0) {
+            const reviews = await fetchReviews(queryDocsSnapshot)
+            if (reviews.length == 0) {
                 setIsReview(false)
                 setPageDescription('ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。')
             } else {
                 setIsReview(true)
             }
-            setAllReviews(reviewArray)
+            setAllReviews(reviews)
             setRefreshing(false)
         })()
     }, [isRefreshed])
-    //　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
-    const convertTypeToReference = (array: string[]):firebase.firestore.DocumentReference[]=> {
-        let reference: firebase.firestore.DocumentReference
-        // 文字列firstを削除する
-        array = array.filter(n => n !== 'first')
-        let convertedArray = array.map((uid) => {
-            reference = db.collection('userList').doc(uid)
-            return reference
-        })
-        return convertedArray
-    }
-    // ログインユーザのフォローしているユーザのuidを取得する
-    const getFollowingUid = async():Promise<string[]> => {
-        let followingUidList: string[] = []
-        // この書き方がsubcollectionの展開の仕方のはず
-        const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get()
-        followingUidList =  querySnapshot.docs.map((doc) => {
-            return doc.id
-        })
-        return followingUidList
-    }
     // 友達のプロフィール欄に遷移する
     const toFriendProfile = (id: string):void => {
         props.globalState.setFriendId(id)
@@ -156,7 +117,7 @@ const Top:React.FC<TopStackNavProps<'Top'> & GlobalContainerProps> = (props) => 
     )
 }
 
-const ProfileWrapper: React.FC<TopStackNavProps<'Top'>> = ({ navigation }) => {
+export const TopWrapper: React.FC<TopStackNavProps<'Top'>> = ({ navigation }) => {
     return (
         <Subscribe to={[GlobalContainer]}>
             {
@@ -166,5 +127,4 @@ const ProfileWrapper: React.FC<TopStackNavProps<'Top'>> = ({ navigation }) => {
     );
 }
 
-export default ProfileWrapper
 

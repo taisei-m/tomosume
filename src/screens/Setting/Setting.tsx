@@ -24,7 +24,7 @@ const Item = (props:ItemProps) => {
 }
 
 const changeUserName = () => {
-    props.navigation.navigate('changeUserName')
+    props.navigation.navigate('nameEditor')
 }
 const showAppTerm = () => {
     (() => Linking.openURL('https://tomosume.flycricket.io/privacy.html'))();

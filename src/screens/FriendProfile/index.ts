@@ -10,10 +10,17 @@ export const fetchFolloweeIds = async(uid: string):Promise<string[]> => {
     followeeIds = followeeIds.filter(n => n !== 'first')
     return followeeIds
 }
+type documentDataType = {
+    iconURL: string
+    uid: string
+    userName: string
+    followee: firebase.firestore.DocumentData
+    follower: firebase.firestore.DocumentData
+}
 //TODO:firebaseの型について調べる.
 export const fetchReviews = async(friendId: string):Promise<friendReviewsType> => {
     const reviews: friendReviewsType = []
-    const ref = db.collection('userList').doc(friendId) as firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+    const ref = db.collection('userList').doc(friendId) as firebase.firestore.DocumentReference<documentDataType>
     await db.collectionGroup('reviews').where('user', '==', ref).orderBy('createdAt', 'desc').get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
