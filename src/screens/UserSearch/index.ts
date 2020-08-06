@@ -1,7 +1,7 @@
 import {db} from '../../../firebaseConfig'
-import { candidateUserDescriptionsType, userDescriptionType } from '../../types/types';
+import { UserDescriptionsType, userDescriptionType } from '../../types/types';
 
-export const checkFollowExchange = async(uid: string, candidateUesrsDataList: candidateUserDescriptionsType): Promise<candidateUserDescriptionsType> => {
+export const checkFollowExchange = async(uid: string, candidateUesrsDataList: UserDescriptionsType): Promise<UserDescriptionsType> => {
     const followeeUserIdList: string[] = []
     const followeeList = await db.collection('userList').doc(uid).collection('followee').get()
     followeeList.forEach((data) => {
@@ -17,9 +17,9 @@ export const checkFollowExchange = async(uid: string, candidateUesrsDataList: ca
     return candidateUesrsDataList
 }
 
-export const showFrinedCandidates = async(inputedName: string): Promise<candidateUserDescriptionsType> => {
+export const showFrinedCandidates = async(inputedName: string): Promise<UserDescriptionsType> => {
     let candidateFriendIds: string[] = [];
-    let candidateFriendsDescriptions: candidateUserDescriptionsType = [];
+    let candidateFriendsDescriptions: UserDescriptionsType = [];
     await db.collection('userList').where('userName', '==', inputedName).get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {

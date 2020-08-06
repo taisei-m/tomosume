@@ -1,4 +1,3 @@
-import { diffClamp } from 'react-native-reanimated'
 import {db} from '../../../firebaseConfig'
 import { userDescriptionType, followersType } from '../../types/types'
 
@@ -28,11 +27,12 @@ export const getFollowerDescriptions= async(followerIds: string[]): Promise<foll
 }
 
 export const checkFollowExchange = async(followers: followersType, uid: string):Promise<followersType> => {
-    const followeeIds: string[] = []
+    let followeeIds: string[] = []
     const followees = await db.collection('userList').doc(uid).collection('followee').get()
     followees.forEach(user => {
         followeeIds.push(user.id)
     })
+    followeeIds = followeeIds.filter( id => id != 'first')
     //　フォローリストとフォロワーリストの比べる。　フォロワーリストのユーザを一人一人取り出し、そのユーザがフォローリストに含まれるかを検証する
     followers.forEach(user => {
         let followerId = user.uid

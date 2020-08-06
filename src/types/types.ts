@@ -29,6 +29,7 @@ export type userReviewsType = userReviewDocResponse[]
 export type followersType = userDescriptionType[]
 
 
+
 export type followeesType = userDescriptionType[]
 
 // followButton.tsx
@@ -81,7 +82,7 @@ export type userDescriptionType = {
     followExchange?: boolean
 }
 
-export type candidateUserDescriptionsType = userDescriptionType[]
+export type UserDescriptionsType = userDescriptionType[]
 
 // friendProfile.tsx
 export type friendReviewDocResponse = {
@@ -256,7 +257,7 @@ export type ProfileStackParamList = {
         headerShown: boolean
         title: string
     }
-    changeUserName: {
+    nameEditor: {
         headerShown: boolean
         title: string
     }

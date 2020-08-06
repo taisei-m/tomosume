@@ -10,8 +10,6 @@ import { ContainerProps, TopStackNavProps, friendReviewsType } from 'src/types/t
 import { fetchFolloweeIds, fetchFriendDescription, fetchReviews, pressFollowButton } from './index'
 
 const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps> = (props) => {
-    const uid: string = (props.globalState.state.uid)
-    const friendId: string = (props.globalState.state.friendId)
 	const [friendName, setFriendName] = useState<string>()
 	const [followee, setFollowee] = useState<number>(0)
 	const [follower, setFollower] = useState<number>(0)
@@ -62,8 +60,8 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
             const friendDescription = await fetchFriendDescription(props.globalState.state.friendId)
             setFriendName(friendDescription.userName)
             setFriendIconUrl(friendDescription.iconURL)
-        })
-    },[friendId])
+        })()
+    },[props.globalState.state.friendId])
 
 	// フォロワーの数を取得する
 	useEffect(() => {
@@ -149,7 +147,7 @@ const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & ContainerProps>
 				<ProfileNumber
 					number={followee}
 					itemName="フォロー"
-					press={() => props.navigation.navigate('friendFollowerList')}
+					press={() => props.navigation.navigate('friendFolloweeList')}
 				/>
 				</View>
 				<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>

@@ -7,8 +7,8 @@ import {SettingWrapper} from '../screens/Setting/Setting'
 import {UserSearchWrapper} from '../screens/UserSearch/UserSearch'
 import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile'
 import friendFollowerList from '../screens/friendFollowerList';
-import friendFolloweeList from '../screens/friendFolloweeList'
-import changeUserName from '../screens/changeUserName'
+import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList'
+import {NameEditorWrapper} from '../screens/NameEditor/NameEditor'
 import {ProfileStackParamList} from '../types/types'
 
 const ProfileNavStack = createStackNavigator<ProfileStackParamList>();
@@ -66,7 +66,7 @@ export const ProfileStack:React.FC = () => {
         />
         <ProfileNavStack.Screen
             name="friendFolloweeList"
-            component={friendFolloweeList}
+            component={FriendFolloweeListWrapper}
             options={{
                 headerShown: true,
                 title: 'フォローリスト',
@@ -81,8 +81,8 @@ export const ProfileStack:React.FC = () => {
         }}
         />
         <ProfileNavStack.Screen
-            name="changeUserName"
-            component={changeUserName}
+            name="nameEditor"
+            component={NameEditorWrapper}
             options={{
                 headerShown: true,
                 title: 'ユーザー名変更',
