@@ -54,7 +54,7 @@ const Search:React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props) 
 			const convertedFollowees = await convertToReferenceType(followeeIds)
 			const shopReviewdByFollower = await db.collectionGroup('reviews').where('user', 'in', convertedFollowees).orderBy('createdAt', 'desc').get()
             const shopReviewdByFollowerDocs = shopReviewdByFollower.docs
-            const shopDescriptions =  fetchShopDescription(shopReviewdByFollowerDocs)
+			const shopDescriptions =  await fetchShopDescription(shopReviewdByFollowerDocs)
 			setAllShopsData(shopDescriptions)
 		})()
     },[_refresh])
