@@ -1,8 +1,8 @@
 import {db} from '../../../firebaseConfig'
 import firebase from '../../../firebaseConfig'
-import { ReviewDocResponse, ShopDocResponse, ShopsArrayType } from '../../types/types'
+import { ReviewDocResponse, ShopDocResponse } from '../../types/types'
 
-export const fetchFolloweeIds = async(uid):Promise<string[]> => {
+export const fetchFolloweeIds = async(uid: string):Promise<string[]> => {
     const querySnapshot = await db.collection('userList').doc(uid).collection('followee').get()
     const followeeIds = querySnapshot.docs.map(doc => {
         return doc.id
@@ -20,8 +20,8 @@ export const convertToReferenceType = async(followeeIds: string[]):Promise<fireb
     return convertedFollowees
 }
 
-export const fetchShopDescription = async(shopReviewdByFollowerDocs:any):Promise<any> => {
-    const shopDescriptions = await Promise.all(shopReviewdByFollowerDocs.map(async (item) => {
+export const fetchShopDescription = async(shopReviewdByFollowerDocs:any):Promise<ShopDocResponse[]> => {
+    const shopDescriptions: ShopDocResponse[] = await Promise.all(shopReviewdByFollowerDocs.map(async (item) => {
         let shopId = item.data().shopId
         return db.collection('shops').doc(shopId).get().then(doc => {
             let shopDescription = doc.data() as ShopDocResponse
@@ -32,8 +32,8 @@ export const fetchShopDescription = async(shopReviewdByFollowerDocs:any):Promise
     return shopDescriptions
 }
 
-export const fetchReviews = async(queryDocsSnapshot:any):Promise<any> => {
-    const reviews = await Promise.all(queryDocsSnapshot.map(async (item) => {
+export const fetchReviews = async(queryDocsSnapshot:any):Promise<ReviewDocResponse[]> => {
+    const reviews: ReviewDocResponse[] = await Promise.all(queryDocsSnapshot.map(async (item) => {
         let review = item.data() as ReviewDocResponse
         review.key = item.id
         const profile = await (review.user).get()

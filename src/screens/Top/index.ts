@@ -1,14 +1,7 @@
 import {db} from '../../../firebaseConfig'
 import firebase from '../../../firebaseConfig'
-import { ReviewDocResponse } from 'src/types/types'
+import { ReviewDocResponse, User } from 'src/types/types'
 
-type User = {
-    followee: firebase.firestore.CollectionReference,
-    follower: firebase.firestore.CollectionReference,
-    iconURL: string,
-    uid: string,
-    userName: string
-}
 export const fetchFolloweeIds = async(uid: string):Promise<string[]> => {
     const querySnapshot = await db.collection('userList').doc(uid).collection('followee').get()
     const followeeIds = querySnapshot.docs.map(doc => {

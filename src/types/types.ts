@@ -1,11 +1,19 @@
 import {StackNavigationProp} from '@react-navigation/stack'
-// Profile.tsx
+
 export type pickerResult = {
     cancelled: boolean
     height: number
     type: string
     uri: string
     width: number
+}
+
+export type User = {
+    followee: firebase.firestore.CollectionReference,
+    follower: firebase.firestore.CollectionReference,
+    iconURL: string,
+    uid: string,
+    userName: string
 }
 
 export type userReviewDocResponse = {
@@ -16,7 +24,7 @@ export type userReviewDocResponse = {
     shopAddress: string,
     shopId: string,
     shopName: string
-    user: firebase.firestore.DocumentReference
+    user: firebase.firestore.DocumentReference<User>
 }
 
 export type userDataDocResponse = {
