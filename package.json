@@ -62,11 +62,34 @@
     "@babel/core": "^7.8.6",
     "@types/expo": "33.0.1",
     "@types/firebase": "3.2.1",
+    "@types/jest": "26.0.9",
     "@types/react": "16.9.34",
     "@types/react-native": "0.62.4",
     "@types/react-native-material-dropdown": "0.11.4",
     "babel-preset-expo": "~8.1.0",
+    "jest": "26.2.2",
+    "ts-jest": "26.1.4",
     "typescript": "3.8.3"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "^@/(.+)": "<rootDir>/src/$1"
+    },
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ]
+  }
 }
