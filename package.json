@@ -73,13 +73,13 @@
   },
   "private": true,
   "jest": {
-    "moduleNameMapper": {
-      "^@/(.+)": "<rootDir>/src/$1"
-    },
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@/(.+)": "<rootDir>/src/$1"
+    },
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
