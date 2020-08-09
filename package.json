@@ -5,9 +5,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
   },
   "dependencies": {
+    "@firebase/testing": "0.20.10",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "5.2.6",
     "@react-navigation/drawer": "5.6.3",
