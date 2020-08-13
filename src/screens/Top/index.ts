@@ -20,7 +20,7 @@ export const convertToReference = async(followeeIds: string[]):Promise<firebase.
     return convertedFollowees
 }
 
-export const fetchReviews = async(queryDocsSnapshot: any):Promise<ReviewDocResponse[]> => {
+export const fetchReviews = async(queryDocsSnapshot: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[]):Promise<ReviewDocResponse[]> => {
     const reviews: ReviewDocResponse[] = await Promise.all(queryDocsSnapshot.map(async (item) => {
         let review = item.data() as ReviewDocResponse
         review.key = item.id

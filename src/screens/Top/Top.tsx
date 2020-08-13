@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import * as Permissions from 'expo-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ContainerProps, TopStackNavProps,  } from 'src/types/types';
+import { ContainerProps, TopStackNavProps } from 'src/types/types';
 import { styles } from './style'
 import {db} from '../../../firebaseConfig'
 import { fetchFolloweeIds, convertToReference, fetchReviews } from './index'
@@ -31,8 +31,7 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
             followeeIds.push(userId)
             const userReferences = await convertToReference(followeeIds)
             const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', userReferences).orderBy('createdAt', 'desc').get()
-            const queryDocsSnapshot = querySnapshot.docs
-            const reviews = await fetchReviews(queryDocsSnapshot)
+            const reviews = await fetchReviews(querySnapshot.docs)
             if (reviews.length == 0) {
                 setIsReview(false)
                 setPageDescription('ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。')
