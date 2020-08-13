@@ -36,11 +36,11 @@ export const styles = StyleSheet.create({
 	},
 	editButton: {
 		width: 160,
-		backgroundColor:"white",
+		backgroundColor:'white',
 		borderRadius:15,
 		height:35,
-		alignItems:"center",
-		justifyContent:"center",
+		alignItems:'center',
+		justifyContent:'center',
 		borderColor: '#818181',
 		borderWidth: 1,
 		marginRight: 10
@@ -53,4 +53,4 @@ export const styles = StyleSheet.create({
 		marginTop: 20,
 		marginBottom: 10
 	},
-})
+});

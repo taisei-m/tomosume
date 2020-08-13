@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, Image, View, TouchableOpacity, SafeAreaView, FlatList, ScrollView, RefreshControl} from 'react-native';
 import { Subscribe } from 'unstated';
 import firebase from '../../firebaseConfig';
-import {db} from '../../firebaseConfig'
+import {db} from '../../firebaseConfig';
 import GlobalContainer from '../store/GlobalState';
 import ProfileNumber from '../components/ProfileNumber';
 import ProfileReviews from '../components/ProfileReviews';
-import {friendReviewDocResponse} from '../types/types'
-import {friendDataDocResponse} from '../types/types'
-import {friendReviewsType} from '../types/types'
-import {TopStackNavProps} from '../types/types'
+import {friendReviewDocResponse} from '../types/types';
+import {friendDataDocResponse} from '../types/types';
+import {friendReviewsType} from '../types/types';
+import {TopStackNavProps} from '../types/types';
 
 type GlobalStateProps = {
     globalState: {
@@ -21,224 +21,224 @@ type GlobalStateProps = {
 }
 
 const FriendProfile:React.FC<TopStackNavProps<'friendProfile'> & GlobalStateProps> = (props) => {
-	const [friendName, setFriendName] = useState<string>()
-	const [followee, setFollowee] = useState<number>(0)
-	const [follower, setFollower] = useState<number>(0)
-	const [postNumber, setPostNumber] = useState<number>(0)
-	const [allReviews, setAllReviews] = useState<friendReviewsType>([])
-	const [isFollow, setIsFollow] = useState(true)
+	const [friendName, setFriendName] = useState<string>();
+	const [followee, setFollowee] = useState<number>(0);
+	const [follower, setFollower] = useState<number>(0);
+	const [postNumber, setPostNumber] = useState<number>(0);
+	const [allReviews, setAllReviews] = useState<friendReviewsType>([]);
+	const [isFollow, setIsFollow] = useState(true);
 	const [image, setFriendIconUrl] = useState<string>();
-	const [canPressFollowButton, setCanPressFollowButton] = useState<boolean>(true)
-	const [refreshing, setRefreshing] = useState<boolean>(false)
-	const [isRefreshed, setIsRefreshed] = useState<boolean>(false)
+	const [canPressFollowButton, setCanPressFollowButton] = useState<boolean>(true);
+	const [refreshing, setRefreshing] = useState<boolean>(false);
+	const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
 
 	//自分のページを見ている場合、フォローボタンを押せないようにする
 	useEffect(() => {
-		checkCanPressFollowButton()
-	},[props.globalState.state.friendId])
+		checkCanPressFollowButton();
+	},[props.globalState.state.friendId]);
 
 	const checkCanPressFollowButton = () => {
-		const friendId = props.globalState.state.friendId
-		const userId = props.globalState.state.uid
+		const friendId = props.globalState.state.friendId;
+		const userId = props.globalState.state.uid;
 		if(userId == friendId) {
-			setCanPressFollowButton(true)
+			setCanPressFollowButton(true);
 		} else {
-			setCanPressFollowButton(false)
+			setCanPressFollowButton(false);
 		}
-	}
+	};
 	useEffect(() => {
-		checkFollowExchange()
-	},[props.globalState.state.friendId])
+		checkFollowExchange();
+	},[props.globalState.state.friendId]);
 	// ユーザをフォローしているかを確認する処理
 	const checkFollowExchange = async() => {
-		const friendId = props.globalState.state.friendId
-		const userId = props.globalState.state.uid
-		let followeeIdArray: string[] = []
-		const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get()
+		const friendId = props.globalState.state.friendId;
+		const userId = props.globalState.state.uid;
+		let followeeIdArray: string[] = [];
+		const querySnapshot = await db.collection('userList').doc(userId).collection('followee').get();
 		querySnapshot.forEach((doc) => {
-			followeeIdArray.push(doc.id)
-		})
-		followeeIdArray = followeeIdArray.filter(n => n !== 'first')
+			followeeIdArray.push(doc.id);
+		});
+		followeeIdArray = followeeIdArray.filter(n => n !== 'first');
 		if (followeeIdArray.includes(friendId)) {
-			setIsFollow(true)
+			setIsFollow(true);
 		} else {
-			setIsFollow(false)
+			setIsFollow(false);
 		}
-	}
+	};
 	// 投稿されたレビューを取得する
 	useEffect(() => {
-		const friendId = props.globalState.state.friendId
-		const ref = db.collection('userList').doc(friendId)
-		let friendReviews: friendReviewsType = []
+		const friendId = props.globalState.state.friendId;
+		const ref = db.collection('userList').doc(friendId);
+		const friendReviews: friendReviewsType = [];
 		db.collectionGroup('reviews').where('user', '==', ref).orderBy('createdAt', 'desc').get()
-        .then(function(querySnapshot) {
-			querySnapshot.forEach(function(doc) {
-				let userReview = doc.data() as friendReviewDocResponse
-				friendReviews.push(userReview)
-			})
-        //投稿されたレビューの件数を取得
-			let reviewNumber: number = friendReviews.length
-			setPostNumber(reviewNumber)
-			setAllReviews(friendReviews)
-			setRefreshing(false)
-    })
-	}, [isRefreshed, props.globalState.state.friendId])
+			.then(function(querySnapshot) {
+				querySnapshot.forEach(function(doc) {
+					const userReview = doc.data() as friendReviewDocResponse;
+					friendReviews.push(userReview);
+				});
+				//投稿されたレビューの件数を取得
+				const reviewNumber: number = friendReviews.length;
+				setPostNumber(reviewNumber);
+				setAllReviews(friendReviews);
+				setRefreshing(false);
+			});
+	}, [isRefreshed, props.globalState.state.friendId]);
 	// ユーザの名前とアイコン画像を取得する
 	useEffect(() => {
-		const friendId = props.globalState.state.friendId
+		const friendId = props.globalState.state.friendId;
 		firebase.firestore().collection('userList').doc(friendId)
-		.get().then(function(doc) {
-			let friendProfileData = doc.data() as friendDataDocResponse
-			setFriendName(friendProfileData.userName)
-			setFriendIconUrl(friendProfileData.iconURL)
-		})
-	},[props.globalState.state.friendId])
+			.get().then(function(doc) {
+				const friendProfileData = doc.data() as friendDataDocResponse;
+				setFriendName(friendProfileData.userName);
+				setFriendIconUrl(friendProfileData.iconURL);
+			});
+	},[props.globalState.state.friendId]);
 	// フォロワーの数を取得する
 	useEffect(() => {
-		const friendId = props.globalState.state.friendId
-		let followerArray:string[] = []
+		const friendId = props.globalState.state.friendId;
+		let followerArray:string[] = [];
 		const unsubscribe = db.collection('userList').doc(friendId).collection('follower')
-		.onSnapshot(function(querySnapshot) {
-			followerArray = []
-			querySnapshot.forEach(function(doc) {
-			followerArray.push(doc.id)
-			})
-		let followerNumber: number = followerArray.length-1
-		setFollower(followerNumber)
-	})
-	return () => {
-		unsubscribe();
-	};
-	},[props.globalState.state.friendId])
+			.onSnapshot(function(querySnapshot) {
+				followerArray = [];
+				querySnapshot.forEach(function(doc) {
+					followerArray.push(doc.id);
+				});
+				const followerNumber: number = followerArray.length-1;
+				setFollower(followerNumber);
+			});
+		return () => {
+			unsubscribe();
+		};
+	},[props.globalState.state.friendId]);
 	//フォローの数を取得する
 	useEffect(() => {
-		const friendId = props.globalState.state.friendId
-		let followeeArray:string[] = []
+		const friendId = props.globalState.state.friendId;
+		let followeeArray:string[] = [];
 		const unsubscribe = db.collection('userList').doc(friendId).collection('followee')
-		.onSnapshot(function(querySnapshot:any) {
-			followeeArray = []
-			querySnapshot.forEach(function(doc:any) {
-			followeeArray.push(doc.id)
-			})
-			let followeeNumber: number = followeeArray.length-1
-			setFollowee(followeeNumber)
-	})
-	return () => {
-		unsubscribe();
-	};
-	},[props.globalState.state.friendId])
+			.onSnapshot(function(querySnapshot:any) {
+				followeeArray = [];
+				querySnapshot.forEach(function(doc:any) {
+					followeeArray.push(doc.id);
+				});
+				const followeeNumber: number = followeeArray.length-1;
+				setFollowee(followeeNumber);
+			});
+		return () => {
+			unsubscribe();
+		};
+	},[props.globalState.state.friendId]);
 	//　フォロー状態を解除する
 	const pressFollowButton = () => {
-		const userId = props.globalState.state.uid
-		const friendId = props.globalState.state.friendId
+		const userId = props.globalState.state.uid;
+		const friendId = props.globalState.state.friendId;
 		if (isFollow) {
-			db.collection('userList').doc(userId).collection('followee').doc(friendId).delete()
-			db.collection('userList').doc(friendId).collection('follower').doc(userId).delete()
-			setIsFollow(false)
+			db.collection('userList').doc(userId).collection('followee').doc(friendId).delete();
+			db.collection('userList').doc(friendId).collection('follower').doc(userId).delete();
+			setIsFollow(false);
 		} else {
-			db.collection('userList').doc(userId).collection('followee').doc(friendId).set({})
-			db.collection('userList').doc(friendId).collection('follower').doc(userId).set({})
-			setIsFollow(true)
+			db.collection('userList').doc(userId).collection('followee').doc(friendId).set({});
+			db.collection('userList').doc(friendId).collection('follower').doc(userId).set({});
+			setIsFollow(true);
 		}
-	}
+	};
 
 	const toFolloweeList = () => {
-		props.navigation.navigate('friendFolloweeList')
-	}
+		props.navigation.navigate('friendFolloweeList');
+	};
 	const toFollowerList = () => {
-		props.navigation.navigate('friendFollowerList')
-	}
+		props.navigation.navigate('friendFollowerList');
+	};
 	const handleRefresh = () => {
-		setIsRefreshed(!isRefreshed)
-		setRefreshing(true)
-    }
+		setIsRefreshed(!isRefreshed);
+		setRefreshing(true);
+	};
 
 	return (
-	<View style={styles.container}>
-		<ScrollView
-			refreshControl={
-				<RefreshControl
-					refreshing={refreshing}
-					onRefresh={handleRefresh}
-				/>
-			}
-		>
-		<View style={{flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto'}}>
-		<View style={{ flexDirection: 'row', justifyContent: "flex-start", marginTop: 20}}>
-			<View>
-				<View style={{alignItems: 'center'}}>
-				<Image
-					source={{ uri: image }}
-					style = {styles.userIcon}
-				/>
-				</View>
-			</View>
-			<View style={{marginLeft: 30}}>
-				<View
-				style={{
-					justifyContent: 'center',
-					flexDirection: 'row',
-				}}
-				>
-				<ProfileNumber
-					number={postNumber}
-					itemName='投稿'
-				/>
-				<ProfileNumber
-					number={follower}
-					itemName="フォロワー"
-					centerClass={{width: 60, height: 50, marginHorizontal: 30}}
-					press={toFollowerList}
-				/>
-				<ProfileNumber
-					number={followee}
-					itemName="フォロー"
-					press={toFolloweeList}
-				/>
-				</View>
-				<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
-				<TouchableOpacity
-					disabled={canPressFollowButton}
-					style={
-						isFollow
-						? styles.followButton
-						: styles.unFollowButton
-							}
-							onPress={()=> {pressFollowButton()}}
-				>
-				{
-				isFollow
-				? <Text style={{color: 'white'}}>フォロー中</Text>
-				: <Text style={{color: 'white'}}>フォロー</Text>
+		<View style={styles.container}>
+			<ScrollView
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={handleRefresh}
+					/>
 				}
-				</TouchableOpacity>
-            </View>
-			</View>
+			>
+				<View style={{flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto'}}>
+					<View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20}}>
+						<View>
+							<View style={{alignItems: 'center'}}>
+								<Image
+									source={{ uri: image }}
+									style = {styles.userIcon}
+								/>
+							</View>
+						</View>
+						<View style={{marginLeft: 30}}>
+							<View
+								style={{
+									justifyContent: 'center',
+									flexDirection: 'row',
+								}}
+							>
+								<ProfileNumber
+									number={postNumber}
+									itemName='投稿'
+								/>
+								<ProfileNumber
+									number={follower}
+									itemName="フォロワー"
+									centerClass={{width: 60, height: 50, marginHorizontal: 30}}
+									press={toFollowerList}
+								/>
+								<ProfileNumber
+									number={followee}
+									itemName="フォロー"
+									press={toFolloweeList}
+								/>
+							</View>
+							<View style={{ alignItems: 'center', marginTop: 5, flexDirection: 'row'}}>
+								<TouchableOpacity
+									disabled={canPressFollowButton}
+									style={
+										isFollow
+											? styles.followButton
+											: styles.unFollowButton
+									}
+									onPress={()=> {pressFollowButton();}}
+								>
+									{
+										isFollow
+											? <Text style={{color: 'white'}}>フォロー中</Text>
+											: <Text style={{color: 'white'}}>フォロー</Text>
+									}
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+					<View style={{marginTop: 10}}>
+						<Text style={styles.userName}>{friendName}</Text>
+					</View>
+				</View>
+				<SafeAreaView style={styles.list}>
+					<FlatList
+						data={allReviews}
+						renderItem={
+							({ item }) =>
+								<ProfileReviews
+									shopName={item.shopName}
+									shopAddress={item.shopAddress}
+									category={item.category}
+									price={item.price}
+									favorite={item.favoriteMenu}
+								/>
+						}
+						keyExtractor={item => item.shopId}
+					/>
+				</SafeAreaView>
+			</ScrollView>
 		</View>
-		<View style={{marginTop: 10}}>
-			<Text style={styles.userName}>{friendName}</Text>
-		</View>
-		</View>
-			<SafeAreaView style={styles.list}>
-				<FlatList
-				data={allReviews}
-				renderItem={
-						({ item }) =>
-						<ProfileReviews
-							shopName={item.shopName}
-							shopAddress={item.shopAddress}
-							category={item.category}
-							price={item.price}
-							favorite={item.favoriteMenu}
-						/>
-				}
-				keyExtractor={item => item.shopId}
-				/>
-			</SafeAreaView>
-		</ScrollView>
-	</View>
 	);
-}
+};
 
 const FriendProfileWrapper:React.FC<TopStackNavProps<'friendProfile'>> = ({ navigation }) => {
 	return (
@@ -248,7 +248,7 @@ const FriendProfileWrapper:React.FC<TopStackNavProps<'friendProfile'>> = ({ navi
 			}
 		</Subscribe>
 	);
-}
+};
 
 export default FriendProfileWrapper;
 
@@ -290,21 +290,21 @@ const styles = StyleSheet.create({
 	},
 	followButton: {
 		width: 180,
-		backgroundColor:"#d3d3d3",
+		backgroundColor:'#d3d3d3',
 		borderRadius:15,
 		height:35,
-		alignItems:"center",
-		justifyContent:"center",
+		alignItems:'center',
+		justifyContent:'center',
 		borderColor: '#d3d3d3',
 		borderWidth: 1,
 	},
 	unFollowButton: {
 		width: 180,
-		backgroundColor:"#fbd01d",
+		backgroundColor:'#fbd01d',
 		borderRadius:15,
 		height : 35,
-		alignItems:"center",
-		justifyContent:"center",
+		alignItems:'center',
+		justifyContent:'center',
 		borderColor: '#fbd01d',
 		borderWidth: 1,
 	},
@@ -318,5 +318,5 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		marginBottom: 270
 	},
-})
+});
 

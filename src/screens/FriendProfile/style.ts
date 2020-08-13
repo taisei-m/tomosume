@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -38,21 +38,21 @@ export const styles = StyleSheet.create({
 	},
 	followButton: {
 		width: 180,
-		backgroundColor:"#d3d3d3",
+		backgroundColor:'#d3d3d3',
 		borderRadius:15,
 		height:35,
-		alignItems:"center",
-		justifyContent:"center",
+		alignItems:'center',
+		justifyContent:'center',
 		borderColor: '#d3d3d3',
 		borderWidth: 1,
 	},
 	unFollowButton: {
 		width: 180,
-		backgroundColor:"#fbd01d",
+		backgroundColor:'#fbd01d',
 		borderRadius:15,
 		height : 35,
-		alignItems:"center",
-		justifyContent:"center",
+		alignItems:'center',
+		justifyContent:'center',
 		borderColor: '#fbd01d',
 		borderWidth: 1,
 	},
@@ -66,5 +66,5 @@ export const styles = StyleSheet.create({
 		marginTop: 20,
 		marginBottom: 270
 	},
-})
+});
 
