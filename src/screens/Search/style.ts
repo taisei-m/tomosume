@@ -9,19 +9,19 @@ export const styles = StyleSheet.create({
 		...StyleSheet.absoluteFillObject,
 		width: '100%',
 		height: '100%',
-		position: 'relative'
+		position: 'relative',
 	},
 	card: {
-		borderRadius: 10
+		borderRadius: 10,
 	},
 	userInfomation: {
 		flexDirection: 'row',
-		marginBottom: 10
+		marginBottom: 10,
 	},
 	userName: {
 		fontSize: 18,
 		paddingTop: 5,
-		paddingLeft: 10
+		paddingLeft: 10,
 	},
 	favorite: {
 		paddingRight: 40,
@@ -31,23 +31,22 @@ export const styles = StyleSheet.create({
 		borderRightWidth: 1,
 		borderRightColor: 'grey',
 		paddingRight: 40,
-		marginLeft: 5
+		marginLeft: 5,
 	},
 	category: {
 		marginLeft: 10,
-		marginRight: 5
+		marginRight: 5,
 	},
 	itemName: {
 		color: 'grey',
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 	categoryName: {
 		marginTop: 5,
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 	menuName: {
 		marginTop: 5,
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 });
-

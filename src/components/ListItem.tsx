@@ -1,45 +1,45 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, } from 'react-native';
-import { Avatar, Card, } from 'react-native-elements';
+import { View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
+import { Avatar, Card } from 'react-native-elements';
 
 interface ItemProps {
-    id: string
-    userName?: string,
-    iconURL?: string
-    title?: string
-    address?: string
-    category: string
-    favorite: string
-    price: string
-    userId?: string
-    pressMethod: Function
+	id: string;
+	userName?: string;
+	iconURL?: string;
+	title?: string;
+	address?: string;
+	category: string;
+	favorite: string;
+	price: string;
+	userId?: string;
+	pressMethod: Function;
 }
 
 const Item = (props: ItemProps) => {
 	return (
 		<View style={styles.container}>
 			<Card containerStyle={styles.card}>
-				<TouchableOpacity  onPress={() => props.pressMethod(props.userId)}>
+				<TouchableOpacity onPress={() => props.pressMethod(props.userId)}>
 					<View style={styles.userInfomation}>
-						<Avatar rounded source={{ uri: props.iconURL }}/>
+						<Avatar rounded source={{ uri: props.iconURL }} />
 						<Text style={styles.userName}>{props.userName}</Text>
 					</View>
 				</TouchableOpacity>
 				<View>
-					<Text style={{ color: 'grey', marginLeft: 5}}>店名</Text>
-					<Text style={styles.shopName} numberOfLines={2}>{props.title}</Text>
-					<Text style={{ color: 'grey', marginLeft: 5, marginTop: 5}}>住所</Text>
-					<Text
-						style={styles.shopAddress}
-						numberOfLines={2}
-					>{props.address}</Text>
-					<View style={{flexDirection: 'row', marginTop: 10, flex: 1, paddingLeft: 5}}>
+					<Text style={{ color: 'grey', marginLeft: 5 }}>店名</Text>
+					<Text style={styles.shopName} numberOfLines={2}>
+						{props.title}
+					</Text>
+					<Text style={{ color: 'grey', marginLeft: 5, marginTop: 5 }}>住所</Text>
+					<Text style={styles.shopAddress} numberOfLines={2}>
+						{props.address}
+					</Text>
+					<View style={{ flexDirection: 'row', marginTop: 10, flex: 1, paddingLeft: 5 }}>
 						<View style={styles.favorite}>
 							<Text style={styles.itemName}>おすすめメニュー</Text>
-							<Text
-								style={styles.menuName}
-								numberOfLines={3}
-							>{props.favorite}</Text>
+							<Text style={styles.menuName} numberOfLines={3}>
+								{props.favorite}
+							</Text>
 						</View>
 						<View style={styles.price}>
 							<Text style={styles.itemName}>値段</Text>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 7
+		marginBottom: 7,
 	},
 	card: {
 		borderRadius: 25,
@@ -75,16 +75,16 @@ const styles = StyleSheet.create({
 				shadowOffset: { width: 3, height: 3 },
 				shadowRadius: 3,
 			},
-		})
+		}),
 	},
 	userInfomation: {
 		flexDirection: 'row',
-		marginBottom: 10
+		marginBottom: 10,
 	},
 	userName: {
 		fontSize: 18,
 		paddingTop: 5,
-		paddingLeft: 10
+		paddingLeft: 10,
 	},
 	shopName: {
 		fontSize: 18,
@@ -96,35 +96,35 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		paddingLeft: 5,
 		marginTop: 10,
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 	favorite: {
 		borderRightWidth: 1,
 		borderRightColor: 'grey',
 		flex: 2,
-		paddingRight: 5
+		paddingRight: 5,
 	},
 	price: {
 		borderRightWidth: 1,
 		borderRightColor: 'grey',
 		flex: 1,
-		paddingHorizontal: 5
+		paddingHorizontal: 5,
 	},
 	category: {
 		flex: 1,
-		paddingLeft: 5
+		paddingLeft: 5,
 	},
 	itemName: {
 		color: 'grey',
 		fontWeight: '700',
-		fontSize: 13
+		fontSize: 13,
 	},
 	categoryName: {
 		marginTop: 5,
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 	menuName: {
 		marginTop: 5,
-		fontWeight: '700'
+		fontWeight: '700',
 	},
 });

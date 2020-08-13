@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../store/GlobalState';
-import {userProfileDataType} from '../types/types';
-import {StackProps} from '../types/types';
+import { userProfileDataType } from '../types/types';
+import { StackProps } from '../types/types';
 
-const ChangeUserName = (props:StackProps) => {
+const ChangeUserName = (props: StackProps) => {
 	const [_userName, setUserName] = useState<string>('');
 	useEffect(() => {
-		db.collection('userList').doc(props.globalState.state.uid).get()
+		db
+			.collection('userList')
+			.doc(props.globalState.state.uid)
+			.get()
 			.then((doc) => {
 				const userProfileData = doc.data() as userProfileDataType;
 				setUserName(userProfileData.userName);
@@ -18,22 +21,16 @@ const ChangeUserName = (props:StackProps) => {
 
 	const changeName = () => {
 		db.collection('userList').doc(props.globalState.state.uid).update({
-			userName: _userName
+			userName: _userName,
 		});
 		props.navigation.navigate('ProfileTop');
 	};
 
 	return (
 		<View style={styles.container}>
-			<View style={{flexDirection: 'row', justifyContent: 'center'}}>
-				<TextInput
-					defaultValue={_userName}
-					style={styles.textInput}
-					onChangeText={setUserName}
-				/>
-				<TouchableOpacity
-					style={styles.button}
-					onPress={changeName}>
+			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+				<TextInput defaultValue={_userName} style={styles.textInput} onChangeText={setUserName} />
+				<TouchableOpacity style={styles.button} onPress={changeName}>
 					<Text>変更</Text>
 				</TouchableOpacity>
 			</View>
@@ -44,9 +41,7 @@ const ChangeUserName = (props:StackProps) => {
 const changeUserNameWrapper = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
-			{
-				globalState => <ChangeUserName globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState) => <ChangeUserName globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
@@ -64,7 +59,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		height: 30,
 		padding: 5,
-		marginTop: 10
+		marginTop: 10,
 	},
 	button: {
 		borderColor: 'black',
@@ -72,6 +67,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		padding: 5,
 		marginTop: 10,
-		marginLeft: 10
-	}
+		marginLeft: 10,
+	},
 });

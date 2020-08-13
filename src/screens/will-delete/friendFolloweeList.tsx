@@ -1,25 +1,27 @@
-import React, {useState, useEffect} from 'react';
-import { View, StyleSheet,FlatList, Text, TouchableOpacity } from 'react-native';
-import { Avatar,  } from 'react-native-elements';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
+import { Avatar } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalContainer from '../store/GlobalState';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import FollowButton from '../components/FollowButton';
-import {followeeProfileType} from '../types/types';
-import {followeeListType} from '../types/types';
-import {TopStackNavProps} from '../types/types';
+import { followeeProfileType } from '../types/types';
+import { followeeListType } from '../types/types';
+import { TopStackNavProps } from '../types/types';
 
 type GlobalStateProps = {
-    globalState: {
-        state: {
-            friendId: string
-            uid: string
-        }
-        setFriendId: (id: string) => void
-    }
-}
+	globalState: {
+		state: {
+			friendId: string;
+			uid: string;
+		};
+		setFriendId: (id: string) => void;
+	};
+};
 
-const FolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & GlobalStateProps> = (props) => {
+const FolloweeList: React.FC<TopStackNavProps<'friendFolloweeList'> & GlobalStateProps> = (
+	props,
+) => {
 	const [_followeeList, setFolloweeList] = useState<followeeListType>();
 	useEffect(() => {
 		(async () => {
@@ -33,23 +35,28 @@ const FolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & GlobalState
 				followeeIdList.push(data.id);
 			});
 			//firstを削除しないとuidがundefinedというエラーが発生する
-			followeeIdList = followeeIdList.filter(id => id != 'first');
+			followeeIdList = followeeIdList.filter((id) => id != 'first');
 			// フォロワーのユーザデータのオブジェクトの配列を返す
-			followeeUserList = await Promise.all(followeeIdList.map(async (item) => {
-				//awaitしないと先にreturnが実行される
-				await db.collection('userList').doc(item).get()
-					.then(function(doc) {
-						followeeProfileData = doc.data() as followeeProfileType;
-					});
-				return followeeProfileData;
-			}));
+			followeeUserList = await Promise.all(
+				followeeIdList.map(async (item) => {
+					//awaitしないと先にreturnが実行される
+					await db
+						.collection('userList')
+						.doc(item)
+						.get()
+						.then(function (doc) {
+							followeeProfileData = doc.data() as followeeProfileType;
+						});
+					return followeeProfileData;
+				}),
+			);
 			// 相互フォローをしているかの真偽値を含むオブジェクトの配列
-			const checkedFollowExchangeArray =  await checkFollowExchange(followeeUserList);
+			const checkedFollowExchangeArray = await checkFollowExchange(followeeUserList);
 			setFolloweeList(checkedFollowExchangeArray);
 		})();
 	}, []);
 	//相互フォローをしているかのチェックをする
-	const checkFollowExchange = async(followeeList: followeeListType): Promise<followeeListType> => {
+	const checkFollowExchange = async (followeeList: followeeListType): Promise<followeeListType> => {
 		const userId = props.globalState.state.uid;
 		const followeeUserList: string[] = [];
 		//使用ユーザのフォローリスト
@@ -62,7 +69,7 @@ const FolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & GlobalState
 			const followeeUserId = item.uid;
 			const isFollowExchange = followeeUserList.includes(followeeUserId);
 			// 相互フォローの場合true, 相互フォローしていない場合falseを代入
-			isFollowExchange ? item.followExchange = true : item.followExchange = false;
+			isFollowExchange ? (item.followExchange = true) : (item.followExchange = false);
 		});
 		return followeeList;
 	};
@@ -70,42 +77,50 @@ const FolloweeList:React.FC<TopStackNavProps<'friendFolloweeList'> & GlobalState
 		props.globalState.setFriendId(id);
 		props.navigation.navigate('friendProfile');
 	};
-	return(
+	return (
 		<FlatList
 			style={styles.container}
 			data={_followeeList}
-			keyExtractor={item => item.uid}
-			renderItem={({item}) =>
+			keyExtractor={(item) => item.uid}
+			renderItem={({ item }) => (
 				<View style={styles.cell}>
-					<TouchableOpacity onPress={() => {toProfileDetailPage(item.uid);}}>
+					<TouchableOpacity
+						onPress={() => {
+							toProfileDetailPage(item.uid);
+						}}>
 						<Avatar
 							rounded
-							containerStyle={{marginLeft: 20, marginTop: 9}}
+							containerStyle={{ marginLeft: 20, marginTop: 9 }}
 							source={{ uri: item.iconURL }}
 						/>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => {toProfileDetailPage(item.uid);}}>
-						<View style={{marginRight: '45%'}}>
-							<Text style={styles.text}　numberOfLines={1} ellipsizeMode="tail">{item.userName}</Text>
+					<TouchableOpacity
+						onPress={() => {
+							toProfileDetailPage(item.uid);
+						}}>
+						<View style={{ marginRight: '45%' }}>
+							<Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+								{item.userName}
+							</Text>
 						</View>
 					</TouchableOpacity>
 					<FollowButton
 						id={item.uid}
 						isFollowExchange={item.followExchange}
-						userId = {props.globalState.state.uid}
+						userId={props.globalState.state.uid}
 					/>
 				</View>
-			}
+			)}
 		/>
 	);
 };
 
-const followeeListWrapper:React.FC<TopStackNavProps<'friendFolloweeList'>> = ({ navigation }) => {
+const followeeListWrapper: React.FC<TopStackNavProps<'friendFolloweeList'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{
-				(globalState:GlobalContainer) => <FolloweeList globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState: GlobalContainer) => (
+				<FolloweeList globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
@@ -128,6 +143,6 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 18,
 		marginLeft: 15,
-		marginTop: 15
+		marginTop: 15,
 	},
 });

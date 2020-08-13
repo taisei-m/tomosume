@@ -1,10 +1,10 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {TopWrapper} from '../screens/Top/Top';
-import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile';
-import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList';
-import {FriendFollowerListWrapper} from '../screens/FriendFollowerList/FriendFollowerList';
-import {TopStackParamList} from '../types/types';
+import { createStackNavigator } from '@react-navigation/stack';
+import { TopWrapper } from '../screens/Top/Top';
+import { FriendProfileWrapper } from '../screens/FriendProfile/FriendProfile';
+import { FriendFolloweeListWrapper } from '../screens/FriendFolloweeList/FriendFolloweeList';
+import { FriendFollowerListWrapper } from '../screens/FriendFollowerList/FriendFollowerList';
+import { TopStackParamList } from '../types/types';
 
 const TopNavStack = createStackNavigator<TopStackParamList>();
 
@@ -16,7 +16,7 @@ export const TopStack: React.FC = () => {
 				component={TopWrapper}
 				options={{
 					headerShown: false,
-					title: 'トップ'
+					title: 'トップ',
 				}}
 			/>
 			<TopNavStack.Screen
@@ -24,7 +24,7 @@ export const TopStack: React.FC = () => {
 				component={FriendProfileWrapper}
 				options={{
 					headerShown: true,
-					title: 'プロフィール'
+					title: 'プロフィール',
 				}}
 			/>
 			<TopNavStack.Screen
@@ -32,7 +32,7 @@ export const TopStack: React.FC = () => {
 				component={FriendFollowerListWrapper}
 				options={{
 					headerShown: true,
-					title: 'フォロワーリスト'
+					title: 'フォロワーリスト',
 				}}
 			/>
 			<TopNavStack.Screen
@@ -40,7 +40,7 @@ export const TopStack: React.FC = () => {
 				component={FriendFolloweeListWrapper}
 				options={{
 					headerShown: true,
-					title: 'フォローリスト'
+					title: 'フォローリスト',
 				}}
 			/>
 		</TopNavStack.Navigator>

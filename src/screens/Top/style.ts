@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
 	container: {
 		backgroundColor: 'white',
 		paddingTop: 20,
-		flex: 1
+		flex: 1,
 	},
 	descriptionPosition: {
 		marginHorizontal: 30,
@@ -12,6 +12,6 @@ export const styles = StyleSheet.create({
 	},
 	description: {
 		fontSize: 18,
-		marginTop: 10
-	}
+		marginTop: 10,
+	},
 });

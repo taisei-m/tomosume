@@ -17,9 +17,14 @@ module.exports = {
 		'ecmaVersion': 11,
 		'sourceType': 'module'
 	},
+	"globals": {
+		"fetch": false
+	},
 	'plugins': [
 		'react',
-		'@typescript-eslint'
+		'react-hooks',
+		'@typescript-eslint',
+		'prettier'
 	],
 	'rules': {
 		indent: ['error', 'tab'],
@@ -35,5 +40,6 @@ module.exports = {
 		'@typescript-eslint/no-empty-function': 'off',
 		'react/display-name': 'off',
 		'react/prop-types': 'off',
+		'prettier/prettier': 'error',
 	}
 };

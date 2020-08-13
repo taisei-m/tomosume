@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Text, } from 'react-native-elements';
+import { Text } from 'react-native-elements';
 import firebase from '../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../store/GlobalState';
@@ -41,11 +41,10 @@ const Splash = (props) => {
 
 	useEffect(() => {
 		(async () => {
-			await checkIsAuthed();//他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
+			await checkIsAuthed(); //他にも欲しいデータあって通信したかったからpromiseAll使ったりして纏めて
 			setTimeout(SplashFalse, 1000);
 		})();
 	}, []);
-
 
 	return (
 		<View style={styles.container}>
@@ -54,30 +53,25 @@ const Splash = (props) => {
 	);
 };
 
-
 const SplashWrapper = () => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
-			{
-				globalState => <Splash globalState={globalState} />
-			}
+			{(globalState) => <Splash globalState={globalState} />}
 		</Subscribe>
 	);
 };
 
-
 export default SplashWrapper;
-
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	splashText: {
-		fontSize:24,
-		color:'black',
+		fontSize: 24,
+		color: 'black',
 	},
 });

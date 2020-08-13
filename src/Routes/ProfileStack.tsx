@@ -1,19 +1,19 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {ProfileWrapper} from '../screens/Profile/Profile';
-import {FolloweeListWrapper} from '../screens/FolloweeList/FolloweeList';
-import {FollowerListWrapper} from '../screens/FollowerList/FollowerList';
-import {SettingWrapper} from '../screens/Setting/Setting';
-import {UserSearchWrapper} from '../screens/UserSearch/UserSearch';
-import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile';
-import {FriendFollowerListWrapper} from '../screens/FriendFollowerList/FriendFollowerList';
-import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList';
-import {NameEditorWrapper} from '../screens/NameEditor/NameEditor';
-import {ProfileStackParamList} from '../types/types';
+import { ProfileWrapper } from '../screens/Profile/Profile';
+import { FolloweeListWrapper } from '../screens/FolloweeList/FolloweeList';
+import { FollowerListWrapper } from '../screens/FollowerList/FollowerList';
+import { SettingWrapper } from '../screens/Setting/Setting';
+import { UserSearchWrapper } from '../screens/UserSearch/UserSearch';
+import { FriendProfileWrapper } from '../screens/FriendProfile/FriendProfile';
+import { FriendFollowerListWrapper } from '../screens/FriendFollowerList/FriendFollowerList';
+import { FriendFolloweeListWrapper } from '../screens/FriendFolloweeList/FriendFolloweeList';
+import { NameEditorWrapper } from '../screens/NameEditor/NameEditor';
+import { ProfileStackParamList } from '../types/types';
 
 const ProfileNavStack = createStackNavigator<ProfileStackParamList>();
 
-export const ProfileStack:React.FC = () => {
+export const ProfileStack: React.FC = () => {
 	return (
 		<ProfileNavStack.Navigator>
 			<ProfileNavStack.Screen
@@ -29,7 +29,7 @@ export const ProfileStack:React.FC = () => {
 				component={FollowerListWrapper}
 				options={{
 					headerShown: true,
-					title: 'フォロワーリスト'
+					title: 'フォロワーリスト',
 				}}
 			/>
 			<ProfileNavStack.Screen
@@ -37,7 +37,7 @@ export const ProfileStack:React.FC = () => {
 				component={FolloweeListWrapper}
 				options={{
 					headerShown: true,
-					title: 'フォローリスト'
+					title: 'フォローリスト',
 				}}
 			/>
 			<ProfileNavStack.Screen
@@ -45,7 +45,7 @@ export const ProfileStack:React.FC = () => {
 				component={SettingWrapper}
 				options={{
 					headerShown: true,
-					title: '設定'
+					title: '設定',
 				}}
 			/>
 			<ProfileNavStack.Screen
@@ -53,7 +53,7 @@ export const ProfileStack:React.FC = () => {
 				component={UserSearchWrapper}
 				options={{
 					headerShown: true,
-					title: 'ユーザー検索'
+					title: 'ユーザー検索',
 				}}
 			/>
 			<ProfileNavStack.Screen

@@ -1,18 +1,15 @@
-
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity,} from 'react-native';
-import { Text, Button as ButtonElem} from 'react-native-elements';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../store/GlobalState';
-import {StackProps} from '../types/types';
+import { StackProps } from '../types/types';
 
 const SelectLoginOrSignup = (props: StackProps) => {
-	return(
+	return (
 		<View style={styles.container}>
 			<View>
-				<Text style={styles.topTitle}>
-                Tomosume
-				</Text>
+				<Text style={styles.topTitle}>Tomosume</Text>
 			</View>
 			<View style={styles.button}>
 				<ButtonElem
@@ -22,34 +19,27 @@ const SelectLoginOrSignup = (props: StackProps) => {
 					onPress={() => props.navigation.navigate('CreateAccount')}
 				/>
 			</View>
-			<TouchableOpacity
-				onPress={() => props.navigation.navigate('LoginScreen')}
-			>
-				<Text style={styles.gotoLoginText}>
-                ログイン
-				</Text>
+			<TouchableOpacity onPress={() => props.navigation.navigate('LoginScreen')}>
+				<Text style={styles.gotoLoginText}>ログイン</Text>
 			</TouchableOpacity>
 		</View>
-	);  
+	);
 };
 
 const SelectLoginOrSignupWrapper = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
-			{
-				globalState => <SelectLoginOrSignup globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState) => <SelectLoginOrSignup globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
 
 export default SelectLoginOrSignupWrapper;
 
-
 const styles = StyleSheet.create({
 	keyboardScrollView: {
 		flex: 1,
-		backgroundColor: 'white'
+		backgroundColor: 'white',
 	},
 	container: {
 		flex: 1,
@@ -57,18 +47,18 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		// justifyContent: 'center',
 	},
-	topTitle:{
-		fontWeight:'bold',
-		fontSize:50,
+	topTitle: {
+		fontWeight: 'bold',
+		fontSize: 50,
 		color: 'black',
 		marginTop: '45%',
-		marginBottom:'20%',
+		marginBottom: '20%',
 	},
 	button: {
-		width:'80%'
+		width: '80%',
 	},
 	gotoSignupButton: {
-		backgroundColor:'#5E9CFE',
+		backgroundColor: '#5E9CFE',
 		borderRadius: 25,
 		borderColor: 'black',
 		height: 50,

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity,Linking } from 'react-native';
-import { Text,  Input, Icon, Button as ButtonElem} from 'react-native-elements';
+import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
+import { Text, Input, Icon, Button as ButtonElem } from 'react-native-elements';
 import firebase from '../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../store/GlobalState';
@@ -17,7 +17,9 @@ const CreateAccount = (props: any) => {
 	const [_passwordIconTypeVisible, setPasswordIconTypeVisible] = useState<string>('ios-eye-off');
 	const [_signupButtonDisabled, setSignupButtonDisabled] = useState<boolean>(true);
 	const [_signupButtonIsloading, setSignupButtonIsloading] = useState<boolean>(false);
-	const [_signupButtonDisabledInitialState, setSignupButtonDisabledInitialState] = useState<boolean>(true);
+	const [_signupButtonDisabledInitialState, setSignupButtonDisabledInitialState] = useState<boolean>(
+		true,
+	);
 	//エラーメッセ―ジ
 	const [_usernameErrorMessage, setUsernameErrorMessage] = useState<string>();
 	const [_emailErrorMessage, setEmailErrorMessage] = useState<string>();
@@ -30,7 +32,7 @@ const CreateAccount = (props: any) => {
 
 	// firebase storageから画像のurlを取得する処理
 	useEffect(() => {
-		(async() => {
+		(async () => {
 			const storageRef = firebase.storage().ref('user/icon/' + 'test-image');
 			const url = await storageRef.getDownloadURL();
 			setDefaultIconUrl(url);
@@ -68,22 +70,22 @@ const CreateAccount = (props: any) => {
 		const fillblankText = '*ユーザーネームは必須です';
 		let errorMessage = '';
 		let errorMessageColorIsRed = true;
-		switch(passedErrorMessageType) {
-		case 'valid':
-			errorMessage = allowText;
-			errorMessageColorIsRed= false;
-			break;
-		case 'invalid':
-			errorMessage = denyText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'blank':
-			errorMessage = blankText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'fillBlank':
-			errorMessage = fillblankText;
-			break;
+		switch (passedErrorMessageType) {
+			case 'valid':
+				errorMessage = allowText;
+				errorMessageColorIsRed = false;
+				break;
+			case 'invalid':
+				errorMessage = denyText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'blank':
+				errorMessage = blankText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'fillBlank':
+				errorMessage = fillblankText;
+				break;
 		}
 		setUsernameErrorMessage(errorMessage);
 		setUsernameErrorMessageIsRed(errorMessageColorIsRed);
@@ -95,22 +97,22 @@ const CreateAccount = (props: any) => {
 		const fillblankText = '*メールアドレスは必須です';
 		let errorMessage = '';
 		let errorMessageColorIsRed = true;
-		switch(passedErrorMessageType) {
-		case 'valid':
-			errorMessage = allowText;
-			errorMessageColorIsRed= false;
-			break;
-		case 'invalid':
-			errorMessage = denyText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'blank':
-			errorMessage = blankText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'fillBlank':
-			errorMessage = fillblankText;
-			break;
+		switch (passedErrorMessageType) {
+			case 'valid':
+				errorMessage = allowText;
+				errorMessageColorIsRed = false;
+				break;
+			case 'invalid':
+				errorMessage = denyText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'blank':
+				errorMessage = blankText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'fillBlank':
+				errorMessage = fillblankText;
+				break;
 		}
 		setEmailErrorMessage(errorMessage);
 		setEmailErrorMessageIsRed(errorMessageColorIsRed);
@@ -123,81 +125,78 @@ const CreateAccount = (props: any) => {
 		let errorMessage = '';
 		let errorMessageColorIsRed = true;
 		switch (passedErrorMessageType) {
-		case 'valid':
-			errorMessage = allowText;
-			errorMessageColorIsRed= false;
-			break;
-		case 'invalid':
-			errorMessage = denyText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'blank':
-			errorMessage = blankText;
-			errorMessageColorIsRed= true;
-			break;
-		case 'fillBlank':
-			errorMessage = fillblankText;
-			break;
+			case 'valid':
+				errorMessage = allowText;
+				errorMessageColorIsRed = false;
+				break;
+			case 'invalid':
+				errorMessage = denyText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'blank':
+				errorMessage = blankText;
+				errorMessageColorIsRed = true;
+				break;
+			case 'fillBlank':
+				errorMessage = fillblankText;
+				break;
 		}
 		setPasswordErrorMessage(errorMessage);
 		setPasswordErrorMessageIsRed(errorMessageColorIsRed);
 	};
-    
+
 	//Signupボタンを押した時に表示されるエラーメッセージの内容
 	const signupErrorTextInput = (errorCode: string, errorMessage: string) => {
 		let outputErrorText = '';
 		switch (errorCode) {
-		case 'auth/email-already-in-use':
-			//Thrown if there already exists an account with the given email address.
-			outputErrorText = 'このメールアドレスは既に使用されています';
-			break;
-		case 'auth/invalid-email':
-			//Thrown if the email address is not valid.
-			outputErrorText = '有効なメールアドレスを入力してください';
-			break;
-		case 'auth/operation-not-allowed':
-			//Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.
-			outputErrorText = 'メールアドレスとパスワードによるログインが無効になっています';
-			break;
-		case 'auth/weak-password':
-			//Thrown if the password is not strong enough.
-			outputErrorText = '脆弱性が高いためパスワードを再度設定してください';
-			break;
-		case 'auth/network-request-failed':
-			//default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
-			outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
-			break;
-		case 'refresh':
-			outputErrorText = '';
-			break;
-		default:
-			outputErrorText = errorMessage;
-			break;
+			case 'auth/email-already-in-use':
+				//Thrown if there already exists an account with the given email address.
+				outputErrorText = 'このメールアドレスは既に使用されています';
+				break;
+			case 'auth/invalid-email':
+				//Thrown if the email address is not valid.
+				outputErrorText = '有効なメールアドレスを入力してください';
+				break;
+			case 'auth/operation-not-allowed':
+				//Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.
+				outputErrorText = 'メールアドレスとパスワードによるログインが無効になっています';
+				break;
+			case 'auth/weak-password':
+				//Thrown if the password is not strong enough.
+				outputErrorText = '脆弱性が高いためパスワードを再度設定してください';
+				break;
+			case 'auth/network-request-failed':
+				//default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
+				outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
+				break;
+			case 'refresh':
+				outputErrorText = '';
+				break;
+			default:
+				outputErrorText = errorMessage;
+				break;
 		}
 		setSignupErrorMessage(outputErrorText);
 	};
 
-
 	//パスワードの表示/非表示に合わせてアイコンの切り替え
-	useEffect(
-		() => {
-			const visibleIconName = 'ios-eye';
-			const unVisibleIconName = 'ios-eye-off';
-			const unVisible: boolean = _isUnvisiblePassword;
-			let iconName: string;
-			if (unVisible) {
-				iconName = unVisibleIconName;
-			} else {
-				iconName = visibleIconName;
-			}
-			setPasswordIconTypeVisible(iconName);
+	useEffect(() => {
+		const visibleIconName = 'ios-eye';
+		const unVisibleIconName = 'ios-eye-off';
+		const unVisible: boolean = _isUnvisiblePassword;
+		let iconName: string;
+		if (unVisible) {
+			iconName = unVisibleIconName;
+		} else {
+			iconName = visibleIconName;
 		}
-		,[_isUnvisiblePassword]);
+		setPasswordIconTypeVisible(iconName);
+	}, [_isUnvisiblePassword]);
 
 	//フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
 	const inputUsername = (inputedUsername: string) => {
 		usernameInput(inputedUsername);
-		autoValidation(inputedUsername,'username');
+		autoValidation(inputedUsername, 'username');
 	};
 	const inputEmail = (inputedEmail: string) => {
 		emailInput(inputedEmail);
@@ -231,7 +230,7 @@ const CreateAccount = (props: any) => {
 		}
 		//validation
 		////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
-		const usernamePattern = (username: string):boolean => {
+		const usernamePattern = (username: string): boolean => {
 			if (username.length == 0) {
 				return false;
 			} else if (username.length > 13) {
@@ -240,7 +239,9 @@ const CreateAccount = (props: any) => {
 				return true;
 			}
 		};
-		const emailPattern = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+		const emailPattern = new RegExp(
+			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+		);
 		const passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
 		const isUsernameValid: boolean = usernamePattern(username);
 		const isEmailValid: boolean = emailPattern.test(email);
@@ -318,46 +319,52 @@ const CreateAccount = (props: any) => {
 		signupButtonDisabledInitialStateInput(false);
 		signupButtonDisabledInput(true);
 
-		firebase.auth().createUserWithEmailAndPassword(_email, _password).catch(function (error) {
-			console.log('errorCode: ' + error.code);
-			console.log('errorMessage: ' + error.message);
-			return error;
-		}).then(async (result) => {
-			//fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
-			signupErrorTextInput(result.code, result.messasge);
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(_email, _password)
+			.catch(function (error) {
+				console.log('errorCode: ' + error.code);
+				console.log('errorMessage: ' + error.message);
+				return error;
+			})
+			.then(async (result) => {
+				//fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
+				signupErrorTextInput(result.code, result.messasge);
 
-			if (result.user) {
-				const user = result.user;
-				_globalState.setCreateAccountEmail(user.email);
+				if (result.user) {
+					const user = result.user;
+					_globalState.setCreateAccountEmail(user.email);
 
-				const db = firebase.firestore().collection('userList').doc(user.uid);
-				db.set({
-					userName: _username,
-					iconURL: _defaultIconUrl,
-					uid: user.uid
-				});
-				db.collection('follower').doc('first').set({});
-				db.collection('followee').doc('first').set({});
-				firebase.auth().languageCode = 'ja';
-				let sentEmail: boolean | undefined;
-				//なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
-				await user.sendEmailVerification().then(function () {
-					//※errorがある場合でもthenの中身も実行される?
-					sentEmail = true;
-				})
-					.catch(function() {
-						sentEmail = false;
+					const db = firebase.firestore().collection('userList').doc(user.uid);
+					db.set({
+						userName: _username,
+						iconURL: _defaultIconUrl,
+						uid: user.uid,
 					});
-				if (sentEmail == true) {
-					_navigation.navigate('ResendEmail');
+					db.collection('follower').doc('first').set({});
+					db.collection('followee').doc('first').set({});
+					firebase.auth().languageCode = 'ja';
+					let sentEmail: boolean | undefined;
+					//なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
+					await user
+						.sendEmailVerification()
+						.then(function () {
+							//※errorがある場合でもthenの中身も実行される?
+							sentEmail = true;
+						})
+						.catch(function () {
+							sentEmail = false;
+						});
+					if (sentEmail == true) {
+						_navigation.navigate('ResendEmail');
+					}
+				} else {
+					console.log('予期せぬエラーが発生しました CreateAccount.tsx');
 				}
-			} else {
-				console.log('予期せぬエラーが発生しました CreateAccount.tsx');
-			}
-			signupButtonIsloadingInput(false);
-			signupButtonDisabledInitialStateInput(true);
-			signupButtonDisabledInput(false);
-		});
+				signupButtonIsloadingInput(false);
+				signupButtonDisabledInitialStateInput(true);
+				signupButtonDisabledInput(false);
+			});
 	};
 
 	return (
@@ -368,29 +375,33 @@ const CreateAccount = (props: any) => {
             <Text style={styles.logo}>アカウント新規作成</Text>
 
         </View> */}
-				<View style={styles.inputView} >
+				<View style={styles.inputView}>
 					<Input
 						inputStyle={styles.inputText}
 						placeholder="ユーザー名（アプリ内で変更可能）"
 						placeholderTextColor="#818181"
 						value={_username}
 						errorMessage={_usernameErrorMessage}
-						errorStyle={_usernameErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
+						errorStyle={
+							_usernameErrorMessageIsRed ? styles.redInputErrorMessage : styles.greenInputErrorMessage
+						}
 						onChangeText={inputUsername}
 					/>
 				</View>
-				<View style={styles.inputView} >
+				<View style={styles.inputView}>
 					<Input
 						inputStyle={styles.inputText}
 						placeholder="メールアドレス"
 						placeholderTextColor="#818181"
 						value={_email}
 						errorMessage={_emailErrorMessage}
-						errorStyle={_emailErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
+						errorStyle={
+							_emailErrorMessageIsRed ? styles.redInputErrorMessage : styles.greenInputErrorMessage
+						}
 						onChangeText={inputEmail}
 					/>
 				</View>
-				<View style={styles.inputView} >
+				<View style={styles.inputView}>
 					<Input
 						inputStyle={styles.inputText}
 						placeholder="パスワード(半角英数字６文字以上)"
@@ -398,59 +409,59 @@ const CreateAccount = (props: any) => {
 						value={_password}
 						secureTextEntry={_isUnvisiblePassword}
 						errorMessage={_passwordErrorMessage}
-						errorStyle={_passwordErrorMessageIsRed ?styles.redInputErrorMessage :styles.greenInputErrorMessage}
+						errorStyle={
+							_passwordErrorMessageIsRed ? styles.redInputErrorMessage : styles.greenInputErrorMessage
+						}
 						onChangeText={inutPassword}
 						rightIcon={
 							<Icon
-								name= {_passwordIconTypeVisible}
-								type='ionicon'
-								color='#517fa4' 
-								onPress={() => {isUnvisiblePasswordInput();}}
-							/>                    
+								name={_passwordIconTypeVisible}
+								type="ionicon"
+								color="#517fa4"
+								onPress={() => {
+									isUnvisiblePasswordInput();
+								}}
+							/>
 						}
 					/>
 				</View>
 				{/* ボタンの上のエラーメッセージ */}
 				<View>
-					<Text style={styles.aboveButtonMessage}>
-						{_signupErrorMessage}
-					</Text>
+					<Text style={styles.aboveButtonMessage}>{_signupErrorMessage}</Text>
 				</View>
-				<View
-					style={{width: '80%'}}
-				>
+				<View style={{ width: '80%' }}>
 					<ButtonElem
 						title="新規登録"
 						type="solid"
 						buttonStyle={styles.button}
 						onPress={pushSignup}
 						disabled={_signupButtonDisabled}
-						disabledStyle={_signupButtonDisabledInitialState
-							? null
-							: {
-								backgroundColor: '5E9CFE'
-							}
+						disabledStyle={
+							_signupButtonDisabledInitialState
+								? null
+								: {
+										backgroundColor: '5E9CFE',
+								  }
 						}
 						accessibilityLabel="Learn more about this purple button"
 						loading={_signupButtonIsloading}
 					/>
 				</View>
 
-
-				<TouchableOpacity
-					onPress={() => props.navigation.navigate('LoginScreen')}
-				>
+				<TouchableOpacity onPress={() => props.navigation.navigate('LoginScreen')}>
 					<Text style={styles.AlreadyHaveAccountText}> 既にアカウントをお持ちの方はこちら </Text>
 				</TouchableOpacity>
-				<View style={{marginLeft:40, marginRight: 30, marginTop: 80}}>
-					<Text>登録することで、
-						<Text style={{color: 'blue', textDecorationLine: 'underline'}}
+				<View style={{ marginLeft: 40, marginRight: 30, marginTop: 80 }}>
+					<Text>
+						登録することで、
+						<Text
+							style={{ color: 'blue', textDecorationLine: 'underline' }}
 							onPress={() => Linking.openURL('https://tomosume.flycricket.io/privacy.html')}>
-                    プライバシーポリシー
+							プライバシーポリシー
 						</Text>
-                    に同意したことになります。</Text>
+						に同意したことになります。
+					</Text>
 				</View>
-
 			</View>
 		</KeyboardAwareScrollView>
 	);
@@ -459,44 +470,41 @@ const CreateAccount = (props: any) => {
 const CreateAccountWrapper = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
-			{
-				globalState => <CreateAccount globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState) => <CreateAccount globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
 
 export default CreateAccountWrapper;
 
-
 const styles = StyleSheet.create({
 	keyboardScrollView: {
 		flex: 1,
-		backgroundColor: 'white'
+		backgroundColor: 'white',
 	},
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
 		alignItems: 'center',
-		paddingTop: '30%'
+		paddingTop: '30%',
 	},
 	logo: {
-		fontWeight:'bold',
-		fontSize:30,
-		color:'black',
+		fontWeight: 'bold',
+		fontSize: 30,
+		color: 'black',
 		marginTop: '20%',
-		marginBottom: '10%'
+		marginBottom: '10%',
 	},
-	inputView:{
-		width:'85%',
-		height:50,
-		marginBottom:20,
-		justifyContent:'center',
-		padding:20,
+	inputView: {
+		width: '85%',
+		height: 50,
+		marginBottom: 20,
+		justifyContent: 'center',
+		padding: 20,
 	},
-	inputText:{
-		height:50,
-		color:'black',
+	inputText: {
+		height: 50,
+		color: 'black',
 		paddingLeft: 5,
 		paddingRight: 0,
 		fontSize: 14,
@@ -511,18 +519,18 @@ const styles = StyleSheet.create({
 		marginTop: '2%',
 		marginBottom: '4%',
 		color: 'red',
-	 },
+	},
 	button: {
-		backgroundColor:'#5E9CFE',
+		backgroundColor: '#5E9CFE',
 		borderRadius: 25,
 		borderColor: 'black',
 		height: 50,
 	},
 	icon: {
-		marginRight: 10
+		marginRight: 10,
 	},
 	AlreadyHaveAccountText: {
 		textDecorationLine: 'underline',
 		marginTop: '5%',
-	}
+	},
 });

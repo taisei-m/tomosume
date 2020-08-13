@@ -7,19 +7,19 @@ import * as Permissions from 'expo-permissions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ContainerProps, TopStackNavProps } from '../../types/types';
 import { styles } from './style';
-import {db} from '../../../firebaseConfig';
+import { db } from '../../../firebaseConfig';
 import { fetchFolloweeIds, convertToReference, fetchReviews } from './index';
 
-const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
+const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 	const [allReviews, setAllReviews] = useState<any>([]);
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
 	const [refreshing, setRefreshing] = useState<boolean>(false);
-	const [isReview , setIsReview] = useState<boolean>(true);
+	const [isReview, setIsReview] = useState<boolean>(true);
 	const [pageDescription, setPageDescription] = useState<string>('');
 	const userId = props.globalState.state.uid;
 
 	useEffect(() => {
-		(async() => {
+		(async () => {
 			Permissions.askAsync(Permissions.LOCATION);
 		})();
 	});
@@ -30,11 +30,17 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 			// 自分の投稿も表示されるように自分のuidを追加する
 			followeeIds.push(userId);
 			const userReferences = await convertToReference(followeeIds);
-			const querySnapshot = await db.collectionGroup('reviews').where('user', 'in', userReferences).orderBy('createdAt', 'desc').get();
+			const querySnapshot = await db
+				.collectionGroup('reviews')
+				.where('user', 'in', userReferences)
+				.orderBy('createdAt', 'desc')
+				.get();
 			const reviews = await fetchReviews(querySnapshot.docs);
 			if (reviews.length == 0) {
 				setIsReview(false);
-				setPageDescription('ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。');
+				setPageDescription(
+					'ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。',
+				);
 			} else {
 				setIsReview(true);
 			}
@@ -44,7 +50,7 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 	}, [isRefreshed]);
 
 	// 友達のプロフィール欄に遷移する
-	const toFriendProfile = (id: string):void => {
+	const toFriendProfile = (id: string): void => {
 		props.globalState.setFriendId(id);
 		props.navigation.navigate('friendProfile');
 	};
@@ -58,13 +64,13 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 		setRefreshing(true);
 	};
 
-	return(
+	return (
 		<View style={styles.container}>
-			{ isReview ?
+			{isReview ? (
 				<FlatList
 					data={allReviews}
-					renderItem={
-						({ item }) => <ListItem
+					renderItem={({ item }) => (
+						<ListItem
 							id={item.shopId}
 							title={item.shopName}
 							category={item.category}
@@ -76,44 +82,38 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 							userId={item.userId}
 							pressMethod={toFriendProfile}
 						/>
-					}
+					)}
 					refreshing={refreshing}
 					onRefresh={handleRefresh}
 				/>
-				:
+			) : (
 				<View>
 					<ScrollView
-						refreshControl={
-							<RefreshControl
-								refreshing={refreshing}
-								onRefresh={() => updateReview()}
-							/>
-						}
-					>
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
 						<View style={styles.descriptionPosition}>
-							<View style={{flexDirection: 'row', alignItems: 'center', flex: 1, justifyContent: 'center'}}>
+							<View
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+									flex: 1,
+									justifyContent: 'center',
+								}}>
+								<Icon name="hand-o-up" color="#fbd01d" size={40} />
 								<Icon
-									name='hand-o-up'
-									color='#fbd01d'
-									size={40}
-								/>
-								<Icon
-									name='arrow-down'
-									color='black'
+									name="arrow-down"
+									color="black"
 									size={25}
-									style={
-										{
-											marginTop: 10,
-											marginLeft: 5
-										}
-									}
+									style={{
+										marginTop: 10,
+										marginLeft: 5,
+									}}
 								/>
 							</View>
 							<Text style={styles.description}>{pageDescription}</Text>
 						</View>
 					</ScrollView>
 				</View>
-			}
+			)}
 		</View>
 	);
 };
@@ -121,11 +121,7 @@ const Top:React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 export const TopWrapper: React.FC<TopStackNavProps<'Top'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{
-				(globalState:GlobalContainer) => <Top globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState: GlobalContainer) => <Top globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
-
-

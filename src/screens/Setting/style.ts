@@ -3,14 +3,14 @@ export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	itemName: {
 		fontSize: 25,
 		marginHorizontal: 10,
-		marginVertical: 6
+		marginVertical: 6,
 	},
 	icon: {
-		marginVertical: 6
-	}
+		marginVertical: 6,
+	},
 });

@@ -15,6 +15,6 @@ export const styles = StyleSheet.create({
 	text: {
 		fontSize: 18,
 		marginLeft: 15,
-		marginTop: 15
+		marginTop: 15,
 	},
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import GlobalStateContainer from '../store/GlobalState';
@@ -10,7 +10,7 @@ const ResendEmail = (props) => {
 	const [_titleText, setTitleText] = useState<string>('');
 	const [_contentText, setContentText] = useState<string>('');
 	const [_resendButtonIsloading, setResendButtonIsloading] = useState<boolean>(false);
-    
+
 	const emailInput = (text: string) => {
 		setEmail(text);
 	};
@@ -33,28 +33,29 @@ const ResendEmail = (props) => {
 	const contentTextInput = (textType: string) => {
 		let contentText = '';
 		const textSentEmailSuccesfully = 'メールを確認して本登録をしてください。';
-		const textSentEmailFailed =  '30秒～1分後に再送信し直してください。';
+		const textSentEmailFailed = '30秒～1分後に再送信し直してください。';
 		const textNotVertified = 'ログイン画面からログインしてください。';
 		if (textType == '初期表示') {
 			contentText = textSentEmailSuccesfully;
 		} else if (textType == '再送信') {
 			contentText = textSentEmailSuccesfully;
-		} if (textType == '再送信失敗') {
+		}
+		if (textType == '再送信失敗') {
 			contentText = textSentEmailFailed;
-		} if (textType == '本人確認済') {
+		}
+		if (textType == '本人確認済') {
 			contentText = textNotVertified;
 		}
 		setContentText(contentText);
 	};
-	useEffect(
-		() => {
-			const email: string = props.globalState.state.createAccountEmail;
-			emailInput(email);
-			const textType = '初期表示';
-			titleTextInput(textType, email);
-			contentTextInput(textType);
-		}, []);
-	const DoResendEmail = async() => {
+	useEffect(() => {
+		const email: string = props.globalState.state.createAccountEmail;
+		emailInput(email);
+		const textType = '初期表示';
+		titleTextInput(textType, email);
+		contentTextInput(textType);
+	}, []);
+	const DoResendEmail = async () => {
 		resendButtonIsloadingInput(true);
 		/*[改善の余地あり]
         サインインした後やとuserでメールアドレス取れるから再送信用のメールアドレス入力欄は作らんだ。
@@ -82,21 +83,24 @@ const ResendEmail = (props) => {
 				email = '';
 				titleTextInput(textType, email);
 				contentTextInput(textType);
-			} else if (emailVerified == false) {                
-				user.sendEmailVerification().then(function () {
-					// Email sent.
-					textType = '再送信';
-					email = '';
-					titleTextInput(textType, email);
-					contentTextInput(textType);
-				}).catch(function (error: any) :void {
-					// An error happened.
-					console.log('再送信失敗', error);
-					textType = '再送信失敗';
-					email = '';
-					titleTextInput(textType, email);
-					contentTextInput(textType);
-				});
+			} else if (emailVerified == false) {
+				user
+					.sendEmailVerification()
+					.then(function () {
+						// Email sent.
+						textType = '再送信';
+						email = '';
+						titleTextInput(textType, email);
+						contentTextInput(textType);
+					})
+					.catch(function (error: any): void {
+						// An error happened.
+						console.log('再送信失敗', error);
+						textType = '再送信失敗';
+						email = '';
+						titleTextInput(textType, email);
+						contentTextInput(textType);
+					});
 			}
 		} else {
 			alert('不正な処理が行われました。新しいメールアドレスで登録し直してください。');
@@ -106,15 +110,13 @@ const ResendEmail = (props) => {
 	};
 	return (
 		<View style={styles.container}>
-			<View style={{marginLeft: 30, marginRight: 25}}>
+			<View style={{ marginLeft: 30, marginRight: 25 }}>
 				<Text style={styles.titleText}>{_titleText}</Text>
 			</View>
-			<View >
+			<View>
 				<Text style={styles.contentText}>{_contentText}</Text>
 			</View>
-			<View
-				style={{width: '80%'}}
-			>
+			<View style={{ width: '80%' }}>
 				<ButtonElem
 					title="メールを再送信する"
 					type="solid"
@@ -124,8 +126,9 @@ const ResendEmail = (props) => {
 				/>
 			</View>
 			<TouchableOpacity
-				onPress={() => { _navigation.navigate('LoginScreen'); }}
-			>
+				onPress={() => {
+					_navigation.navigate('LoginScreen');
+				}}>
 				<Text style={styles.ToLoginText}> ログイン画面へ </Text>
 			</TouchableOpacity>
 		</View>
@@ -134,9 +137,7 @@ const ResendEmail = (props) => {
 const ResendEmailWrapper = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalStateContainer]}>
-			{
-				globalState => <ResendEmail globalState={globalState} navigation = {navigation} />
-			}
+			{(globalState) => <ResendEmail globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
@@ -148,54 +149,49 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	titleText:{
-		fontWeight:'bold',
-		fontSize:26,
-		color:'black',
-		marginBottom:40
+	titleText: {
+		fontWeight: 'bold',
+		fontSize: 26,
+		color: 'black',
+		marginBottom: 40,
 	},
-	contentText:{
-		fontSize:20,
-		color:'black',
-		marginBottom:40
+	contentText: {
+		fontSize: 20,
+		color: 'black',
+		marginBottom: 40,
 	},
-	inputView:{
-		width:'80%',
-		borderRadius:25,
+	inputView: {
+		width: '80%',
+		borderRadius: 25,
 		borderColor: 'black',
-		height:50,
-		marginBottom:20,
-		justifyContent:'center',
-		padding:20
+		height: 50,
+		marginBottom: 20,
+		justifyContent: 'center',
+		padding: 20,
 	},
-	inputText:{
-		height:50,
+	inputText: {
+		height: 50,
 		color: 'black',
 	},
 	forgot: {
 		margin: 20,
 		color: '#818181',
-		marginBottom: 60
+		marginBottom: 60,
 	},
 	button: {
-		backgroundColor:'#5E9CFE',
+		backgroundColor: '#5E9CFE',
 		borderRadius: 25,
 		borderColor: 'black',
-		height: 50
+		height: 50,
 	},
 	buttonText: {
-		color: 'white'
+		color: 'white',
 	},
 	ToLoginText: {
 		textDecorationLine: 'underline',
 		marginTop: '5%',
 	},
 	icon: {
-		marginRight: 10
-	}
+		marginRight: 10,
+	},
 });
-
-
-
-
-

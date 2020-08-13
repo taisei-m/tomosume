@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
 		borderRadius: 10,
 		height: 30,
 		padding: 5,
-		marginTop: 10
+		marginTop: 10,
 	},
 	button: {
 		borderColor: 'black',
@@ -20,6 +20,6 @@ export const styles = StyleSheet.create({
 		borderRadius: 10,
 		padding: 5,
 		marginTop: 10,
-		marginLeft: 10
-	}
+		marginLeft: 10,
+	},
 });

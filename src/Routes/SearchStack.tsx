@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {SearchWrapper} from '../screens/Search/Search';
-import {FriendProfileWrapper} from '../screens/FriendProfile/FriendProfile';
-import {FriendFolloweeListWrapper} from '../screens/FriendFolloweeList/FriendFolloweeList';
-import {FriendFollowerListWrapper} from '../screens/FriendFollowerList/FriendFollowerList';
-import {SearchStackParamList} from '../types/types';
+import { SearchWrapper } from '../screens/Search/Search';
+import { FriendProfileWrapper } from '../screens/FriendProfile/FriendProfile';
+import { FriendFolloweeListWrapper } from '../screens/FriendFolloweeList/FriendFolloweeList';
+import { FriendFollowerListWrapper } from '../screens/FriendFollowerList/FriendFollowerList';
+import { SearchStackParamList } from '../types/types';
 
 const SearchNavStack = createStackNavigator<SearchStackParamList>();
 
@@ -16,7 +16,7 @@ export const SearchStack: React.FC = () => {
 				component={SearchWrapper}
 				options={{
 					headerShown: false,
-					title: '検索'
+					title: '検索',
 				}}
 			/>
 			<SearchNavStack.Screen
@@ -24,7 +24,7 @@ export const SearchStack: React.FC = () => {
 				component={FriendProfileWrapper}
 				options={{
 					headerShown: true,
-					title: 'プロフィール'
+					title: 'プロフィール',
 				}}
 			/>
 			<SearchNavStack.Screen
@@ -40,11 +40,9 @@ export const SearchStack: React.FC = () => {
 				component={FriendFolloweeListWrapper}
 				options={{
 					headerShown: true,
-					title: 'フォロワーリスト'
+					title: 'フォロワーリスト',
 				}}
 			/>
 		</SearchNavStack.Navigator>
 	);
 };
-
-
