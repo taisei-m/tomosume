@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#fff',
-		flex: 1
+		flex: 1,
 	},
 	userName: {
 		color: 'black',
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
 	userIcon: {
 		width: 90,
 		height: 90,
-		borderRadius: 90/ 2,
+		borderRadius: 90 / 2,
 		borderColor: 'white',
 		borderWidth: 2,
 	},
@@ -21,29 +21,29 @@ export const styles = StyleSheet.create({
 		margin: 15,
 	},
 	shopName: {
-		fontSize: 25
+		fontSize: 25,
 	},
 	favoriteMenu: {
-		margin: 10
+		margin: 10,
 	},
 	number: {
-		fontSize: 28
+		fontSize: 28,
 	},
 	numberKey: {
 		fontSize: 12,
 		textAlign: 'center',
-		color: '#818181'
+		color: '#818181',
 	},
 	editButton: {
 		width: 160,
-		backgroundColor:"white",
-		borderRadius:15,
-		height:35,
-		alignItems:"center",
-		justifyContent:"center",
+		backgroundColor: 'white',
+		borderRadius: 15,
+		height: 35,
+		alignItems: 'center',
+		justifyContent: 'center',
 		borderColor: '#818181',
 		borderWidth: 1,
-		marginRight: 10
+		marginRight: 10,
 	},
 	editText: {
 		color: 'black',
@@ -51,6 +51,6 @@ export const styles = StyleSheet.create({
 	},
 	list: {
 		marginTop: 20,
-		marginBottom: 10
+		marginBottom: 10,
 	},
-})
+});
