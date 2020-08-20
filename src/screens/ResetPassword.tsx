@@ -103,7 +103,7 @@ const ResetPassword = (props: any) => {
 				.then(function () {
 					// Email sent.
 					// alert("パスワード再設定メールを送信しました。");
-					props.navigation.navigate('afterResetEmail');
+					props.navigation.navigate('AfterResetEmail');
 				})
 				.catch(function (error) {
 					// An error happened.

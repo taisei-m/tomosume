@@ -1,9 +1,9 @@
 import React from 'react';
-import SelectLoginOrSignup from '../screens/selectLoginOrSignup';
+import SelectLoginOrSignup from '../screens/SelectLoginOrSignup';
 import LoginScreen from '../screens/LoginScreen';
 import CreateAccount from '../screens/CreateAccount';
 import ResetPassword from '../screens/ResetPassword';
-import afterResetEmail from '../screens/afterResetPassword';
+import AfterResetEmail from '../screens/AfterResetPassword';
 import ResendEmail from '../screens/ResendEmail';
 import { NavLogin } from './NavLogin';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -31,8 +31,8 @@ export const NavUnlogin: React.FC = () => {
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen
-				name="afterResetEmail"
-				component={afterResetEmail}
+				name="AfterResetEmail"
+				component={AfterResetEmail}
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen name="ResendEmail" component={ResendEmail} options={{ headerShown: false }} />
