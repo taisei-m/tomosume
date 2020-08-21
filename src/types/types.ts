@@ -183,7 +183,7 @@ export type NavUnloginParamList = {
 	ResetPassword: {
 		headerShwon: boolean;
 	};
-	afterResetEmail: {
+	AfterResetEmail: {
 		headerShwon: boolean;
 	};
 	ResendEmail: {

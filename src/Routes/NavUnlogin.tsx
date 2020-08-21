@@ -1,6 +1,6 @@
 import React from 'react';
 import SelectLoginOrSignup from '../screens/SelectLoginOrSignup';
-import LoginScreen from '../screens/LoginScreen';
+import { LoginScreenWrapper } from '../screens/LoginScreen/LoginScreen';
 import CreateAccount from '../screens/CreateAccount';
 import ResetPassword from '../screens/ResetPassword';
 import AfterResetEmail from '../screens/AfterResetPassword';
@@ -19,7 +19,7 @@ export const NavUnlogin: React.FC = () => {
 				component={SelectLoginOrSignup}
 				options={{ headerShown: false }}
 			/>
-			<TabUnlogin.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
+			<TabUnlogin.Screen name="LoginScreen" component={LoginScreenWrapper} options={{ headerShown: false }} />
 			<TabUnlogin.Screen
 				name="CreateAccount"
 				component={CreateAccount}
