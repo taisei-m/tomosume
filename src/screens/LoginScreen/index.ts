@@ -35,7 +35,8 @@ export const validateTextEmailInput = (textType: string): string => {
         case 'fillBlank':
             return fillblankText;
     }
-
+    
+    return '';
 };
 
 // パスワード入力欄の下のエラーメッセージの表示
@@ -58,6 +59,8 @@ export const validateTextPasswordInput = (textType: string): string => {
         case 'fillBlank':
             return fillblankText;
     }
+
+    return '';
 };
 
 // ログインボタンの上のエラーメッセージの表示

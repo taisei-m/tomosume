@@ -16,8 +16,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 
 const CreateAccount = (props: any) => {
-	const [_globalState, setGlobalState] = useState(props.globalState);
-	const [_navigation, setNavigation] = useState(props.navigation);
+	const [_globalState] = useState(props.globalState);
+	const [_navigation] = useState(props.navigation);
 	const [_username, setUsername] = useState<string>('');
 	const [_email, setEmail] = useState<string>('');
 	const [_password, setPassword] = useState<string>('');
