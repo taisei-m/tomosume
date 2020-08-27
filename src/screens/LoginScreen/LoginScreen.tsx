@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
-import firebase from '../../firebaseConfig';
-import GlobalStateContainer from '../store/GlobalState';
+import firebase from '../../../firebaseConfig';
+import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {   
+    validateTextEmailInput, validateTextPasswordInput, signinErrorTextInputFirebase, 
+    testEmailPattern, testPasswordPattern } from './index'
+import { styles } from './style'
+import { NavUnloginParamList, ContainerProps } from '../../types/types';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const LoginScreen = (props: any) => {
+const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [emailAsRendered, setEmailAsRendered] = useState('');
 	const [passwordAsRendered, setPasswordAsRendered] = useState('');
 	const [validateTextEmail, setValidateTextEmail] = useState('');
@@ -39,80 +45,7 @@ const LoginScreen = (props: any) => {
 		setIsDisabledInitialState(result);
 	};
 
-	//CreateAccount.tsxの方が綺麗に書いてある
-	const validateTextEmailInput = (textType: string) => {
-		const allowText = 'ok ✓';
-		const denyText = '*メールアドレスの形式が正しくありません';
-		const blankText = '';
-		const fillblankText = '*メールアドレスは必須です';
-
-		switch (textType) {
-			case 'allow':
-				setValidateTextEmail(allowText);
-				break;
-			case 'deny':
-				setValidateTextEmail(denyText);
-				break;
-			case 'blank':
-				setValidateTextEmail(blankText);
-				break;
-			case 'fillBlank':
-				setValidateTextEmail(fillblankText);
-		}
-	};
-	//CreateAccount.tsxの方が綺麗に書いてある
-	const validateTextPasswordInput = (textType: string) => {
-		const allowText = 'ok ✓';
-		const denyText = '*半角英数字を含む6文字以上にしてください';
-		const blankText = '';
-		const fillblankText = '*パスワードは必須です';
-
-		switch (textType) {
-			case 'allow':
-				setValidateTextPassword(allowText);
-				break;
-			case 'deny':
-				setValidateTextPassword(denyText);
-				break;
-			case 'blank':
-				setValidateTextPassword(blankText);
-				break;
-			case 'fillBlank':
-				setValidateTextPassword(fillblankText);
-		}
-	};
-
-	const signinErrorTextInputFirebase = (errorCode: string, errorMessage: string) => {
-		let outputErrorText = '';
-		switch (errorCode) {
-			case 'auth/wrong-password':
-				//default firebase error message: 'The password is invalid or the user does not have a password'
-				outputErrorText = 'パスワードが違います。もしくは設定されていません。';
-				break;
-			case 'auth/user-not-found':
-				//default firebase error message: 'There is no user record corresponding to this identifier. The user may have been deleted.'
-				outputErrorText = 'メールアドレスまたはパスワードが間違っています';
-				break;
-			case 'auth/network-request-failed':
-				//default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
-				outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
-				break;
-			case 'auth/user-disabled':
-				outputErrorText = errorMessage; //翻訳できやんだ
-				break;
-			case 'authentication mail-did not check':
-				outputErrorText = 'アカウント作成時に送信された認証メールを確認してくだい';
-				break;
-			case 'refresh':
-				outputErrorText = '';
-				break;
-			default:
-				outputErrorText = errorMessage;
-				break;
-		}
-		setSigninErrorText(outputErrorText);
-	};
-
+	
 	////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
 	const inputedEmail = (textInputed: string) => {
 		emailAsRenderedInput(textInputed);
@@ -127,7 +60,7 @@ const LoginScreen = (props: any) => {
 
 	const doValidate = (textInputed: string, inputedPlace: string) => {
 		//signinボタンの上のエラーメッセージを非表示にする
-		signinErrorTextInputFirebase('refrech', '');
+		setSigninErrorText(signinErrorTextInputFirebase('refrech', ''));
 
 		let email = '';
 		let password = '';
@@ -142,15 +75,11 @@ const LoginScreen = (props: any) => {
 			password = textInputed;
 		}
 
-		const emailPattern = new RegExp(
-			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-		);
-		const passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
-
-		const approveEmailValidation = emailPattern.test(email);
-		const approvePasswordValidation = passwordPattern.test(password);
+		const approveEmailValidation = testEmailPattern(email);
+		const approvePasswordValidation = testPasswordPattern(password);
 		let isEmailBlank = true;
-		let isPasswordBlank = true;
+        let isPasswordBlank = true;
+        
 		//////入力欄の値に応じて入力方法のメッセージ(変更内容)を表示する
 
 		////フォームに値があるかどうかの判別
@@ -168,27 +97,27 @@ const LoginScreen = (props: any) => {
 		////フォーム(validate)の下に表示されるメッセージ
 		//メールアドレス
 		if (approveEmailValidation) {
-			validateTextEmailInput('allow');
+			setValidateTextEmail(validateTextEmailInput('allow'));
 			emailErrorIsRedInput(false);
 		} else if (!approveEmailValidation) {
 			if (isEmailBlank) {
-				validateTextEmailInput('blank');
+				setValidateTextEmail(validateTextEmailInput('blank'));
 				emailErrorIsRedInput(true);
 			} else if (!isEmailBlank) {
-				validateTextEmailInput('deny');
+				setValidateTextEmail(validateTextEmailInput('deny'));
 				emailErrorIsRedInput(true);
 			}
 		}
 		//パスワード
 		if (approvePasswordValidation) {
-			validateTextPasswordInput('allow');
+			setValidateTextPassword(validateTextPasswordInput('allow'));
 			passwordErrorIsRedInput(false);
 		} else if (!approvePasswordValidation) {
 			if (isPasswordBlank) {
-				validateTextPasswordInput('blank');
+				setValidateTextPassword(validateTextPasswordInput('blank'));
 				passwordErrorIsRedInput(true);
 			} else if (!isPasswordBlank) {
-				validateTextPasswordInput('deny');
+				setValidateTextPassword(validateTextPasswordInput('deny'));
 				passwordErrorIsRedInput(true);
 			}
 		}
@@ -217,7 +146,7 @@ const LoginScreen = (props: any) => {
 			})
 			.then((result) => {
 				//fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
-				signinErrorTextInputFirebase(result.code, result.messasge);
+				setSigninErrorText(signinErrorTextInputFirebase(result.code, result.messasge));
 
 				//firebaseに認可されたらログイン処理(ユーザー情報の取得)
 				if (result.user) {
@@ -226,7 +155,7 @@ const LoginScreen = (props: any) => {
 						props.globalState.login(result.user.uid);
 					} else if (result.user.emailVerified == false) {
 						//////メールを登録したけどメール認証していない場合
-						signinErrorTextInputFirebase('authentication mail-did not check', '');
+						setSigninErrorText(signinErrorTextInputFirebase('authentication mail-did not check', ''));
 						//認証メールを送る画面に飛ばす処理、ボタンの出現とか書くならここ
 					}
 				} else {
@@ -320,83 +249,18 @@ const LoginScreen = (props: any) => {
 	);
 };
 
-const LoginScreenWrapper = ({ navigation }) => {
+type LoginScreenNavigationProps = StackNavigationProp<NavUnloginParamList, 'LoginScreen'>;
+
+type NavigationProps = {
+	navigation: LoginScreenNavigationProps;
+};
+
+export const LoginScreenWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
-			{(globalState) => <LoginScreen globalState={globalState} navigation={navigation} />}
+		<Subscribe to={[GlobalContainer]}>
+			{(globalState: GlobalContainer) => <LoginScreen globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
 
-export default LoginScreenWrapper;
 
-const styles = StyleSheet.create({
-	keyboardScrollView: {
-		flex: 1,
-		backgroundColor: 'white',
-	},
-	sigininButton: {
-		width: '80%',
-	},
-	container: {
-		flex: 1,
-		backgroundColor: 'white',
-		alignItems: 'center',
-		// justifyContent: 'center',
-		paddingTop: '30%',
-	},
-	logo: {
-		fontWeight: 'bold',
-		fontSize: 50,
-		color: 'black',
-		marginTop: '20%',
-		marginBottom: '10%',
-	},
-	inputView: {
-		width: '80%',
-		borderRadius: 25,
-		borderColor: 'black',
-		borderWidth: 1,
-		height: 50,
-		justifyContent: 'center',
-		paddingLeft: '5%',
-		paddingRight: '5%',
-	},
-	inputText: {
-		height: 50,
-		color: 'black',
-	},
-	inputErrorMessage: {
-		marginBottom: '3%',
-		color: 'red',
-	},
-	inputNotErrorMessage: {
-		marginBottom: '3%',
-		color: '#48D1CC',
-	},
-	forgotText: {
-		color: 'black',
-		textDecorationLine: 'underline',
-		// marginBottom: "13%",
-	},
-	createAccountText: {
-		// color: '#818181',
-		color: 'black',
-		textDecorationLine: 'underline',
-		marginTop: '5%',
-	},
-	aboveButtonMessage: {
-		marginTop: '3%',
-		marginBottom: '4%',
-		color: 'red',
-	},
-	button: {
-		backgroundColor: '#5E9CFE',
-		borderRadius: 25,
-		borderColor: 'black',
-		height: 50,
-	},
-	icon: {
-		marginRight: 10,
-	},
-});

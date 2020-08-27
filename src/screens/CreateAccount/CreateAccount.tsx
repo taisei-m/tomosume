@@ -1,15 +1,23 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
+import { View, TouchableOpacity, Linking } from 'react-native';
 import { Text, Input, Icon, Button as ButtonElem } from 'react-native-elements';
-import firebase from '../../firebaseConfig';
+import firebase from '../../../firebaseConfig';
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../store/GlobalState';
+import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { testEmailPattern, testPasswordPattern } from '../LoginScreen/index';
+import { usernameErrorMessageInput, emailErrorMessageInput, passwordErrorMessageInput,
+		 signupErrorTextInput, testUsernamePattern,  
+} from './index'
+import { styles } from './style'
+import { NavUnloginParamList, ContainerProps } from '@/types/types';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const CreateAccount = (props: any) => {
-	const [_globalState, setGlobalState] = useState(props.globalState);
-	const [_navigation, setNavigation] = useState(props.navigation);
+
+const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
+	const [_globalState] = useState(props.globalState);
+	const [_navigation] = useState(props.navigation);
 	const [_username, setUsername] = useState<string>('');
 	const [_email, setEmail] = useState<string>('');
 	const [_password, setPassword] = useState<string>('');
@@ -39,7 +47,7 @@ const CreateAccount = (props: any) => {
 		})();
 	}, []);
 
-	////input関数
+	//input関数
 	const usernameInput = (passedUsername: string) => {
 		setUsername(passedUsername);
 	};
@@ -52,7 +60,7 @@ const CreateAccount = (props: any) => {
 	const signupButtonDisabledInput = (result: boolean) => {
 		setSignupButtonDisabled(result);
 	};
-	//アイコンが押されたら、パスワードの表示 / 非表示を切り替える
+	////アイコンが押されたら、パスワードの表示 / 非表示を切り替える
 	const isUnvisiblePasswordInput = () => {
 		setIsUnvisiblePassword(!_isUnvisiblePassword);
 	};
@@ -61,122 +69,6 @@ const CreateAccount = (props: any) => {
 	};
 	const signupButtonDisabledInitialStateInput = (result: boolean) => {
 		setSignupButtonDisabledInitialState(result);
-	};
-
-	const usernameErrorMessageInput = (passedErrorMessageType: string) => {
-		const allowText = 'ok ✓';
-		const denyText = '*13文字以内で入力してください';
-		const blankText = '';
-		const fillblankText = '*ユーザーネームは必須です';
-		let errorMessage = '';
-		let errorMessageColorIsRed = true;
-		switch (passedErrorMessageType) {
-			case 'valid':
-				errorMessage = allowText;
-				errorMessageColorIsRed = false;
-				break;
-			case 'invalid':
-				errorMessage = denyText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'blank':
-				errorMessage = blankText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'fillBlank':
-				errorMessage = fillblankText;
-				break;
-		}
-		setUsernameErrorMessage(errorMessage);
-		setUsernameErrorMessageIsRed(errorMessageColorIsRed);
-	};
-	const emailErrorMessageInput = (passedErrorMessageType: string) => {
-		const allowText = 'ok ✓';
-		const denyText = '*メールアドレスの形式が正しくありません';
-		const blankText = '';
-		const fillblankText = '*メールアドレスは必須です';
-		let errorMessage = '';
-		let errorMessageColorIsRed = true;
-		switch (passedErrorMessageType) {
-			case 'valid':
-				errorMessage = allowText;
-				errorMessageColorIsRed = false;
-				break;
-			case 'invalid':
-				errorMessage = denyText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'blank':
-				errorMessage = blankText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'fillBlank':
-				errorMessage = fillblankText;
-				break;
-		}
-		setEmailErrorMessage(errorMessage);
-		setEmailErrorMessageIsRed(errorMessageColorIsRed);
-	};
-	const passwordErrorMessageInput = (passedErrorMessageType: string) => {
-		const allowText = 'ok ✓';
-		const denyText = '*半角英数字を含む6文字以上にしてください';
-		const blankText = '';
-		const fillblankText = '*パスワードは必須です';
-		let errorMessage = '';
-		let errorMessageColorIsRed = true;
-		switch (passedErrorMessageType) {
-			case 'valid':
-				errorMessage = allowText;
-				errorMessageColorIsRed = false;
-				break;
-			case 'invalid':
-				errorMessage = denyText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'blank':
-				errorMessage = blankText;
-				errorMessageColorIsRed = true;
-				break;
-			case 'fillBlank':
-				errorMessage = fillblankText;
-				break;
-		}
-		setPasswordErrorMessage(errorMessage);
-		setPasswordErrorMessageIsRed(errorMessageColorIsRed);
-	};
-
-	//Signupボタンを押した時に表示されるエラーメッセージの内容
-	const signupErrorTextInput = (errorCode: string, errorMessage: string) => {
-		let outputErrorText = '';
-		switch (errorCode) {
-			case 'auth/email-already-in-use':
-				//Thrown if there already exists an account with the given email address.
-				outputErrorText = 'このメールアドレスは既に使用されています';
-				break;
-			case 'auth/invalid-email':
-				//Thrown if the email address is not valid.
-				outputErrorText = '有効なメールアドレスを入力してください';
-				break;
-			case 'auth/operation-not-allowed':
-				//Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.
-				outputErrorText = 'メールアドレスとパスワードによるログインが無効になっています';
-				break;
-			case 'auth/weak-password':
-				//Thrown if the password is not strong enough.
-				outputErrorText = '脆弱性が高いためパスワードを再度設定してください';
-				break;
-			case 'auth/network-request-failed':
-				//default firebase error message: ' A network error (such as timeout, interrupted connection or unreachable host) has occurred.'
-				outputErrorText = 'ネットワークエラー：インターネットに接続されていません';
-				break;
-			case 'refresh':
-				outputErrorText = '';
-				break;
-			default:
-				outputErrorText = errorMessage;
-				break;
-		}
-		setSignupErrorMessage(outputErrorText);
 	};
 
 	//パスワードの表示/非表示に合わせてアイコンの切り替え
@@ -208,8 +100,9 @@ const CreateAccount = (props: any) => {
 	};
 
 	const autoValidation = (inputedText: string, inputedForm: string) => {
-		//signinボタンの上のエラーメッセージを非表示にする
-		signupErrorTextInput('refresh', '');
+		// 新規作成ボタンの上のエラーメッセージを非表示にする
+		let outputErrorText: string = signupErrorTextInput('refresh', '');
+		setSignupErrorMessage(outputErrorText);
 
 		let username = '';
 		let email = '';
@@ -230,22 +123,9 @@ const CreateAccount = (props: any) => {
 		}
 		//validation
 		////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
-		const usernamePattern = (username: string): boolean => {
-			if (username.length == 0) {
-				return false;
-			} else if (username.length > 13) {
-				return false;
-			} else {
-				return true;
-			}
-		};
-		const emailPattern = new RegExp(
-			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-		);
-		const passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
-		const isUsernameValid: boolean = usernamePattern(username);
-		const isEmailValid: boolean = emailPattern.test(email);
-		const isPasswordValid: boolean = passwordPattern.test(password);
+		const isUsernameValid: boolean = testUsernamePattern(username);
+		const isEmailValid: boolean = testEmailPattern(email);
+		const isPasswordValid: boolean = testPasswordPattern(password);
 		let isUsernameBlank = true;
 		let isEmailBlank = true;
 		let isPasswordBlank = true;
@@ -267,7 +147,8 @@ const CreateAccount = (props: any) => {
 			isPasswordBlank = false;
 		}
 
-		//各入力欄のエラーの内容と色を切り替え
+		// 各入力欄のエラーの内容と色を切り替え
+		//// ユーザー名
 		let usernameValidationErrorMessageType = '';
 		if (isUsernameValid) {
 			usernameValidationErrorMessageType = 'valid';
@@ -278,8 +159,11 @@ const CreateAccount = (props: any) => {
 				usernameValidationErrorMessageType = 'invalid';
 			}
 		}
-		usernameErrorMessageInput(usernameValidationErrorMessageType);
-
+		let usernameErrorMessageInfo = usernameErrorMessageInput(usernameValidationErrorMessageType);
+		setUsernameErrorMessage(usernameErrorMessageInfo.errorMessage);
+		setUsernameErrorMessageIsRed(usernameErrorMessageInfo.errorMessageColorIsRed);
+		
+		//// メールアドレス
 		let emailValidationErrorMessageType = '';
 		if (isEmailValid) {
 			emailValidationErrorMessageType = 'valid';
@@ -290,8 +174,11 @@ const CreateAccount = (props: any) => {
 				emailValidationErrorMessageType = 'invalid';
 			}
 		}
-		emailErrorMessageInput(emailValidationErrorMessageType);
+		let emailErrorMessageInfo = emailErrorMessageInput(emailValidationErrorMessageType);
+		setEmailErrorMessage(emailErrorMessageInfo.errorMessage);
+    	setEmailErrorMessageIsRed(emailErrorMessageInfo.errorMessageColorIsRed);
 
+		//// パスワード
 		let passwordValidationErrorMessageType = '';
 		if (isPasswordValid) {
 			passwordValidationErrorMessageType = 'valid';
@@ -302,9 +189,11 @@ const CreateAccount = (props: any) => {
 				passwordValidationErrorMessageType = 'invalid';
 			}
 		}
-		passwordErrorMessageInput(passwordValidationErrorMessageType);
+		let passwordErrorMessageInfo = passwordErrorMessageInput(passwordValidationErrorMessageType);
+		setPasswordErrorMessage(passwordErrorMessageInfo.errorMessage);
+		setPasswordErrorMessageIsRed(passwordErrorMessageInfo.errorMessageColorIsRed);
 
-		//signupボタンの表示/非表示の切り替え
+		// 新規登録ボタンの表示/非表示の切り替え
 		let signupButtonDisabled = true;
 		if (isUsernameValid && isEmailValid && isPasswordValid) {
 			signupButtonDisabled = false;
@@ -328,8 +217,10 @@ const CreateAccount = (props: any) => {
 				return error;
 			})
 			.then(async (result) => {
-				//fiebaseと通信の上でのsigninエラーを表示する: signinボタンの上に表示
-				signupErrorTextInput(result.code, result.messasge);
+				//fiebaseと通信の上での新規作成時のエラーを表示する: 新規作成ボタンの上に表示
+				let outputErrorText: string = signupErrorTextInput(result.code, result.messasge);
+				setSignupErrorMessage(outputErrorText);
+
 
 				if (result.user) {
 					const user = result.user;
@@ -467,70 +358,17 @@ const CreateAccount = (props: any) => {
 	);
 };
 
-const CreateAccountWrapper = ({ navigation }) => {
+type CreateAccountNavigationProps = StackNavigationProp<NavUnloginParamList, 'CreateAccount'>
+
+type NavigationProps = {
+	navigation: CreateAccountNavigationProps;
+}
+
+export const CreateAccountWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
-			{(globalState) => <CreateAccount globalState={globalState} navigation={navigation} />}
+		<Subscribe to={[GlobalContainer]}>
+			{(globalState: GlobalContainer) => <CreateAccount globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
 
-export default CreateAccountWrapper;
-
-const styles = StyleSheet.create({
-	keyboardScrollView: {
-		flex: 1,
-		backgroundColor: 'white',
-	},
-	container: {
-		flex: 1,
-		backgroundColor: 'white',
-		alignItems: 'center',
-		paddingTop: '30%',
-	},
-	logo: {
-		fontWeight: 'bold',
-		fontSize: 30,
-		color: 'black',
-		marginTop: '20%',
-		marginBottom: '10%',
-	},
-	inputView: {
-		width: '85%',
-		height: 50,
-		marginBottom: 20,
-		justifyContent: 'center',
-		padding: 20,
-	},
-	inputText: {
-		height: 50,
-		color: 'black',
-		paddingLeft: 5,
-		paddingRight: 0,
-		fontSize: 14,
-	},
-	redInputErrorMessage: {
-		color: 'red',
-	},
-	greenInputErrorMessage: {
-		color: '#48D1CC',
-	},
-	aboveButtonMessage: {
-		marginTop: '2%',
-		marginBottom: '4%',
-		color: 'red',
-	},
-	button: {
-		backgroundColor: '#5E9CFE',
-		borderRadius: 25,
-		borderColor: 'black',
-		height: 50,
-	},
-	icon: {
-		marginRight: 10,
-	},
-	AlreadyHaveAccountText: {
-		textDecorationLine: 'underline',
-		marginTop: '5%',
-	},
-});

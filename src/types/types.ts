@@ -183,7 +183,7 @@ export type NavUnloginParamList = {
 	ResetPassword: {
 		headerShwon: boolean;
 	};
-	afterResetEmail: {
+	AfterResetPassword: {
 		headerShwon: boolean;
 	};
 	ResendEmail: {
@@ -300,3 +300,9 @@ export type SearchStackParamList = {
 export type SearchStackNavProps<T extends keyof SearchStackParamList> = {
 	navigation: StackNavigationProp<SearchStackParamList, T>;
 };
+
+export type ErorrMessageInput = {
+	errorMessage: string;
+	errorMessageColorIsRed : boolean
+	
+}
