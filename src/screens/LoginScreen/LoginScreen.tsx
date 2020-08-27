@@ -9,10 +9,10 @@ import {
     validateTextEmailInput, validateTextPasswordInput, signinErrorTextInputFirebase, 
     testEmailPattern, testPasswordPattern } from './index'
 import { styles } from './style'
-import { NavUnloginParamList } from '../../types/types';
+import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-const LoginScreen = (props: any) => {
+const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [emailAsRendered, setEmailAsRendered] = useState('');
 	const [passwordAsRendered, setPasswordAsRendered] = useState('');
 	const [validateTextEmail, setValidateTextEmail] = useState('');

@@ -11,11 +11,11 @@ import { usernameErrorMessageInput, emailErrorMessageInput, passwordErrorMessage
 		 signupErrorTextInput, testUsernamePattern,  
 } from './index'
 import { styles } from './style'
-import { NavUnloginParamList } from '@/types/types';
+import { NavUnloginParamList, ContainerProps } from '@/types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 
-const CreateAccount = (props: any) => {
+const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [_globalState] = useState(props.globalState);
 	const [_navigation] = useState(props.navigation);
 	const [_username, setUsername] = useState<string>('');
