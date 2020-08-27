@@ -1,8 +1,8 @@
 import React from 'react';
-import SelectLoginOrSignup from '../screens/SelectLoginOrSignup';
+import { SelectLoginOrSignupWrapper } from '../screens/SelectLoginOrSignup/SelectLoginOrSignup';
 import { LoginScreenWrapper } from '../screens/LoginScreen/LoginScreen';
 import { CreateAccountWrapper } from '../screens/CreateAccount/CreateAccount';
-import ResetPassword from '../screens/ResetPassword';
+import { ResetPasswordWrapper } from '../screens/ResetPassword/ResetPassword';
 import AfterResetEmail from '../screens/AfterResetPassword';
 import ResendEmail from '../screens/ResendEmail';
 import { NavLogin } from './NavLogin';
@@ -16,7 +16,7 @@ export const NavUnlogin: React.FC = () => {
 		<TabUnlogin.Navigator initialRouteName="SelectLoginOrSignup">
 			<TabUnlogin.Screen
 				name="SelectLoginOrSignup"
-				component={SelectLoginOrSignup}
+				component={SelectLoginOrSignupWrapper}
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen name="LoginScreen" component={LoginScreenWrapper} options={{ headerShown: false }} />
@@ -27,7 +27,7 @@ export const NavUnlogin: React.FC = () => {
 			/>
 			<TabUnlogin.Screen
 				name="ResetPassword"
-				component={ResetPassword}
+				component={ResetPasswordWrapper}
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen
