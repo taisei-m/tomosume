@@ -28,7 +28,6 @@ const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 	
 	const pushSubmit = () => {
 		submitButtonIsloadingInput(true);
-		console.log('pushed resetPassword');
 		const email: string = _email;
 		let errorCode = '';
 		let errorMessage = '';
