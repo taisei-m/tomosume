@@ -3,7 +3,7 @@ import { SelectLoginOrSignupWrapper } from '../screens/SelectLoginOrSignup/Selec
 import { LoginScreenWrapper } from '../screens/LoginScreen/LoginScreen';
 import { CreateAccountWrapper } from '../screens/CreateAccount/CreateAccount';
 import { ResetPasswordWrapper } from '../screens/ResetPassword/ResetPassword';
-import AfterResetEmail from '../screens/AfterResetPassword';
+import { AfterResetPasswordWrapper } from '../screens/AfterResetPassword/AfterResetPassword';
 import ResendEmail from '../screens/ResendEmail';
 import { NavLogin } from './NavLogin';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -31,8 +31,8 @@ export const NavUnlogin: React.FC = () => {
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen
-				name="AfterResetEmail"
-				component={AfterResetEmail}
+				name="AfterResetPassword"
+				component={AfterResetPasswordWrapper}
 				options={{ headerShown: false }}
 			/>
 			<TabUnlogin.Screen name="ResendEmail" component={ResendEmail} options={{ headerShown: false }} />

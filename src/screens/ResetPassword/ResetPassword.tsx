@@ -53,7 +53,7 @@ const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 				.then(function () {
 					// Email sent.
 					// alert("パスワード再設定メールを送信しました。");
-					props.navigation.navigate('AfterResetEmail');
+					props.navigation.navigate('AfterResetPassword');
 				})
 				.catch(function (error) {
 					// An error happened.
