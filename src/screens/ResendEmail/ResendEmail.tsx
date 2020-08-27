@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Text, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../store/GlobalState';
-import firebase from '../../firebaseConfig';
-const ResendEmail = (props) => {
+import GlobalContainer from '../../store/GlobalState';
+import firebase from '../../../firebaseConfig';
+import { styles } from './style';
+import { titleTextInput, contentTextInput} from './index'
+import { NavUnloginParamList, ContainerProps } from '@/types/types';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+const ResendEmail: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [_navigation] = useState(props.navigation);
 	const [_email, setEmail] = useState<string>('');
 	const [_titleText, setTitleText] = useState<string>('');
@@ -17,44 +22,15 @@ const ResendEmail = (props) => {
 	const resendButtonIsloadingInput = (result: boolean) => {
 		setResendButtonIsloading(result);
 	};
-	const titleTextInput = (textType: string, passedEmail: string) => {
-		let titleText = '';
-		if (textType == '初期表示') {
-			titleText = passedEmail + '\nへメールを送信しました';
-		} else if (textType == '再送信') {
-			titleText = _email + '\nへメールを再送信しました';
-		} else if (textType == '再送信失敗') {
-			titleText = _email + '\nへメールを再送信できませんでした';
-		} else if (textType == '本人確認済') {
-			titleText = _email + 'で登録されたアカウントは既に本人確認済です';
-		}
-		setTitleText(titleText);
-	};
-	const contentTextInput = (textType: string) => {
-		let contentText = '';
-		const textSentEmailSuccesfully = 'メールを確認して本登録をしてください。';
-		const textSentEmailFailed = '30秒～1分後に再送信し直してください。';
-		const textNotVertified = 'ログイン画面からログインしてください。';
-		if (textType == '初期表示') {
-			contentText = textSentEmailSuccesfully;
-		} else if (textType == '再送信') {
-			contentText = textSentEmailSuccesfully;
-		}
-		if (textType == '再送信失敗') {
-			contentText = textSentEmailFailed;
-		}
-		if (textType == '本人確認済') {
-			contentText = textNotVertified;
-		}
-		setContentText(contentText);
-	};
+	
 	useEffect(() => {
 		const email: string = props.globalState.state.createAccountEmail;
 		emailInput(email);
 		const textType = '初期表示';
-		titleTextInput(textType, email);
-		contentTextInput(textType);
-	}, []);
+		setTitleText(titleTextInput(textType, email, _email));
+		setContentText(contentTextInput(textType));
+    }, []);
+    
 	const DoResendEmail = async () => {
 		resendButtonIsloadingInput(true);
 		/*[改善の余地あり]
@@ -81,8 +57,8 @@ const ResendEmail = (props) => {
 			if (emailVerified == true) {
 				textType = '本人確認済';
 				email = '';
-				titleTextInput(textType, email);
-				contentTextInput(textType);
+				setTitleText(titleTextInput(textType, email, _email));
+				setContentText(contentTextInput(textType));
 			} else if (emailVerified == false) {
 				user
 					.sendEmailVerification()
@@ -90,16 +66,16 @@ const ResendEmail = (props) => {
 						// Email sent.
 						textType = '再送信';
 						email = '';
-						titleTextInput(textType, email);
-						contentTextInput(textType);
+						setTitleText(titleTextInput(textType, email, _email));
+						setContentText(contentTextInput(textType));
 					})
 					.catch(function (error: any): void {
 						// An error happened.
 						console.log('再送信失敗', error);
 						textType = '再送信失敗';
 						email = '';
-						titleTextInput(textType, email);
-						contentTextInput(textType);
+						setTitleText(titleTextInput(textType, email, _email));
+						setContentText(contentTextInput(textType));
 					});
 			}
 		} else {
@@ -107,7 +83,8 @@ const ResendEmail = (props) => {
 			console.log('ResendEmail.tsx  userが取得できませんでした');
 		}
 		resendButtonIsloadingInput(false);
-	};
+    };
+    
 	return (
 		<View style={styles.container}>
 			<View style={{ marginLeft: 30, marginRight: 25 }}>
@@ -134,64 +111,17 @@ const ResendEmail = (props) => {
 		</View>
 	);
 };
-const ResendEmailWrapper = ({ navigation }) => {
+
+type ResendEmailNavigationProps = StackNavigationProp<NavUnloginParamList, 'ResendEmail'>
+
+type NavigationProps = {
+    navigation: ResendEmailNavigationProps;
+}
+
+export const ResendEmailWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
-			{(globalState) => <ResendEmail globalState={globalState} navigation={navigation} />}
+		<Subscribe to={[GlobalContainer]}>
+			{(globalState: GlobalContainer) => <ResendEmail globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
-export default ResendEmailWrapper;
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: 'white',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	titleText: {
-		fontWeight: 'bold',
-		fontSize: 26,
-		color: 'black',
-		marginBottom: 40,
-	},
-	contentText: {
-		fontSize: 20,
-		color: 'black',
-		marginBottom: 40,
-	},
-	inputView: {
-		width: '80%',
-		borderRadius: 25,
-		borderColor: 'black',
-		height: 50,
-		marginBottom: 20,
-		justifyContent: 'center',
-		padding: 20,
-	},
-	inputText: {
-		height: 50,
-		color: 'black',
-	},
-	forgot: {
-		margin: 20,
-		color: '#818181',
-		marginBottom: 60,
-	},
-	button: {
-		backgroundColor: '#5E9CFE',
-		borderRadius: 25,
-		borderColor: 'black',
-		height: 50,
-	},
-	buttonText: {
-		color: 'white',
-	},
-	ToLoginText: {
-		textDecorationLine: 'underline',
-		marginTop: '5%',
-	},
-	icon: {
-		marginRight: 10,
-	},
-});
