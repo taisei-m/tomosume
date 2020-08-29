@@ -130,7 +130,7 @@ export type regionType = {
 
 export type ContainerType = {
 	isSplash: boolean;
-	isSignout: string;
+	isSignout: boolean | undefined;
 	uid: string;
 	itemId: string;
 	friendId: string;
@@ -142,7 +142,7 @@ export type ContainerProps = {
 	globalState: {
 		state: {
 			isSplash: boolean;
-			isSignout: string;
+			isSignout: boolean | undefined;
 			uid: string;
 			itemId: string;
 			friendId: string;
@@ -150,7 +150,7 @@ export type ContainerProps = {
 			resetPasswordEmail: string;
 		};
 		setSplashFalse: () => void;
-		setSignout: (result: string) => void;
+		setSignout: (result: boolean) => void;
 		login: (uid: string) => void;
 		logout: () => void;
 		setItemId: (id: string) => void;
@@ -303,6 +303,5 @@ export type SearchStackNavProps<T extends keyof SearchStackParamList> = {
 
 export type ErorrMessageInput = {
 	errorMessage: string;
-	errorMessageColorIsRed : boolean
-	
-}
+	errorMessageColorIsRed: boolean;
+};

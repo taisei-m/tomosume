@@ -15,8 +15,8 @@ const Splash = (props: ContainerProps) => {
 	//認証状態の取得、状態に応じて画面遷移
 	const checkIsAuthed = async () => {
 		firebase.auth().onAuthStateChanged(function (user) {
-			let isnotAuthed;
-			let emailVerified;
+			let isnotAuthed!: boolean;
+			let emailVerified: boolean;
 			if (user) {
 				// User is signed in.
 				// アカウント作成するとfirebaseに認可される。
@@ -25,13 +25,13 @@ const Splash = (props: ContainerProps) => {
 				emailVerified = user.emailVerified;
 				if (emailVerified == true) {
 					props.globalState.setUid(user.uid);
-					isnotAuthed = 'false';
+					isnotAuthed = false;
 				} else if (emailVerified == false) {
-					isnotAuthed = 'true';
+					isnotAuthed = true;
 				}
 			} else {
 				// No user is signed in.
-				isnotAuthed = 'true';
+				isnotAuthed = true;
 			}
 			props.globalState.setSignout(isnotAuthed);
 			return;

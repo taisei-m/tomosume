@@ -4,28 +4,20 @@ import { NavLogin } from './NavLogin';
 import { NavUnlogin } from './NavUnlogin';
 import { NavigationContainer } from '@react-navigation/native';
 import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../store/GlobalState';
+import GlobalContainer from '../store/GlobalState';
 import SplashScreen from '../screens/Splash';
-import { IndexParamList } from '../types/types';
+import { IndexParamList, ContainerProps } from '../types/types';
 
 const Stack = createStackNavigator<IndexParamList>();
 
-type IndexProps = {
-	globalState: {
-		state: {
-			isSplash: boolean;
-			isSignout: string;
-		};
-	};
-};
-const Index: React.FC<IndexProps> = (props) => {
-	if (props.globalState.state.isSplash == true || props.globalState.state.isSignout == '') {
+const Index: React.FC<ContainerProps> = (props) => {
+	if (props.globalState.state.isSplash == true || props.globalState.state.isSignout == undefined) {
 		return <SplashScreen />;
 	}
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
-				{props.globalState.state.isSignout == 'true' ? (
+				{props.globalState.state.isSignout == true ? (
 					<Stack.Screen name="NavUnlogin" component={NavUnlogin} options={{ headerShown: false }} />
 				) : (
 					<Stack.Screen name="NavLogined" component={NavLogin} options={{ headerShown: false }} />
@@ -37,8 +29,8 @@ const Index: React.FC<IndexProps> = (props) => {
 
 const indexWrapper = () => {
 	return (
-		<Subscribe to={[GlobalStateContainer]}>
-			{(globalState) => <Index globalState={globalState} />}
+		<Subscribe to={[GlobalContainer]}>
+			{(globalState: GlobalContainer) => <Index globalState={globalState} />}
 		</Subscribe>
 	);
 };
