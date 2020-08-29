@@ -3,12 +3,12 @@ import { View, TouchableOpacity, TextInput } from 'react-native';
 import { Text, Button as ButtonElem } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../../firebaseConfig';
-import { styles } from './style'
+import { styles } from './style';
 import GlobalContainer from '../../store/GlobalState';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { errorMessageAboveSubmitButtonInput } from './index';
-import { testEmailPattern } from '../LoginScreen/index'
+import { testEmailPattern } from '../LoginScreen/index';
 
 const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [navigation] = useState(props.navigation);
@@ -25,13 +25,13 @@ const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const submitButtonIsloadingInput = (result: boolean) => {
 		setSubmitButtonIsloading(result);
 	};
-	
+
 	const pushSubmit = () => {
 		submitButtonIsloadingInput(true);
 		const email: string = _email;
 		let errorCode = '';
 		let errorMessage = '';
-		
+
 		const approveEmailValidation = testEmailPattern(email);
 		props.globalState.setResetPasswordEmail(email);
 
@@ -106,17 +106,18 @@ const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 	);
 };
 
-type ResetPasswordProps = StackNavigationProp<NavUnloginParamList, 'ResetPassword'>
+type ResetPasswordProps = StackNavigationProp<NavUnloginParamList, 'ResetPassword'>;
 
 type NavigationProps = {
-    navigation: ResetPasswordProps;
-}
+	navigation: ResetPasswordProps;
+};
 
 export const ResetPasswordWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <ResetPassword globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<ResetPassword globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
-

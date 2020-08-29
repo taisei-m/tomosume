@@ -4,7 +4,7 @@ import { ContainerType } from '../types/types';
 export default class GlobalContainer extends Container<ContainerType> {
 	state = {
 		isSplash: true,
-		isSignout: '',
+		isSignout: undefined,
 		uid: '',
 		itemId: '',
 		friendId: '',
@@ -18,7 +18,7 @@ export default class GlobalContainer extends Container<ContainerType> {
 		});
 	};
 	//Splash.tsx
-	setSignout = (result: string): void => {
+	setSignout = (result: boolean): void => {
 		this.setState({
 			isSignout: result,
 		});
@@ -26,7 +26,7 @@ export default class GlobalContainer extends Container<ContainerType> {
 	//LoginScreen.tsx
 	login = (uid: string): void => {
 		this.setState({
-			isSignout: 'false',
+			isSignout: false,
 		});
 		this.setState({
 			uid: uid,
@@ -35,7 +35,7 @@ export default class GlobalContainer extends Container<ContainerType> {
 	//Setting.tsx
 	logout = (): void => {
 		this.setState({
-			isSignout: 'true',
+			isSignout: true,
 		});
 	};
 	setItemId = (id: string): void => {
