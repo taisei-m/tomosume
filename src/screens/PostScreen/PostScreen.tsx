@@ -70,7 +70,7 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 		setInputedShopName(text);
 	};
 	const close = () => {
-		//　falseになると検索結果の一覧が表示されなくなる
+		// falseになると検索結果の一覧が表示されなくなる
 		setIsShownPredictions(false);
 		change('');
 	};
