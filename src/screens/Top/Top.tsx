@@ -5,13 +5,13 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import * as Permissions from 'expo-permissions';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ContainerProps, TopStackNavProps } from '../../types/types';
+import { ContainerProps, TopStackNavProps, ReviewDocResponse } from '../../types/types';
 import { styles } from './style';
 import { db } from '../../../firebaseConfig';
 import { fetchFolloweeIds, convertToReference, fetchReviews } from './index';
 
 const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
-	const [allReviews, setAllReviews] = useState<any>([]);
+	const [allReviews, setAllReviews] = useState<ReviewDocResponse[]>([]);
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
 	const [refreshing, setRefreshing] = useState<boolean>(false);
 	const [isReview, setIsReview] = useState<boolean>(true);

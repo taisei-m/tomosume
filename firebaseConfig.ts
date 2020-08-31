@@ -9,11 +9,10 @@ import {
 	FIREBASE_STORAGE_BUCKET,
 	FIREBASE_MESSAGING_SENDER_ID,
 	FIREBASE_APP_ID,
-	FIREBASE_MEASUREMENT_ID
+	FIREBASE_MEASUREMENT_ID,
 } from 'react-native-dotenv';
 
-
-const firebaseConfig =  {
+const firebaseConfig = {
 	apiKey: FIREBASE_API_KEY,
 	authDomain: FIREBASE_AUTH_DOMAIN,
 	databaseURL: FIREBASE_DATABASE_URL,
@@ -21,12 +20,11 @@ const firebaseConfig =  {
 	storageBucket: FIREBASE_STORAGE_BUCKET,
 	messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
 	appId: FIREBASE_APP_ID,
-	measurementId: FIREBASE_MEASUREMENT_ID
+	measurementId: FIREBASE_MEASUREMENT_ID,
 };
 
 export const Firebase = firebase.initializeApp(firebaseConfig);
 export default firebase;
-
 
 // export const Firebase = firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
