@@ -23,7 +23,7 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 			Permissions.askAsync(Permissions.LOCATION);
 		})();
 	});
-	// fetch all reviews and show them
+	// fetch all reviews from firestore and show them
 	useEffect(() => {
 		void (async () => {
 			const followeeIds = await fetchFolloweeIds(userId);
@@ -54,7 +54,6 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 		props.globalState.setFriendId(id);
 		props.navigation.navigate('friendProfile');
 	};
-
 	const handleRefresh = () => {
 		setIsRefreshed(!isRefreshed);
 		setRefreshing(true);
