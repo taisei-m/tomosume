@@ -44,7 +44,6 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 			} else {
 				setIsReview(true);
 			}
-			console.log(reviews[0].shopAddress);
 			setAllReviews(reviews);
 			setRefreshing(false);
 		})();
