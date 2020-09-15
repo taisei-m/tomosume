@@ -7,13 +7,16 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { testEmailPattern, testPasswordPattern } from '../LoginScreen/index';
-import { usernameErrorMessageInput, emailErrorMessageInput, passwordErrorMessageInput,
-		 signupErrorTextInput, testUsernamePattern,  
-} from './index'
-import { styles } from './style'
+import {
+	usernameErrorMessageInput,
+	emailErrorMessageInput,
+	passwordErrorMessageInput,
+	signupErrorTextInput,
+	testUsernamePattern,
+} from './index';
+import { styles } from './style';
 import { NavUnloginParamList, ContainerProps } from '@/types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 
 const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [_globalState] = useState(props.globalState);
@@ -41,7 +44,7 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	// firebase storageから画像のurlを取得する処理
 	useEffect(() => {
 		(async () => {
-			const storageRef = firebase.storage().ref('user/icon/' + 'test-image');
+			const storageRef = firebase.storage().ref('user/default/' + 'user-icon.png');
 			const url = await storageRef.getDownloadURL();
 			setDefaultIconUrl(url);
 		})();
@@ -162,7 +165,7 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 		let usernameErrorMessageInfo = usernameErrorMessageInput(usernameValidationErrorMessageType);
 		setUsernameErrorMessage(usernameErrorMessageInfo.errorMessage);
 		setUsernameErrorMessageIsRed(usernameErrorMessageInfo.errorMessageColorIsRed);
-		
+
 		//// メールアドレス
 		let emailValidationErrorMessageType = '';
 		if (isEmailValid) {
@@ -176,7 +179,7 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 		}
 		let emailErrorMessageInfo = emailErrorMessageInput(emailValidationErrorMessageType);
 		setEmailErrorMessage(emailErrorMessageInfo.errorMessage);
-    	setEmailErrorMessageIsRed(emailErrorMessageInfo.errorMessageColorIsRed);
+		setEmailErrorMessageIsRed(emailErrorMessageInfo.errorMessageColorIsRed);
 
 		//// パスワード
 		let passwordValidationErrorMessageType = '';
@@ -220,7 +223,6 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 				//fiebaseと通信の上での新規作成時のエラーを表示する: 新規作成ボタンの上に表示
 				let outputErrorText: string = signupErrorTextInput(result.code, result.messasge);
 				setSignupErrorMessage(outputErrorText);
-
 
 				if (result.user) {
 					const user = result.user;
@@ -327,13 +329,7 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 						buttonStyle={styles.button}
 						onPress={pushSignup}
 						disabled={_signupButtonDisabled}
-						disabledStyle={
-							_signupButtonDisabledInitialState
-								? null
-								: {
-										backgroundColor: '5E9CFE',
-								  }
-						}
+						disabledStyle={_signupButtonDisabledInitialState ? null : { backgroundColor: '5E9CFE' }}
 						accessibilityLabel="Learn more about this purple button"
 						loading={_signupButtonIsloading}
 					/>
@@ -358,17 +354,18 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	);
 };
 
-type CreateAccountNavigationProps = StackNavigationProp<NavUnloginParamList, 'CreateAccount'>
+type CreateAccountNavigationProps = StackNavigationProp<NavUnloginParamList, 'CreateAccount'>;
 
 type NavigationProps = {
 	navigation: CreateAccountNavigationProps;
-}
+};
 
 export const CreateAccountWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <CreateAccount globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<CreateAccount globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
-
