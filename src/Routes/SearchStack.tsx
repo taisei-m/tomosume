@@ -1,70 +1,48 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import search from '../screens/Search'
-import friendProfile from '../screens/friendProfile'
-import friendFollowerList from '../screens/friendFolloweeList';
-import friendFolloweeList from '../screens/friendFollowerList'
-import { Subscribe } from 'unstated';
-import GlobalStateContainer from '../containers/GlobalState';
+import { SearchWrapper } from '../screens/Search/Search';
+import { FriendProfileWrapper } from '../screens/FriendProfile/FriendProfile';
+import { FriendFolloweeListWrapper } from '../screens/FriendFolloweeList/FriendFolloweeList';
+import { FriendFollowerListWrapper } from '../screens/FriendFollowerList/FriendFollowerList';
+import { SearchStackParamList } from '../types/types';
 
-const SearchNavStack = createStackNavigator();
+const SearchNavStack = createStackNavigator<SearchStackParamList>();
 
-const SearchStack = (props) => {
-    let navigation = props.navigation;
-    // ページを移動してstackgがたまった状態でtabをタップするとsearchに遷移する
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('tabPress', e => {
-            navigation.navigate('seaerch')
-        });
-        return unsubscribe;
-    }, [navigation]);
-
-    return (
-    <SearchNavStack.Navigator>
-        <SearchNavStack.Screen
-            name="seaerch"
-            component={search}
-            options={{
-                headerShown: false,
-                title: '検索'
-            }}
-        />
-        <SearchNavStack.Screen
-            name="friendProfile"
-            component={friendProfile}
-            options={{
-                headerShown: true,
-                title: 'プロフィール'
-            }}
-        />
-        <SearchNavStack.Screen
-            name="friendFollowerList"
-            component={friendFollowerList}
-            options={{
-                headerShown: true,
-                title: 'フォローリスト',
-            }}
-        />
-        <SearchNavStack.Screen
-            name="friendFolloweeList"
-            component={friendFolloweeList}
-            options={{
-                headerShown: true,
-                title: 'フォロワーリスト'
-            }}
-        />
-    </SearchNavStack.Navigator>
-    )
+export const SearchStack: React.FC = () => {
+	return (
+		<SearchNavStack.Navigator>
+			<SearchNavStack.Screen
+				name="search"
+				component={SearchWrapper}
+				options={{
+					headerShown: false,
+					title: '検索',
+				}}
+			/>
+			<SearchNavStack.Screen
+				name="friendProfile"
+				component={FriendProfileWrapper}
+				options={{
+					headerShown: true,
+					title: 'プロフィール',
+				}}
+			/>
+			<SearchNavStack.Screen
+				name="friendFollowerList"
+				component={FriendFollowerListWrapper}
+				options={{
+					headerShown: true,
+					title: 'フォローリスト',
+				}}
+			/>
+			<SearchNavStack.Screen
+				name="friendFolloweeList"
+				component={FriendFolloweeListWrapper}
+				options={{
+					headerShown: true,
+					title: 'フォロワーリスト',
+				}}
+			/>
+		</SearchNavStack.Navigator>
+	);
 };
-
-const ProfileStackWrapper = ({ navigation }) => {
-    return (
-        <Subscribe to={[GlobalStateContainer]}>
-            {
-                globalState => <SearchStack globalState={globalState} navigation = {navigation} />
-            }
-        </Subscribe>
-    );
-}
-
-export default ProfileStackWrapper;
