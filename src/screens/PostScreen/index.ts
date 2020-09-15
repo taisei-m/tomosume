@@ -25,6 +25,7 @@ export const fetchShopDescription = async (address: string): Promise<any> => {
 	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
 	const shopDescription = await fetch(apiUrl);
 	const shopDescriptionJson = await shopDescription.json();
+	console.log(shopDescriptionJson);
 	return shopDescriptionJson;
 };
 type shopInfomationType = {
@@ -76,7 +77,7 @@ export const registerReview = async (
 		.set({
 			shopId: shopInfomation.placeId,
 			user: db.collection('userList').doc(uid),
-			address: address,
+			shopAddress: address,
 			shopName: shopName,
 			favoriteMenu: favoriteMenu,
 			price: price,

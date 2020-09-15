@@ -27,6 +27,7 @@ export const fetchReviews = async (
 	const reviews: ReviewsDocResponse = await Promise.all(
 		queryDocsSnapshot.map(async (item) => {
 			const review = item.data() as ReviewDocResponse;
+			console.log(review.shopAddress);
 			review.key = item.id;
 			const userProfile = await review.user.get();
 			review.userName = userProfile.get('userName');
