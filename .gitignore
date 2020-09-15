@@ -14,3 +14,9 @@ tomosume.jks
 api
 # macOS
 .DS_Store
+firebase.json
+firebase-debug.log
+firestore.rules
+firestore.indexes.json
+storage.rules
+ui-debug.log
