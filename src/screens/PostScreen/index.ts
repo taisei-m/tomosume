@@ -76,7 +76,7 @@ export const registerReview = async (
 		.set({
 			shopId: shopInfomation.placeId,
 			user: db.collection('userList').doc(uid),
-			address: address,
+			shopAddress: address,
 			shopName: shopName,
 			favoriteMenu: favoriteMenu,
 			price: price,
