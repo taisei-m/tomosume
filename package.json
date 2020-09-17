@@ -8,7 +8,9 @@
     "eject": "expo eject",
     "test": "jest",
     "lint": "eslint --ext .tsx --ext .ts src/ --fix",
-    "format": "prettier --check ./src"
+    "format": "prettier --check ./src",
+    "prestorybook": "rnstl",
+    "storybook": "storybook start"
   },
   "dependencies": {
     "@firebase/testing": "0.20.10",
@@ -64,6 +66,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
+    "@expo/webpack-config": "0.12.29",
+    "@storybook/react-native": "5.3.21",
     "@types/expo": "33.0.1",
     "@types/firebase": "3.2.1",
     "@types/jest": "26.0.9",
