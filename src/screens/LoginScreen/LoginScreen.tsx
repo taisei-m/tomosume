@@ -5,10 +5,14 @@ import { Subscribe } from 'unstated';
 import firebase from '../../../firebaseConfig';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {   
-    validateTextEmailInput, validateTextPasswordInput, signinErrorTextInputFirebase, 
-    testEmailPattern, testPasswordPattern } from './index'
-import { styles } from './style'
+import {
+	validateTextEmailInput,
+	validateTextPasswordInput,
+	signinErrorTextInputFirebase,
+	testEmailPattern,
+	testPasswordPattern,
+} from './index';
+import { styles } from './style';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -44,8 +48,6 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const isDisabledInitialStateInput = (result: boolean) => {
 		setIsDisabledInitialState(result);
 	};
-
-	
 	////入力されたのがemailかpasswordかどっちか判別してログイン関数を呼ぶ
 	const inputedEmail = (textInputed: string) => {
 		emailAsRenderedInput(textInputed);
@@ -78,8 +80,8 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 		const approveEmailValidation = testEmailPattern(email);
 		const approvePasswordValidation = testPasswordPattern(password);
 		let isEmailBlank = true;
-        let isPasswordBlank = true;
-        
+		let isPasswordBlank = true;
+
 		//////入力欄の値に応じて入力方法のメッセージ(変更内容)を表示する
 
 		////フォームに値があるかどうかの判別
@@ -223,17 +225,11 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 						buttonStyle={styles.button}
 						onPress={pushLogin}
 						disabled={signinButtonDisabled}
-						disabledStyle={
-							_isDisabledInitialState
-								? null
-								: {
-										backgroundColor: '5E9CFE',
-								  }
-						}
+						disabledStyle={_isDisabledInitialState ? null : { backgroundColor: '5E9CFE' }}
 						loading={signinButtonIsloading}
 					/>
 				</View>
-				{/* アカウント作成画面へ　ボタン */}
+				{/* アカウント作成画面へボタン */}
 				<TouchableOpacity
 					onPress={() => {
 						props.navigation.navigate('CreateAccount');
@@ -258,9 +254,9 @@ type NavigationProps = {
 export const LoginScreenWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <LoginScreen globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<LoginScreen globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
-
-

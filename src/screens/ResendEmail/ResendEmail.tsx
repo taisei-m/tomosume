@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import firebase from '../../../firebaseConfig';
 import { styles } from './style';
-import { titleTextInput, contentTextInput} from './index'
+import { titleTextInput, contentTextInput } from './index';
 import { NavUnloginParamList, ContainerProps } from '@/types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -22,15 +22,15 @@ const ResendEmail: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const resendButtonIsloadingInput = (result: boolean) => {
 		setResendButtonIsloading(result);
 	};
-	
+
 	useEffect(() => {
 		const email: string = props.globalState.state.createAccountEmail;
 		emailInput(email);
 		const textType = '初期表示';
 		setTitleText(titleTextInput(textType, email, _email));
 		setContentText(contentTextInput(textType));
-    }, []);
-    
+	}, []);
+
 	const DoResendEmail = async () => {
 		resendButtonIsloadingInput(true);
 		/*[改善の余地あり]
@@ -83,8 +83,8 @@ const ResendEmail: React.FC<NavigationProps & ContainerProps> = (props) => {
 			console.log('ResendEmail.tsx  userが取得できませんでした');
 		}
 		resendButtonIsloadingInput(false);
-    };
-    
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={{ marginLeft: 30, marginRight: 25 }}>
@@ -112,16 +112,18 @@ const ResendEmail: React.FC<NavigationProps & ContainerProps> = (props) => {
 	);
 };
 
-type ResendEmailNavigationProps = StackNavigationProp<NavUnloginParamList, 'ResendEmail'>
+type ResendEmailNavigationProps = StackNavigationProp<NavUnloginParamList, 'ResendEmail'>;
 
 type NavigationProps = {
-    navigation: ResendEmailNavigationProps;
-}
+	navigation: ResendEmailNavigationProps;
+};
 
 export const ResendEmailWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <ResendEmail globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<ResendEmail globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };

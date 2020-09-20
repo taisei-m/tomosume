@@ -7,17 +7,22 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { testEmailPattern, testPasswordPattern } from '../LoginScreen/index';
-import { usernameErrorMessageInput, emailErrorMessageInput, passwordErrorMessageInput,
-		 signupErrorTextInput, testUsernamePattern,  
-} from './index'
-import { styles } from './style'
+import {
+	changeUserNameErrorMessage,
+	changeEmailErrorMessage,
+	passwordErrorMessageInput,
+	getSignupErrorMessage,
+	checkIsUserNameValid,
+	checkIsEmpty,
+	changeValidationMessageType,
+	checkCanSignup,
+	setUser,
+} from './index';
+import { styles } from './style';
 import { NavUnloginParamList, ContainerProps } from '@/types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-
 const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
-	const [_globalState] = useState(props.globalState);
-	const [_navigation] = useState(props.navigation);
 	const [_username, setUsername] = useState<string>('');
 	const [_email, setEmail] = useState<string>('');
 	const [_password, setPassword] = useState<string>('');
@@ -47,225 +52,152 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 		})();
 	}, []);
 
-	//input関数
-	const usernameInput = (passedUsername: string) => {
-		setUsername(passedUsername);
-	};
-	const emailInput = (passedEmail: string) => {
-		setEmail(passedEmail);
-	};
-	const passwordInput = (passedPassword: string) => {
-		setPassword(passedPassword);
-	};
-	const signupButtonDisabledInput = (result: boolean) => {
-		setSignupButtonDisabled(result);
-	};
-	////アイコンが押されたら、パスワードの表示 / 非表示を切り替える
-	const isUnvisiblePasswordInput = () => {
-		setIsUnvisiblePassword(!_isUnvisiblePassword);
-	};
-	const signupButtonIsloadingInput = (passed: boolean) => {
-		setSignupButtonIsloading(passed);
-	};
-	const signupButtonDisabledInitialStateInput = (result: boolean) => {
-		setSignupButtonDisabledInitialState(result);
-	};
-
 	//パスワードの表示/非表示に合わせてアイコンの切り替え
 	useEffect(() => {
-		const visibleIconName = 'ios-eye';
-		const unVisibleIconName = 'ios-eye-off';
 		const unVisible: boolean = _isUnvisiblePassword;
 		let iconName: string;
 		if (unVisible) {
-			iconName = unVisibleIconName;
+			iconName = 'ios-eye-off';
 		} else {
-			iconName = visibleIconName;
+			iconName = 'ios-eye';
 		}
 		setPasswordIconTypeVisible(iconName);
 	}, [_isUnvisiblePassword]);
 
 	//フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
 	const inputUsername = (inputedUsername: string) => {
-		usernameInput(inputedUsername);
+		setUsername(inputedUsername);
 		autoValidation(inputedUsername, 'username');
 	};
 	const inputEmail = (inputedEmail: string) => {
-		emailInput(inputedEmail);
+		setEmail(inputedEmail);
 		autoValidation(inputedEmail, 'email');
 	};
 	const inutPassword = (inputedPassword: string) => {
-		passwordInput(inputedPassword);
+		setPassword(inputedPassword);
 		autoValidation(inputedPassword, 'password');
 	};
 
-	const autoValidation = (inputedText: string, inputedForm: string) => {
-		// 新規作成ボタンの上のエラーメッセージを非表示にする
-		let outputErrorText: string = signupErrorTextInput('refresh', '');
-		setSignupErrorMessage(outputErrorText);
-
-		let username = '';
-		let email = '';
-		let password = '';
-
+	const input = (
+		inputedText: string,
+		inputedForm: 'username' | 'email' | 'password',
+	): { username: string; email: string; password: string } => {
+		let registerdInfo = {
+			username: '',
+			email: '',
+			password: '',
+		};
 		if (inputedForm == 'username') {
-			username = inputedText;
-			email = _email;
-			password = _password;
+			registerdInfo.username = inputedText;
+			registerdInfo.email = _email;
+			registerdInfo.password = _password;
 		} else if (inputedForm == 'email') {
-			username = _username;
-			email = inputedText;
-			password = _password;
-		} else if (inputedForm == 'password') {
-			username = _username;
-			email = _email;
-			password = inputedText;
+			registerdInfo.username = _username;
+			registerdInfo.email = inputedText;
+			registerdInfo.password = _password;
+		} else {
+			registerdInfo.username = _username;
+			registerdInfo.email = _email;
+			registerdInfo.password = inputedText;
 		}
+		return registerdInfo;
+	};
+	const autoValidation = (inputedText: string, inputedForm: 'username' | 'email' | 'password') => {
+		// 新規作成ボタンの上のエラーメッセージを非表示にする
+		let outputErrorText: string = '';
+		setSignupErrorMessage(outputErrorText);
+		const registerInfo = input(inputedText, inputedForm);
 		//validation
-		////※名詞＋形容詞の場合。名詞のこぶが一つなら前置修飾、二つ以上なら後置修飾or後置で統一？
-		const isUsernameValid: boolean = testUsernamePattern(username);
-		const isEmailValid: boolean = testEmailPattern(email);
-		const isPasswordValid: boolean = testPasswordPattern(password);
-		let isUsernameBlank = true;
-		let isEmailBlank = true;
-		let isPasswordBlank = true;
+		const isUsernameValid: boolean = checkIsUserNameValid(registerInfo.username);
+		const isEmailValid: boolean = testEmailPattern(registerInfo.email);
+		const isPasswordValid: boolean = testPasswordPattern(registerInfo.password);
 
-		//各入力欄が未入力かどうか確かめる
-		if (username == '') {
-			isUsernameBlank = true;
-		} else {
-			isUsernameBlank = false;
-		}
-		if (email == '') {
-			isEmailBlank = true;
-		} else {
-			isEmailBlank = false;
-		}
-		if (password == '') {
-			isPasswordBlank = true;
-		} else {
-			isPasswordBlank = false;
-		}
-
+		const isUserNameEmpty = checkIsEmpty(registerInfo.username);
+		const isEmailEmpty = checkIsEmpty(registerInfo.email);
+		const isPasswordEmpty = checkIsEmpty(registerInfo.password);
 		// 各入力欄のエラーの内容と色を切り替え
 		//// ユーザー名
-		let usernameValidationErrorMessageType = '';
-		if (isUsernameValid) {
-			usernameValidationErrorMessageType = 'valid';
-		} else if (!isUsernameValid) {
-			if (isUsernameBlank) {
-				usernameValidationErrorMessageType = 'blank';
-			} else {
-				usernameValidationErrorMessageType = 'invalid';
-			}
-		}
-		let usernameErrorMessageInfo = usernameErrorMessageInput(usernameValidationErrorMessageType);
-		setUsernameErrorMessage(usernameErrorMessageInfo.errorMessage);
-		setUsernameErrorMessageIsRed(usernameErrorMessageInfo.errorMessageColorIsRed);
-		
+		const userNameValidationMessageType = changeValidationMessageType(
+			isUsernameValid,
+			isUserNameEmpty,
+		);
+		const userNameErrorMessage = changeUserNameErrorMessage(userNameValidationMessageType);
+		setUsernameErrorMessage(userNameErrorMessage.errorMessage);
+		setUsernameErrorMessageIsRed(userNameErrorMessage.errorMessageColorIsRed);
+
 		//// メールアドレス
-		let emailValidationErrorMessageType = '';
-		if (isEmailValid) {
-			emailValidationErrorMessageType = 'valid';
-		} else if (!isEmailValid) {
-			if (isEmailBlank) {
-				emailValidationErrorMessageType = 'blank';
-			} else if (!isEmailBlank) {
-				emailValidationErrorMessageType = 'invalid';
-			}
-		}
-		let emailErrorMessageInfo = emailErrorMessageInput(emailValidationErrorMessageType);
-		setEmailErrorMessage(emailErrorMessageInfo.errorMessage);
-    	setEmailErrorMessageIsRed(emailErrorMessageInfo.errorMessageColorIsRed);
+		const emailValidationMessageType = changeValidationMessageType(isEmailValid, isEmailEmpty);
+		const emailErrorMessage = changeEmailErrorMessage(emailValidationMessageType);
+		setEmailErrorMessage(emailErrorMessage.errorMessage);
+		setEmailErrorMessageIsRed(emailErrorMessage.errorMessageColorIsRed);
 
 		//// パスワード
-		let passwordValidationErrorMessageType = '';
-		if (isPasswordValid) {
-			passwordValidationErrorMessageType = 'valid';
-		} else if (!isPasswordValid) {
-			if (isPasswordBlank) {
-				passwordValidationErrorMessageType = 'blank';
-			} else if (!isPasswordBlank) {
-				passwordValidationErrorMessageType = 'invalid';
-			}
-		}
-		let passwordErrorMessageInfo = passwordErrorMessageInput(passwordValidationErrorMessageType);
-		setPasswordErrorMessage(passwordErrorMessageInfo.errorMessage);
-		setPasswordErrorMessageIsRed(passwordErrorMessageInfo.errorMessageColorIsRed);
+		const passwordValidationMessageType = changeValidationMessageType(
+			isPasswordValid,
+			isPasswordEmpty,
+		);
+		const passwordErrorMessage = passwordErrorMessageInput(passwordValidationMessageType);
+		setPasswordErrorMessage(passwordErrorMessage.errorMessage);
+		setPasswordErrorMessageIsRed(passwordErrorMessage.errorMessageColorIsRed);
 
 		// 新規登録ボタンの表示/非表示の切り替え
-		let signupButtonDisabled = true;
-		if (isUsernameValid && isEmailValid && isPasswordValid) {
-			signupButtonDisabled = false;
-		} else {
-			signupButtonDisabled = true;
-		}
-		signupButtonDisabledInput(signupButtonDisabled);
+		const canSignup = checkCanSignup({
+			userName: isUsernameValid,
+			email: isEmailValid,
+			password: isPasswordValid,
+		});
+		setSignupButtonDisabled(canSignup);
 	};
-
-	const pushSignup = () => {
-		signupButtonIsloadingInput(true);
-		signupButtonDisabledInitialStateInput(false);
-		signupButtonDisabledInput(true);
+	const signup = () => {
+		setSignupButtonIsloading(true);
+		setSignupButtonDisabledInitialState(false);
+		setSignupButtonDisabled(true);
 
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(_email, _password)
-			.catch(function (error) {
-				console.log('errorCode: ' + error.code);
-				console.log('errorMessage: ' + error.message);
-				return error;
+			.catch((error) => {
+				const authError = error as firebase.auth.Error;
+				const errorCode = authError.code;
+				const errorMessage = authError.message;
+				const signupErrorMessage: string = getSignupErrorMessage(errorCode, errorMessage);
+				setSignupErrorMessage(signupErrorMessage);
 			})
 			.then(async (result) => {
-				//fiebaseと通信の上での新規作成時のエラーを表示する: 新規作成ボタンの上に表示
-				let outputErrorText: string = signupErrorTextInput(result.code, result.messasge);
-				setSignupErrorMessage(outputErrorText);
-
-
-				if (result.user) {
+				if (typeof result == 'object') {
 					const user = result.user;
-					_globalState.setCreateAccountEmail(user.email);
-
-					const db = firebase.firestore().collection('userList').doc(user.uid);
-					db.set({
-						userName: _username,
-						iconURL: _defaultIconUrl,
-						uid: user.uid,
-					});
-					db.collection('follower').doc('first').set({});
-					db.collection('followee').doc('first').set({});
-					firebase.auth().languageCode = 'ja';
-					let sentEmail: boolean | undefined;
-					//なんでかわからんけどsendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
-					await user
-						.sendEmailVerification()
-						.then(function () {
-							//※errorがある場合でもthenの中身も実行される?
-							sentEmail = true;
-						})
-						.catch(function () {
-							sentEmail = false;
-						});
-					if (sentEmail == true) {
-						_navigation.navigate('ResendEmail');
+					if (user) {
+						if (user.email) {
+							props.globalState.setCreateAccountEmail(user.email);
+						} else {
+							console.log('email is empty');
+						}
+						setUser(_username, _defaultIconUrl, user.uid);
+						firebase.auth().languageCode = 'ja';
+						//FIXME:sendEmailVerificationメソッドこのファイルやとエラーでやんけどresendEmailで使うと[Error: We have blocked all requests from this device due to unusual activity. Try again later.]のエラーcatchする。
+						await user
+							.sendEmailVerification()
+							.then(() => {
+								props.navigation.navigate('ResendEmail');
+							})
+							.catch((error) => {
+								console.log(error);
+							});
+					} else {
+						console.log('予期せぬエラーが発生しました CreateAccount.tsx');
 					}
 				} else {
-					console.log('予期せぬエラーが発生しました CreateAccount.tsx');
+					console.log('error');
 				}
-				signupButtonIsloadingInput(false);
-				signupButtonDisabledInitialStateInput(true);
-				signupButtonDisabledInput(false);
+				setSignupButtonIsloading(false);
+				setSignupButtonDisabledInitialState(true);
+				setSignupButtonDisabled(false);
 			});
 	};
 
 	return (
 		<KeyboardAwareScrollView style={styles.keyboardScrollView}>
 			<View style={styles.container}>
-				{/* <View>
-
-            <Text style={styles.logo}>アカウント新規作成</Text>
-
-        </View> */}
 				<View style={styles.inputView}>
 					<Input
 						inputStyle={styles.inputText}
@@ -310,7 +242,7 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 								type="ionicon"
 								color="#517fa4"
 								onPress={() => {
-									isUnvisiblePasswordInput();
+									setIsUnvisiblePassword(!_isUnvisiblePassword);
 								}}
 							/>
 						}
@@ -325,15 +257,9 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 						title="新規登録"
 						type="solid"
 						buttonStyle={styles.button}
-						onPress={pushSignup}
+						onPress={signup}
 						disabled={_signupButtonDisabled}
-						disabledStyle={
-							_signupButtonDisabledInitialState
-								? null
-								: {
-										backgroundColor: '5E9CFE',
-								  }
-						}
+						disabledStyle={_signupButtonDisabledInitialState ? null : { backgroundColor: '5E9CFE' }}
 						accessibilityLabel="Learn more about this purple button"
 						loading={_signupButtonIsloading}
 					/>
@@ -358,17 +284,18 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	);
 };
 
-type CreateAccountNavigationProps = StackNavigationProp<NavUnloginParamList, 'CreateAccount'>
+type CreateAccountNavigationProps = StackNavigationProp<NavUnloginParamList, 'CreateAccount'>;
 
 type NavigationProps = {
 	navigation: CreateAccountNavigationProps;
-}
+};
 
 export const CreateAccountWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <CreateAccount globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<CreateAccount globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
-
