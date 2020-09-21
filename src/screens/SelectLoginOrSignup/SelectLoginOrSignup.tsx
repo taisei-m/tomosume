@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
-import { styles } from './style'
+import { styles } from './style';
 
 const SelectLoginOrSignup: React.FC<NavigationProps & ContainerProps> = (props) => {
 	return (
@@ -31,16 +31,15 @@ const SelectLoginOrSignup: React.FC<NavigationProps & ContainerProps> = (props) 
 type SelectLoginOrSignupWrapper = StackNavigationProp<NavUnloginParamList, 'SelectLoginOrSignup'>;
 
 type NavigationProps = {
-    navigation: SelectLoginOrSignupWrapper;
-}
+	navigation: SelectLoginOrSignupWrapper;
+};
 
 export const SelectLoginOrSignupWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <SelectLoginOrSignup globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<SelectLoginOrSignup globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
-
-
-

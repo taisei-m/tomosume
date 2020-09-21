@@ -14,6 +14,7 @@ const Splash = (props: ContainerProps) => {
 	};
 	//認証状態の取得、状態に応じて画面遷移
 	const checkIsAuthed = async () => {
+		console.log('===========================================');
 		firebase.auth().onAuthStateChanged(function (user) {
 			let isnotAuthed!: boolean;
 			let emailVerified: boolean;
