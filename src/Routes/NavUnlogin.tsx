@@ -19,7 +19,11 @@ export const NavUnlogin: React.FC = () => {
 				component={SelectLoginOrSignupWrapper}
 				options={{ headerShown: false }}
 			/>
-			<TabUnlogin.Screen name="LoginScreen" component={LoginScreenWrapper} options={{ headerShown: false }} />
+			<TabUnlogin.Screen
+				name="LoginScreen"
+				component={LoginScreenWrapper}
+				options={{ headerShown: false }}
+			/>
 			<TabUnlogin.Screen
 				name="CreateAccount"
 				component={CreateAccountWrapper}
@@ -35,10 +39,11 @@ export const NavUnlogin: React.FC = () => {
 				component={AfterResetPasswordWrapper}
 				options={{ headerShown: false }}
 			/>
-			<TabUnlogin.Screen 
-				name="ResendEmail" 
-				component={ResendEmailWrapper} 
-				options={{ headerShown: false }} />
+			<TabUnlogin.Screen
+				name="ResendEmail"
+				component={ResendEmailWrapper}
+				options={{ headerShown: false }}
+			/>
 			<TabUnlogin.Screen name="NavLogin" component={NavLogin} options={{ headerShown: false }} />
 		</TabUnlogin.Navigator>
 	);
