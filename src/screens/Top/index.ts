@@ -37,3 +37,13 @@ export const fetchReviews = async (
 	);
 	return reviews;
 };
+
+export const fetchQuerySnapshot = async (
+	userReferences: firebase.firestore.DocumentReference<User>[],
+): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => {
+	return await db
+		.collectionGroup('reviews')
+		.where('user', 'in', userReferences)
+		.orderBy('createdAt', 'desc')
+		.get();
+};

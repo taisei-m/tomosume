@@ -7,15 +7,13 @@ import * as Permissions from 'expo-permissions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ContainerProps, TopStackNavProps, ReviewDocResponse } from '../../types/types';
 import { styles } from './style';
-import { db } from '../../../firebaseConfig';
-import { fetchFolloweeIds, convertToReference, fetchReviews } from './index';
+import { fetchFolloweeIds, convertToReference, fetchReviews, fetchQuerySnapshot } from './index';
 
 const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 	const [allReviews, setAllReviews] = useState<ReviewDocResponse[]>([]);
 	const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
 	const [refreshing, setRefreshing] = useState<boolean>(false);
 	const [isReview, setIsReview] = useState<boolean>(true);
-	const [pageDescription, setPageDescription] = useState<string>('');
 	const userId = props.globalState.state.uid;
 
 	useEffect(() => {
@@ -30,17 +28,10 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 			// 自分の投稿も表示されるように自分のuidを追加する
 			followeeIds.push(userId);
 			const userReferences = await convertToReference(followeeIds);
-			const querySnapshot = await db
-				.collectionGroup('reviews')
-				.where('user', 'in', userReferences)
-				.orderBy('createdAt', 'desc')
-				.get();
+			const querySnapshot = await fetchQuerySnapshot(userReferences);
 			const reviews = await fetchReviews(querySnapshot.docs);
 			if (reviews.length == 0) {
 				setIsReview(false);
-				setPageDescription(
-					'ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。',
-				);
 			} else {
 				setIsReview(true);
 			}
@@ -108,7 +99,11 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 									}}
 								/>
 							</View>
-							<Text style={styles.description}>{pageDescription}</Text>
+							<Text style={styles.description}>
+								{
+									'ここには投稿されたレビューが表示されます。画面上部を引くことで、最新の投稿を確認することができます。'
+								}
+							</Text>
 						</View>
 					</ScrollView>
 				</View>
