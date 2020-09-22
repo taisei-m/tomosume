@@ -11,49 +11,44 @@ import { styles } from './style';
 import {
 	ContainerProps,
 	SearchStackNavProps,
-	regionType,
-	ReviewsDocResponse,
+	Region,
+	ShopDocResponse,
+	Reviews,
+	ShopDescription,
 } from '../../types/types';
 import {
 	fetchFolloweeIds,
-	convertToReferenceType,
+	convertArrayToReference,
 	fetchReviews,
 	fetchShopDescription,
+	fetchShopsDescriptionByFollowees,
+	fetchReviewsByFollowees,
 } from './index';
-import { db } from '../../../firebaseConfig';
-
-// TODO:フォローしているユーザを判別する関数は独立させたい
-// TODO:新しく投稿したお店が自動で更新されるようにしたい
 
 const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props) => {
-	const [allShopsData, setAllShopsData] = useState<any>([]);
-	const [_allReviews, setAllReviews] = useState<any>([]);
+	const [allShopsDescription, setAllShopsDescription] = useState<ShopDocResponse[]>([]);
+	const [_allReviews, setAllReviews] = useState<Reviews>([]);
 	const [_refresh, setRefresh] = useState<boolean>(false);
-	const [region, setRegion] = useState<regionType>({
-		latitude: 10,
-		longitude: 90,
-		latitudeDelta: 0.05,
-		longitudeDelta: 0.05,
-	});
-	const refRBSheet = useRef();
+	const [region, setRegion] = useState<Region>(null!);
+	const refRBSheet = useRef<RBSheet>(null!);
+
+	const executeSetRegion = (latitude: number, longitude: number) => {
+		setRegion({
+			latitude,
+			longitude,
+			latitudeDelta: 0.05,
+			longitudeDelta: 0.05,
+		});
+	};
+
 	useEffect(() => {
 		(async () => {
 			const { status } = await Permissions.askAsync(Permissions.LOCATION);
 			if (status == 'granted') {
 				const location = await Location.getCurrentPositionAsync({});
-				setRegion({
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude,
-					latitudeDelta: 0.05,
-					longitudeDelta: 0.05,
-				});
+				executeSetRegion(location.coords.latitude, location.coords.longitude);
 			} else {
-				setRegion({
-					latitude: 35.67832667,
-					longitude: 139.77044378,
-					latitudeDelta: 0.08,
-					longitudeDelta: 0.08,
-				});
+				executeSetRegion(35.67832667, 139.77044378);
 			}
 		})();
 	}, []);
@@ -62,48 +57,30 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 		(async () => {
 			const followeeIds = await fetchFolloweeIds(props.globalState.state.uid);
 			followeeIds.push(props.globalState.state.uid);
-			const convertedFollowees = await convertToReferenceType(followeeIds);
-			const shopReviewdByFollower = await db
-				.collectionGroup('reviews')
-				.where('user', 'in', convertedFollowees)
-				.orderBy('createdAt', 'desc')
-				.get();
-			const shopReviewdByFollowerDocs = shopReviewdByFollower.docs;
-			const shopDescriptions = await fetchShopDescription(shopReviewdByFollowerDocs);
-			setAllShopsData(shopDescriptions);
+			const FolloweeReferences = await convertArrayToReference(followeeIds);
+			const shopsDescriptionByFollowees = await fetchShopsDescriptionByFollowees(FolloweeReferences);
+			const shopsDescriptionByFolloweesDocs = shopsDescriptionByFollowees.docs;
+			const shopDescriptions = await fetchShopDescription(shopsDescriptionByFolloweesDocs);
+			setAllShopsDescription(shopDescriptions);
 		})();
 	}, [_refresh]);
 
 	// 選択したお店の全レビューを取得する
-	const getAllReviews = async (
-		id: string,
-		latitude: number,
-		longitude: number,
-	): Promise<ReviewsDocResponse> => {
-		setRegion({
-			latitude: latitude,
-			longitude: longitude,
-			latitudeDelta: 0.05,
-			longitudeDelta: 0.05,
-		});
+	const getAllReviews = async (description: ShopDescription): Promise<Reviews> => {
+		executeSetRegion(description.latitude, description.longitude);
 		const followeeIds = await fetchFolloweeIds(props.globalState.state.uid);
 		followeeIds.push(props.globalState.state.uid);
-		const convertedFollowees = await convertToReferenceType(followeeIds);
-		const querySnapshot = await db
-			.collectionGroup('reviews')
-			.where('shopId', '==', id)
-			.where('user', 'in', convertedFollowees)
-			.orderBy('createdAt', 'desc')
-			.get();
-		const queryDocsSnapshot = querySnapshot.docs;
+		const followeeReferences = await convertArrayToReference(followeeIds);
+		const reviewsByFollowees = await fetchReviewsByFollowees(description.id, followeeReferences);
+		const queryDocsSnapshot = reviewsByFollowees.docs;
 		const reviews = await fetchReviews(queryDocsSnapshot);
 		return reviews;
 	};
-	//ログインユーザのフォローしているユーザのuidを取得する
-	//　whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
+	// ログインユーザのフォローしているユーザのuidを取得する
+	// whereの条件で使う時にrefernce型が必要になるからstring型からreference型に変換する処理
 	const showShopReviews = async (id: string, latitude: number, longitude: number) => {
 		refRBSheet.current.open();
-		const _reviews = await getAllReviews(id, latitude, longitude);
+		const _reviews = await getAllReviews({ id: id, latitude: latitude, longitude: longitude });
 		setAllReviews(_reviews);
 	};
 	const toProfilePage = (id: string) => {
@@ -117,15 +94,15 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	return (
 		<View style={styles.container}>
 			<MapView style={styles.mapStyle} region={region}>
-				{allShopsData.map((location) => (
+				{allShopsDescription.map((description) => (
 					<Marker
-						key={location.id}
-						title={location.shopName}
-						description={location.address}
-						onPress={() => showShopReviews(location.id, location.latitude, location.longitude)}
+						key={description.id}
+						title={description.shopName}
+						description={description.address}
+						onPress={() => showShopReviews(description.id, description.latitude, description.longitude)}
 						coordinate={{
-							latitude: location.latitude,
-							longitude: location.longitude,
+							latitude: description.latitude,
+							longitude: description.longitude,
 						}}
 					/>
 				))}
@@ -141,7 +118,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 					backgroundColor: '#000',
 				}}>
 				<RBSheet
-					style={{ borderRadius: 20 }}
 					ref={refRBSheet}
 					animationType={'slide'}
 					height={300}
@@ -150,6 +126,9 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 					customStyles={{
 						wrapper: {
 							backgroundColor: 'transparent',
+						},
+						container: {
+							borderRadius: 20,
 						},
 					}}>
 					<View style={{ paddingBottom: 50 }}>
