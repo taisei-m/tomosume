@@ -15,6 +15,7 @@ import {
 	ShopDocResponse,
 	Reviews,
 	ShopDescription,
+	Review,
 } from '../../types/types';
 import {
 	fetchFolloweeIds,
@@ -72,7 +73,9 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 		followeeIds.push(props.globalState.state.uid);
 		const followeeReferences = await convertArrayToReference(followeeIds);
 		const reviewsByFollowees = await fetchReviewsByFollowees(description.id, followeeReferences);
-		const queryDocsSnapshot = reviewsByFollowees.docs;
+		const queryDocsSnapshot = reviewsByFollowees.docs as firebase.firestore.QueryDocumentSnapshot<
+			Review
+		>[];
 		const reviews = await fetchReviews(queryDocsSnapshot);
 		return reviews;
 	};
