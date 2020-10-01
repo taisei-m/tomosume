@@ -24,7 +24,10 @@
     "ios": {
       "bundleIdentifier": "com.bi17.tomosume",
       "buildNumber": "1",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app access your location information to use it in this app."
+      }
     },
     "android": {
       "permissions": [
