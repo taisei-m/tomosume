@@ -26,8 +26,9 @@ export const fetchShopDescription = async (
 	shopReviewdByFollowerDocs: any,
 ): Promise<ShopDocResponse[]> => {
 	const shopDescriptions: ShopDocResponse[] = await Promise.all(
-		shopReviewdByFollowerDocs.map(async (item) => {
-			let shopId = item.data().shopId;
+		shopReviewdByFollowerDocs.map(async (item: firebase.firestore.DocumentData) => {
+			let review = item.data() as Review;
+			let shopId = review.shopId;
 			return db
 				.collection('shops')
 				.doc(shopId)
