@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Platform, Dimensions, Image, } from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 
 interface ItemProps {
 	id: string;
@@ -45,22 +46,37 @@ const Item = (props: ItemProps) => {
 					/>
 				</View>
 				<View style={styles.actionButtons}>
-					<View style={{marginRight: 18}}>
-						<Icon
-							size={30}
-							name="heart"
-							type="font-awesome"
-							color="black"
-							// onPress={() => }
-						/>
+					<View style={styles.actionButtonsLeft}>
+						<View style={styles.actionButtonHeart}>
+							<Icon 
+								size={30}
+								name="heart"
+								type="font-awesome"
+								color="red"
+								// onPress={() => }
+							/>
+						</View>
+						<View style={styles.actionButtonSearch}>
+							<Icon
+								size={30}
+								name="search"
+								type="font-awesome"
+								color="black"
+								// onPress={() => }
+							/>
+						</View>
 					</View>
-					<Icon
-						size={30}
-						name="inbox"
-						type="font-awesome"
-						color="black"
-						// onPress={() => }
-					/>
+					<View style={styles.actionButtonsRight}>
+						<View style={styles.actionButtonKeep}>
+							<Icon
+								size={30}
+								name="inbox"
+								type="font-awesome"
+								color="black"
+								// onPress={() => }
+							/>
+						</View>
+					</View>
 				</View>
 				<View style={styles.frameReview}>
 					<View style={styles.favorite}>
@@ -135,9 +151,28 @@ const styles = StyleSheet.create({
 	},
 	actionButtons: {
 		flexDirection: "row",
-		justifyContent: "flex-end",
 		marginTop: 9,
+		marginLeft: 12,
 		marginRight: 12,
+	},
+	actionButtonsLeft: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "flex-start",
+	},
+	actionButtonsRight: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "flex-end",
+	},
+	actionButtonHeart: {
+		
+	},
+	actionButtonSearch: {
+		marginLeft: 12,
+	},
+	actionButtonKeep: {
+		
 	},
 	frameReview : { 
 		flexDirection: 'row', 
