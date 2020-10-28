@@ -76,8 +76,8 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 		const queryDocsSnapshot = reviewsByFollowees.docs as firebase.firestore.QueryDocumentSnapshot<
 			Review
 		>[];
-		// const reviews = await fetchReviews(queryDocsSnapshot);
-		const reviews = await fetchReviews(reviewsByFollowees);
+		const reviews = await fetchReviews(queryDocsSnapshot);
+		// const reviews = await fetchReviews(reviewsByFollowees);
 		console.log(reviews);
 		return reviews;
 	};
