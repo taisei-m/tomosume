@@ -20,7 +20,7 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 
 	useEffect(() => {
 		(async () => {
-			Permissions.askAsync(Permissions.LOCATION);
+			await Permissions.askAsync(Permissions.LOCATION);
 		})();
 	});
 	// fetch all reviews from firestore and show them
@@ -86,33 +86,33 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 					onRefresh={handleRefresh}
 				/>
 			) : (
-				<View>
-					<ScrollView
-						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
-						<View style={styles.descriptionPosition}>
-							<View
-								style={{
-									flexDirection: 'row',
-									alignItems: 'center',
-									flex: 1,
-									justifyContent: 'center',
-								}}>
-								<Icon name="hand-o-up" color="#fbd01d" size={40} />
-								<Icon
-									name="arrow-down"
-									color="black"
-									size={25}
+					<View>
+						<ScrollView
+							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
+							<View style={styles.descriptionPosition}>
+								<View
 									style={{
-										marginTop: 10,
-										marginLeft: 5,
-									}}
-								/>
+										flexDirection: 'row',
+										alignItems: 'center',
+										flex: 1,
+										justifyContent: 'center',
+									}}>
+									<Icon name="hand-o-up" color="#fbd01d" size={40} />
+									<Icon
+										name="arrow-down"
+										color="black"
+										size={25}
+										style={{
+											marginTop: 10,
+											marginLeft: 5,
+										}}
+									/>
+								</View>
+								<Text style={styles.description}>{pageDescription}</Text>
 							</View>
-							<Text style={styles.description}>{pageDescription}</Text>
-						</View>
-					</ScrollView>
-				</View>
-			)}
+						</ScrollView>
+					</View>
+				)}
 		</View>
 	);
 };

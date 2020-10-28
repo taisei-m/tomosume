@@ -26,7 +26,9 @@
       "buildNumber": "1",
       "supportsTablet": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "This app access your location information to use it in this app."
+        "NSLocationAlwaysUsageDescription": "This app access your location infomation to identify your location in this app.",
+        "NSLocationUsageDescription": "This app access your location infomation to identify your location in this app.",
+        "NSLocationWhenInUseUsageDescription": "This app access your location infomation to identify your location in this app."
       }
     },
     "android": {
@@ -35,7 +37,7 @@
         "ACCESS_FINE_LOCATION"
       ],
       "package": "com.bi17.tomosume",
-      "versionCode": 17,
+      "versionCode": 18,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAh3MVH7HGvzEBsv_y3hkpVgaUwZJMkssw"
