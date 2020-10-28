@@ -43,12 +43,28 @@ export const fetchShopDescription = async (
 	return shopDescriptions;
 };
 
-export const fetchReviews = async (
-	queryDocsSnapshot: firebase.firestore.QueryDocumentSnapshot<Review>[],
-): Promise<Reviews> => {
+// export const fetchReviews = async (
+// 	queryDocsSnapshot: firebase.firestore.QueryDocumentSnapshot<Review>[],
+// ): Promise<Reviews> => {
+// 	const reviews: Reviews = await Promise.all(
+// 		queryDocsSnapshot.map(async (item) => {
+// 			let review = item.data();
+// 			review.key = item.id;
+// 			const profile = await review.user.get();
+// 			review.userName = profile.get('userName');
+// 			review.iconURL = profile.get('iconURL');
+// 			review.userId = profile.id;
+// 			return review;
+// 		}),
+// 	);
+// 	return reviews;
+// };
+
+export const fetchReviews = async (queryDocsSnapshot: any): Promise<Reviews> => {
 	const reviews: Reviews = await Promise.all(
-		queryDocsSnapshot.map(async (item) => {
+		queryDocsSnapshot.forEach(async (item) => {
 			let review = item.data();
+			console.log('test');
 			review.key = item.id;
 			const profile = await review.user.get();
 			review.userName = profile.get('userName');
