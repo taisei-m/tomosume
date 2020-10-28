@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Dimensions, Image, } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Dimensions, Image} from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
 
 interface ItemProps {
 	id: string;
@@ -14,9 +13,22 @@ interface ItemProps {
 	price: string;
 	userId?: string;
 	pressMethod: Function;
+	photoInFeedURI?: string;
 }
 
 const Item = (props: ItemProps) => {
+	const [_aspectRate, setAspectRate] = useState<number>(0);
+	const [_windowWidth, setWindowWidth] = useState<number>(0);
+
+	const photoInfeedURI: string = '../../assets/suberidai.png';
+
+
+	useEffect(() => {
+		const source = Image.resolveAssetSource(require(photoInfeedURI));
+		setAspectRate(source.height/source.width); 
+		setWindowWidth(Dimensions.get('window').width);
+	}, []);
+
 	return (
 		<View style={styles.container}>
 			<Card containerStyle={styles.card}>
@@ -41,8 +53,8 @@ const Item = (props: ItemProps) => {
 				</View>
 				<View>
 					<Image
-						style={styles.feedPhoto}
-        				source={require('../../assets/beauty.jpg')}
+						style={{height: _windowWidth * _aspectRate , width: "100%"}}
+						source={require(photoInfeedURI)}
 					/>
 				</View>
 				<View style={styles.actionButtons}>
@@ -53,7 +65,7 @@ const Item = (props: ItemProps) => {
 								name="heart"
 								type="font-awesome"
 								color="red"
-								// onPress={() => }
+								// onPress={() =>{}}
 							/>
 						</View>
 						<View style={styles.actionButtonSearch}>
@@ -211,8 +223,8 @@ const styles = StyleSheet.create({
 		fontWeight: '700',
 	},
 	feedPhoto: {
-		width: 100 + "%",
-		height: Dimensions.get('window').width
+		// width: 100 + "%",
+		// height: Dimensions.get('window').width * 
 	},
 	caption: {
 		marginTop: 9,
