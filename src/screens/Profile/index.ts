@@ -63,6 +63,7 @@ export const changeIconUrl = async (uid: string): Promise<string> => {
 	if (!selectedIcon.cancelled) {
 		let data = '';
 		data = await fetchIconUrl(selectedIcon.uri, uid);
+		console.log(selectedIcon.uri)
 		return data;
 	} else {
 		// 画像の変更をキャンセルした際にダイアログの表示を消す

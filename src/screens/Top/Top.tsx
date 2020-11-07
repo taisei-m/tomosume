@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
-import ListItem from '../../components/ListItem';
+import ListItem from '../../components/ListItemPhoto';
 import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import * as Permissions from 'expo-permissions';
