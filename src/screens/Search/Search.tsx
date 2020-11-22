@@ -77,6 +77,8 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 			Review
 		>[];
 		const reviews = await fetchReviews(queryDocsSnapshot);
+		// const reviews = await fetchReviews(reviewsByFollowees);
+		console.log(reviews);
 		return reviews;
 	};
 	// ログインユーザのフォローしているユーザのuidを取得する

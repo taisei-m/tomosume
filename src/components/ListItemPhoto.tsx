@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Dimensions, Image} from 'react-native';
+import {
+	View,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	Platform,
+	Dimensions,
+	Image,
+} from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
 
-interface ItemProps {
+type ItemProps = {
 	id: string;
 	userName?: string;
 	iconURL?: string;
@@ -14,7 +22,7 @@ interface ItemProps {
 	userId?: string;
 	pressMethod: Function;
 	photoInFeedURI?: string;
-}
+};
 
 const Item = (props: ItemProps) => {
 	const [_aspectRate, setAspectRate] = useState<number>(0);
@@ -22,10 +30,9 @@ const Item = (props: ItemProps) => {
 
 	const photoInfeedURI: string = '../../assets/suberidai.png';
 
-
 	useEffect(() => {
 		const source = Image.resolveAssetSource(require(photoInfeedURI));
-		setAspectRate(source.height/source.width); 
+		setAspectRate(source.height / source.width);
 		setWindowWidth(Dimensions.get('window').width);
 	}, []);
 
@@ -34,7 +41,7 @@ const Item = (props: ItemProps) => {
 			<Card containerStyle={styles.card}>
 				<View style={styles.feedHeader}>
 					<TouchableOpacity onPress={() => props.pressMethod(props.userId)}>
-						<View style={styles.feedHeaderIcon}>
+						<View>
 							<Avatar rounded source={{ uri: props.iconURL }} size={'small'} />
 						</View>
 					</TouchableOpacity>
@@ -44,16 +51,11 @@ const Item = (props: ItemProps) => {
 								<Text style={styles.userName}>{props.userName}</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity>
-							<Text style={styles.shopAddress} numberOfLines={2}>
-								{props.address}
-							</Text>
-						</TouchableOpacity>
 					</View>
 				</View>
 				<View>
 					<Image
-						style={{height: _windowWidth * _aspectRate , width: "100%"}}
+						style={{ height: _windowWidth * _aspectRate, width: '100%' }}
 						source={require(photoInfeedURI)}
 					/>
 				</View>
@@ -65,7 +67,6 @@ const Item = (props: ItemProps) => {
 								name="favorite"
 								type="material"
 								color="black"
-								// onPress={() =>{}}
 							/>
 						</View>
 						<View style={styles.actionButtonSearch}>
@@ -74,7 +75,6 @@ const Item = (props: ItemProps) => {
 								name="search"
 								type="material"
 								color="black"
-								// onPress={() => }
 							/>
 						</View>
 					</View>
@@ -85,11 +85,16 @@ const Item = (props: ItemProps) => {
 								name="inbox"
 								type="material"
 								color="black"
-								// onPress={() => }
 							/>
 						</View>
 					</View>
 				</View>
+				<TouchableOpacity>
+					<View style={styles.shopAddress}>
+						<Text style={styles.itemName}>住所</Text>
+						<Text style={styles.menuName}>{props.address}</Text>
+					</View>
+				</TouchableOpacity>
 				<View style={styles.frameReview}>
 					<View style={styles.favorite}>
 						<Text style={styles.itemName}>おすすめメニュー</Text>
@@ -106,8 +111,8 @@ const Item = (props: ItemProps) => {
 						<Text style={styles.categoryName}>{props.category}</Text>
 					</View>
 				</View>
-				<Text style={styles.caption}>				
-					gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+				<Text style={styles.caption}>
+					ここにはユーザの自由記述がきます。何文字くらいまでならちょうどいいのか？
 				</Text>
 			</Card>
 		</View>
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
 		padding: 0,
 		margin: 0,
 		backgroundColor: 'white',
-		borderColor: "white",
+		borderColor: 'white',
 		borderRadius: 0,
 		width: 100 + '%',
 		...Platform.select({
@@ -139,19 +144,16 @@ const styles = StyleSheet.create({
 		}),
 	},
 	feedHeader: {
-		flexDirection: "row",
-		alignItems: "center",
+		flexDirection: 'row',
+		alignItems: 'center',
 		marginTop: 9,
 		marginBottom: 9,
 		marginLeft: 12,
 		marginRight: 12,
 	},
-	feedHeaderIcon: {
-
-	},
 	feedHeaderText: {
-		flexDirection: "column",
-		justifyContent: "center",
+		flexDirection: 'column',
+		justifyContent: 'center',
 		marginLeft: 12,
 	},
 	userName: {
@@ -160,38 +162,41 @@ const styles = StyleSheet.create({
 	},
 	shopAddress: {
 		fontSize: 13,
+		paddingTop: 10,
+		paddingRight: 17,
+		paddingLeft: 17,
 	},
 	actionButtons: {
-		flexDirection: "row",
+		flexDirection: 'row',
 		marginTop: 9,
 		marginLeft: 12,
 		marginRight: 12,
 	},
 	actionButtonsLeft: {
 		flex: 1,
-		flexDirection: "row",
-		justifyContent: "flex-start",
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
 	},
 	actionButtonsRight: {
 		flex: 1,
-		flexDirection: "row",
-		justifyContent: "flex-end",
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
 	},
 	actionButtonHeart: {
-		
+
 	},
 	actionButtonSearch: {
 		marginLeft: 12,
 	},
 	actionButtonKeep: {
-		
+
 	},
-	frameReview : { 
-		flexDirection: 'row', 
-		marginTop: 9, 
+	frameReview: {
+		flexDirection: 'row',
+		marginTop: 9,
 		marginBottom: 9,
 		marginLeft: 12,
-		marginRight: 12
+		marginRight: 12,
 	},
 	favorite: {
 		borderRightWidth: 1,
@@ -222,14 +227,10 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		fontWeight: '700',
 	},
-	feedPhoto: {
-		// width: 100 + "%",
-		// height: Dimensions.get('window').width * 
-	},
 	caption: {
 		marginTop: 9,
 		marginBottom: 20,
-		marginLeft: 12,
-		marginRight: 12,
-	}
+		marginLeft: 17,
+		marginRight: 17,
+	},
 });
