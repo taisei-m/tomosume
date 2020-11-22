@@ -62,9 +62,9 @@ const Item = (props: ItemProps) => {
 						<View style={styles.actionButtonHeart}>
 							<Icon 
 								size={30}
-								name="heart"
-								type="font-awesome"
-								color="red"
+								name="favorite"
+								type="material"
+								color="black"
 								// onPress={() =>{}}
 							/>
 						</View>
@@ -72,7 +72,7 @@ const Item = (props: ItemProps) => {
 							<Icon
 								size={30}
 								name="search"
-								type="font-awesome"
+								type="material"
 								color="black"
 								// onPress={() => }
 							/>
@@ -83,7 +83,7 @@ const Item = (props: ItemProps) => {
 							<Icon
 								size={30}
 								name="inbox"
-								type="font-awesome"
+								type="material"
 								color="black"
 								// onPress={() => }
 							/>
