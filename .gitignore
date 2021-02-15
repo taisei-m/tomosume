@@ -7,6 +7,7 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+*.cache
 web-build/
 web-report/
 .env
