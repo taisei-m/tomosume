@@ -30,7 +30,7 @@ import {
 import { Subscribe } from 'unstated';
 import { styles } from './style';
 //@ts-ignore
-import { ProgressDialog } from 'react-native-simple-dialogs';
+import { Alert, AlertIcon } from '@chakra-ui/react';
 
 const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> = (props) => {
 	const [_userName, setUserName] = useState<string>();
@@ -39,6 +39,7 @@ const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps>
 	const [_postNumber, setPostNumber] = useState<number>(0);
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([]);
 	const [_userIcon, setUserIcon] = useState<string>();
+	const [isFinishedChangeIcon, setIsFinishedChangeIcon] = useState<boolean>(false);
 	const [progressVisible, setProgressVisible] = useState<boolean>(false);
 	const [userDataUpdate, setUserDataUpdate] = useState<boolean>(false);
 	const [refresh, setRefresh] = useState<boolean>(false);
@@ -108,13 +109,16 @@ const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps>
 	const changeIcon = async () => {
 		try {
 			setProgressVisible(true);
+			setIsFinishedChangeIcon(true);
 			const iconUrl = await changeIconUrl(props.globalState.state.uid);
 			if (iconUrl == 'cancel') {
 				setProgressVisible(false);
+				setIsFinishedChangeIcon(false);
 			} else {
 				await setIconUrlOnFirestore(props.globalState.state.uid, iconUrl);
 				setUserIcon(iconUrl);
 				setProgressVisible(false);
+				setIsFinishedChangeIcon(false);
 			}
 		} catch (error) {
 			console.log(error);
@@ -122,17 +126,16 @@ const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps>
 	};
 	return (
 		<View style={styles.container}>
+			{isFinishedChangeIcon == true && (
+				<Alert status="warning">
+					<AlertIcon />
+					Seems your account is about expire, upgrade now
+				</Alert>
+			)}
 			<ScrollView
 				refreshControl={
 					<RefreshControl refreshing={userDataUpdate} onRefresh={() => updateProfileInfo()} />
 				}>
-				<View>
-					<ProgressDialog
-						visible={progressVisible}
-						title="アイコン画像を変更しています"
-						message="しばらくお待ちください"
-					/>
-				</View>
 				<View style={{ flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto' }}>
 					<View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: 50 }}>
 						<View>
@@ -212,7 +215,9 @@ export const ProfileWrapper: React.FC<ProfileStackNavProps<'ProfileWrapper'>> = 
 }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <Profile globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<Profile globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
