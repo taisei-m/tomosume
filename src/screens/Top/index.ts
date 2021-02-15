@@ -3,6 +3,7 @@ import firebase from '../../../firebaseConfig';
 import { ReviewDocResponse, ReviewsDocResponse, User } from '../../types/types';
 
 export const fetchFolloweeIds = async (uid: string): Promise<string[]> => {
+	console.log(uid);
 	const querySnapshot = await db.collection('userList').doc(uid).collection('followee').get();
 	const followeeIds = querySnapshot.docs.map((doc) => {
 		return doc.id;

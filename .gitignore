@@ -20,3 +20,4 @@ firestore.rules
 firestore.indexes.json
 storage.rules
 ui-debug.log
+web-build
