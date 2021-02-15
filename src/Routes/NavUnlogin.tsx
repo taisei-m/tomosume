@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectLoginOrSignupWrapper } from '../screens/SelectLoginOrSignup/SelectLoginOrSignup';
+// import { SelectLoginOrSignupWrapper } from '../screens/SelectLoginOrSignup/SelectLoginOrSignup';
 import { LoginScreenWrapper } from '../screens/LoginScreen/LoginScreen';
 import { CreateAccountWrapper } from '../screens/CreateAccount/CreateAccount';
 import { ResetPasswordWrapper } from '../screens/ResetPassword/ResetPassword';
@@ -14,11 +14,11 @@ const TabUnlogin = createStackNavigator<NavUnloginParamList>();
 export const NavUnlogin: React.FC = () => {
 	return (
 		<TabUnlogin.Navigator initialRouteName="SelectLoginOrSignup">
-			<TabUnlogin.Screen
+			{/* <TabUnlogin.Screen
 				name="SelectLoginOrSignup"
 				component={SelectLoginOrSignupWrapper}
 				options={{ headerShown: false }}
-			/>
+			/> */}
 			<TabUnlogin.Screen
 				name="LoginScreen"
 				component={LoginScreenWrapper}
