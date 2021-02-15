@@ -1,0 +1,3 @@
+steps:
+      - name: gcr.io/tomosume-c2926/firebase
+        args: ['deploy', '--project=tomosume-c2926', '--only=hosting:dev']
