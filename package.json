@@ -10,7 +10,8 @@
     "lint": "eslint --ext .tsx --ext .ts src/ --fix",
     "format": "prettier --check ./src",
     "prestorybook": "rnstl",
-    "storybook": "storybook start"
+    "storybook": "storybook start",
+    "buildweb": "expo build:web"
   },
   "dependencies": {
     "@chakra-ui/react": "1.3.3",

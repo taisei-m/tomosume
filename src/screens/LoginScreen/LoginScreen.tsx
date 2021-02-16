@@ -141,7 +141,7 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	return (
 		<KeyboardAwareScrollView style={styles.keyboardScrollView}>
 			<View style={styles.container}>
-				<Text> test11 </Text>
+				<Text> test12 </Text>
 				<Input placeholder="メールアドレス" value={email} onChange={inputEmail} maxWidth={300} />
 				<View>
 					<Text style={isErrorEmail ? styles.inputErrorMessage : styles.inputNotErrorMessage}>
