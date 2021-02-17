@@ -29,8 +29,9 @@ import {
 } from '../../types/types';
 import { Subscribe } from 'unstated';
 import { styles } from './style';
+import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton } from '@chakra-ui/react';
 //@ts-ignore
-import { Alert, AlertIcon } from '@chakra-ui/react';
+import Modal from 'modal-react-native-web';
 
 const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps> = (props) => {
 	const [_userName, setUserName] = useState<string>();
@@ -39,10 +40,10 @@ const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps>
 	const [_postNumber, setPostNumber] = useState<number>(0);
 	const [_allReviews, setAllReviews] = useState<userReviewsType>([]);
 	const [_userIcon, setUserIcon] = useState<string>();
-	const [isFinishedChangeIcon, setIsFinishedChangeIcon] = useState<boolean>(false);
-	const [progressVisible, setProgressVisible] = useState<boolean>(false);
 	const [userDataUpdate, setUserDataUpdate] = useState<boolean>(false);
 	const [refresh, setRefresh] = useState<boolean>(false);
+
+	const [_visible, setVisible] = useState(false);
 
 	useEffect(() => {
 		(async () => {
@@ -108,34 +109,32 @@ const Profile: React.FC<ProfileStackNavProps<'ProfileWrapper'> & ContainerProps>
 
 	const changeIcon = async () => {
 		try {
-			setProgressVisible(true);
-			setIsFinishedChangeIcon(true);
 			const iconUrl = await changeIconUrl(props.globalState.state.uid);
 			if (iconUrl == 'cancel') {
-				setProgressVisible(false);
-				setIsFinishedChangeIcon(false);
+				setVisible(false);
 			} else {
 				await setIconUrlOnFirestore(props.globalState.state.uid, iconUrl);
 				setUserIcon(iconUrl);
-				setProgressVisible(false);
-				setIsFinishedChangeIcon(false);
+				setVisible(true);
 			}
+			setTimeout(() => setVisible(false), 2000);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 	return (
 		<View style={styles.container}>
-			{isFinishedChangeIcon == true && (
-				<Alert status="warning">
-					<AlertIcon />
-					Seems your account is about expire, upgrade now
-				</Alert>
-			)}
 			<ScrollView
 				refreshControl={
 					<RefreshControl refreshing={userDataUpdate} onRefresh={() => updateProfileInfo()} />
 				}>
+				{_visible && (
+					<Alert status="success">
+						<AlertIcon />
+						<AlertTitle mr={2}>画像の変更が完了しました</AlertTitle>
+					</Alert>
+				)}
+
 				<View style={{ flexDirection: 'column', marginRight: 'auto', marginLeft: 'auto' }}>
 					<View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: 50 }}>
 						<View>

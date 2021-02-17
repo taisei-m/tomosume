@@ -37,6 +37,7 @@
     "firebase": "7.9.0",
     "framer-motion": "3.3.0",
     "lodash": "4.17.15",
+    "modal-react-native-web": "0.2.0",
     "react": "~16.9.0",
     "react-dom": "16.9.0",
     "react-google-maps": "9.4.5",
