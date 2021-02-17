@@ -8,9 +8,20 @@ import { styles } from './style';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
 import { ContainerProps, ProfileStackNavProps, ItemProps } from '../../types/types';
 import { logout } from './index';
+import {
+	Button,
+	AlertDialog,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogContent,
+	AlertDialogOverlay,
+} from '@chakra-ui/react';
 
 const Setting: React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (props) => {
-	const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = React.useState(false);
+	const onClose = () => setIsOpen(false);
+	//TODO:any
+	const cancelRef = React.useRef<any>();
 
 	const Item = (props: ItemProps) => {
 		return (
@@ -47,28 +58,29 @@ const Setting: React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (pro
 			id: '58694a0f-3da1-471f-bd96-145571e29d72',
 			title: 'ログアウト',
 			icon: 'sign-out',
-			method: () => setDialogVisible(true),
+			method: () => setIsOpen(true),
 		},
 	];
 	return (
 		<>
 			<View>
-				<ConfirmDialog
-					visible={_dialogVisible}
-					title="確認画面"
-					onTouchOutside={() => setDialogVisible(false)}
-					positiveButton={{
-						title: 'はい',
-						onPress: () => logout(props),
-					}}
-					negativeButton={{
-						title: 'いいえ',
-						onPress: () => setDialogVisible(false),
-					}}>
-					<View>
-						<Text style={{ textAlign: 'center' }}>本当にログアウトしますか？</Text>
-					</View>
-				</ConfirmDialog>
+				<>
+					<AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+						<AlertDialogOverlay>
+							<AlertDialogContent>
+								<AlertDialogHeader fontSize="lg" fontWeight="bold">
+									本当にログアウトしますか？
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<Button onClick={onClose}>いいえ</Button>
+									<Button colorScheme="red" onClick={() => logout(props)} ml={3}>
+										はい
+									</Button>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialogOverlay>
+					</AlertDialog>
+				</>
 			</View>
 			<SafeAreaView style={styles.container}>
 				<FlatList
@@ -86,7 +98,9 @@ const Setting: React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (pro
 export const SettingWrapper: React.FC<ProfileStackNavProps<'setting'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => <Setting globalState={globalState} navigation={navigation} />}
+			{(globalState: GlobalContainer) => (
+				<Setting globalState={globalState} navigation={navigation} />
+			)}
 		</Subscribe>
 	);
 };
