@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import GlobalContainer from '../../store/GlobalState';
@@ -25,6 +25,7 @@ import {
 	fetchShopsDescriptionByFollowees,
 	fetchReviewsByFollowees,
 } from './index';
+import PlacesAutocomplete from 'react-places-autocomplete';
 
 const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props) => {
 	const [allShopsDescription, setAllShopsDescription] = useState<ShopDocResponse[]>([]);
@@ -32,6 +33,13 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	const [_refresh, setRefresh] = useState<boolean>(false);
 	const [region, setRegion] = useState<Region>(null!);
 	const refRBSheet = useRef<RBSheet>(null!);
+	const [_windowHeight, setWindowHeight] = useState<number>(0);
+	const [_windowWidth, setWindowWidth] = useState<number>(0);
+
+	useEffect(() => {
+		setWindowHeight(Dimensions.get('window').height);
+		setWindowWidth(Dimensions.get('window').width);
+	}, []);
 
 	const executeSetRegion = (latitude: number, longitude: number) => {
 		setRegion({
@@ -115,17 +123,10 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 			<View style={{ position: 'absolute', right: '7%', top: '5%' }}>
 				<Icon size={30} name="refresh" type="font-awesome" color="black" onPress={reGetShopReviews} />
 			</View>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#000',
-				}}>
 				<RBSheet
 					ref={refRBSheet}
 					animationType={'slide'}
-					height={300}
+					height={_windowHeight*0.3}
 					closeOnDragDown={true}
 					closeOnPressMask={true}
 					customStyles={{
@@ -133,8 +134,12 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 							backgroundColor: 'transparent',
 						},
 						container: {
+							width: _windowWidth,
 							borderRadius: 20,
 						},
+						draggableIcon: {
+							marginTop: '6%'
+						}
 					}}>
 					<View style={{ paddingBottom: 50 }}>
 						<FlatList
@@ -175,7 +180,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 						/>
 					</View>
 				</RBSheet>
-			</View>
 		</View>
 	);
 };
