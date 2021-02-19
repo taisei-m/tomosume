@@ -11,6 +11,12 @@ export const styles = StyleSheet.create({
 		height: '100%',
 		position: 'relative',
 	},
+	description: {
+		backgroundColor: 'white',
+		width: '70vw',
+		justifyContent: 'center',
+		padding: '0.5rem'
+	},
 	card: {
 		borderRadius: 10,
 	},
