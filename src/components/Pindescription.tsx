@@ -13,10 +13,30 @@ const PinDescriptionDetail = (props: {shopDoc: ShopDocResponse}) => {
     )
 }
 
-
+const PinMapImage = (props: {openedPinId: string, pinId: string}) => {
+    if(props.openedPinId == props.pinId){
+        return(
+            <Image
+                source={require('../../assets/pin-red.png')}
+                style={{
+                    width: 24,
+                    height: 42
+                }}
+            />
+            )
+        }
+    return(
+        <Image
+            source={require('../../assets/pin-yellow.png')}
+            style={{
+                width: 30,
+                height: 30,
+            }}
+        />
+    )
+}
 
 const Pindescription = (props: PinFunc) =>{ 
-
     const [_descriptionVisible, setDescriptionVisible] =useState<boolean>(false);
 
     useEffect(() => {
@@ -43,11 +63,7 @@ const Pindescription = (props: PinFunc) =>{
                     }
                 }
             >
-                
-                <Image
-                    source={require('../../assets/pin.png')}
-                    style={styles.pin}
-                />
+            <PinMapImage openedPinId={props.openedPinId} pinId={props.shopDoc.id}/>                
             </TouchableOpacity>
         </View>
     );
@@ -57,10 +73,6 @@ export default Pindescription;
 
 
 const styles = StyleSheet.create({
-    pin: {
-        width: 30,
-        height: 30
-    },
     description: {
 		backgroundColor: 'white',
 		width: '70vw',
