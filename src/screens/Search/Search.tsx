@@ -137,6 +137,7 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 					height={_windowHeight*0.3}
 					closeOnDragDown={true}
 					closeOnPressMask={true}
+					onClose={()=> setOpenedPinId('')}
 					customStyles={{
 						wrapper: {
 							backgroundColor: 'transparent',
