@@ -142,6 +142,14 @@ export type ShopDescription = {
 	latitude: number;
 	longitude: number;
 };
+
+export type PinFunc = {
+	shopDoc: ShopDocResponse;
+	showShopReviews: (id: string, latitude: number, longitude: number) => void;
+	openedPinId: string;
+	setPinId: (isOpen: string) => void;
+}
+
 // Search.tsx
 export type Region = {
 	latitude: number;

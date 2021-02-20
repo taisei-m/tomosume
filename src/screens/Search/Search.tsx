@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Text, View, FlatList, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import GlobalContainer from '../../store/GlobalState';
@@ -25,6 +25,7 @@ import {
 	fetchShopsDescriptionByFollowees,
 	fetchReviewsByFollowees,
 } from './index';
+import  Pindescription  from '../../components/Pindescription'
 
 const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props) => {
 	const [allShopsDescription, setAllShopsDescription] = useState<ShopDocResponse[]>([]);
@@ -34,7 +35,11 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	const refRBSheet = useRef<RBSheet>(null!);
 	const [_windowHeight, setWindowHeight] = useState<number>(0);
 	const [_windowWidth, setWindowWidth] = useState<number>(0);
-	const [_descriptionVisible, setDescriptionVisible] =useState<any>('none');
+	const [_openedPinId, setOpenedPinId ] = useState<string>('');
+
+	const setPinId = (isOpen: string) => {
+		setOpenedPinId(isOpen);
+	};
 
 	useEffect(() => {
 		setWindowHeight(Dimensions.get('window').height);
@@ -85,7 +90,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 			Review
 		>[];
 		const reviews = await fetchReviews(queryDocsSnapshot);
-		// const reviews = await fetchReviews(reviewsByFollowees);
 		console.log(reviews);
 		return reviews;
 	};
@@ -95,7 +99,7 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 		refRBSheet.current.open();
 		const _reviews = await getAllReviews({ id: id, latitude: latitude, longitude: longitude });
 		setAllReviews(_reviews);
-		setDescriptionVisible('flex');
+		// setDescriptionVisible('flex');
 	};
 	const toProfilePage = (id: string) => {
 		props.globalState.setFriendId(id);
@@ -104,7 +108,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	};
 	const reGetShopReviews = () => {
 		setRefresh(!_refresh);
-		setDescriptionVisible('none');
 	};
 	return (
 		<View style={styles.container}>
@@ -121,20 +124,7 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 							longitude: description.longitude,
 						}}
 					>
-						<View style={{display: _descriptionVisible}}>
-							<View style={styles.description}>
-								<Text>{description.address}</Text>
-							</View>
-						</View>
-						<TouchableOpacity onPress={() =>showShopReviews(description.id, description.latitude, description.longitude)}>
-							<Image
-								source={require('../../../assets/pin.png')}
-								style={{
-									width: 40,
-									height: 40
-								}}
-							/>
-						</TouchableOpacity>
+						< Pindescription shopDoc={description} showShopReviews={showShopReviews} openedPinId={_openedPinId} setPinId={setPinId}/>
 					</Marker>
 				))}
 			</MapView>
