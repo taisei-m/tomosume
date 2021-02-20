@@ -6,12 +6,14 @@ const PinDescriptionDetail = (props: {shopDoc: ShopDocResponse}) => {
     return(
         <View>
             <View style={styles.description}>
-                <Text>{props.shopDoc.shopName}</Text>
+                <Text style={{fontWeight: 'bold'}}>{props.shopDoc.shopName}</Text>
                 <Text>{props.shopDoc.address}</Text>
             </View>
         </View>
     )
 }
+
+
 
 const Pindescription = (props: PinFunc) =>{ 
 
@@ -28,7 +30,7 @@ const Pindescription = (props: PinFunc) =>{
    
 
     return(
-        <View>
+        <View style={styles.descriptionView}>
             {(props.openedPinId == props.shopDoc.id)
                 ? <PinDescriptionDetail shopDoc={props.shopDoc} />
                 : null
@@ -41,6 +43,7 @@ const Pindescription = (props: PinFunc) =>{
                     }
                 }
             >
+                
                 <Image
                     source={require('../../assets/pin.png')}
                     style={styles.pin}
@@ -55,14 +58,18 @@ export default Pindescription;
 
 const styles = StyleSheet.create({
     pin: {
-        width: 40,
-        height: 40
+        width: 30,
+        height: 30
     },
     description: {
 		backgroundColor: 'white',
 		width: '70vw',
 		justifyContent: 'center',
 		padding: '0.5rem'
+    },
+    descriptionView: {
+		flexDirection: 'column', 
+		alignItems: 'center'
 	},
 });
 

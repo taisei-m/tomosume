@@ -124,7 +124,7 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 							longitude: description.longitude,
 						}}
 					>
-						< Pindescription shopDoc={description} showShopReviews={showShopReviews} openedPinId={_openedPinId} setPinId={setPinId}/>
+						<Pindescription shopDoc={description} showShopReviews={showShopReviews} openedPinId={_openedPinId} setPinId={setPinId}/>
 					</Marker>
 				))}
 			</MapView>
