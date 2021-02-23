@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 const Setting: React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (props) => {
-	const [isOpen, setIsOpen] = React.useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	const onClose = () => setIsOpen(false);
 	//TODO:any
 	const cancelRef = React.useRef<any>();

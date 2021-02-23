@@ -29,7 +29,7 @@ import {
 } from '../../types/types';
 import { Subscribe } from 'unstated';
 import { styles } from './style';
-import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
 //@ts-ignore
 import Modal from 'modal-react-native-web';
 

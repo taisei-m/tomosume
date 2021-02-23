@@ -8,6 +8,7 @@ declare module 'react-native-dotenv' {
 		const FIREBASE_MESSAGING_SENDER_ID: string;
 		const FIREBASE_APP_ID: string;
 		const FIREBASE_MEASUREMENT_ID: string;
+		const GOOGLE_API_KEY: string;
 	}
 	export = N;
 }
