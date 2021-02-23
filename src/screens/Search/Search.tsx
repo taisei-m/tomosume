@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Avatar, Card, Icon } from 'react-native-elements';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import GlobalContainer from '../../store/GlobalState';
@@ -25,6 +25,7 @@ import {
 	fetchShopsDescriptionByFollowees,
 	fetchReviewsByFollowees,
 } from './index';
+import  Pindescription  from '../../components/Pindescription'
 
 const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props) => {
 	const [allShopsDescription, setAllShopsDescription] = useState<ShopDocResponse[]>([]);
@@ -32,6 +33,18 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	const [_refresh, setRefresh] = useState<boolean>(false);
 	const [region, setRegion] = useState<Region>(null!);
 	const refRBSheet = useRef<RBSheet>(null!);
+	const [_windowHeight, setWindowHeight] = useState<number>(0);
+	const [_windowWidth, setWindowWidth] = useState<number>(0);
+	const [_openedPinId, setOpenedPinId ] = useState<string>('');
+
+	const setPinId = (isOpen: string) => {
+		setOpenedPinId(isOpen);
+	};
+
+	useEffect(() => {
+		setWindowHeight(Dimensions.get('window').height);
+		setWindowWidth(Dimensions.get('window').width);
+	}, []);
 
 	const executeSetRegion = (latitude: number, longitude: number) => {
 		setRegion({
@@ -77,7 +90,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 			Review
 		>[];
 		const reviews = await fetchReviews(queryDocsSnapshot);
-		// const reviews = await fetchReviews(reviewsByFollowees);
 		console.log(reviews);
 		return reviews;
 	};
@@ -87,6 +99,7 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 		refRBSheet.current.open();
 		const _reviews = await getAllReviews({ id: id, latitude: latitude, longitude: longitude });
 		setAllReviews(_reviews);
+		// setDescriptionVisible('flex');
 	};
 	const toProfilePage = (id: string) => {
 		props.globalState.setFriendId(id);
@@ -98,43 +111,44 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 	};
 	return (
 		<View style={styles.container}>
-			<MapView style={styles.mapStyle} region={region}>
+			<MapView 
+				style={styles.mapStyle} 
+				region={region}
+				provider={PROVIDER_GOOGLE}
+			>
 				{allShopsDescription.map((description) => (
 					<Marker
 						key={description.id}
-						title={description.shopName}
-						description={description.address}
-						onPress={() => showShopReviews(description.id, description.latitude, description.longitude)}
 						coordinate={{
 							latitude: description.latitude,
 							longitude: description.longitude,
 						}}
-					/>
+					>
+						<Pindescription shopDoc={description} showShopReviews={showShopReviews} openedPinId={_openedPinId} setPinId={setPinId}/>
+					</Marker>
 				))}
 			</MapView>
 			<View style={{ position: 'absolute', right: '7%', top: '5%' }}>
 				<Icon size={30} name="refresh" type="font-awesome" color="black" onPress={reGetShopReviews} />
 			</View>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#000',
-				}}>
 				<RBSheet
 					ref={refRBSheet}
 					animationType={'slide'}
-					height={300}
+					height={_windowHeight*0.3}
 					closeOnDragDown={true}
 					closeOnPressMask={true}
+					onClose={()=> setOpenedPinId('')}
 					customStyles={{
 						wrapper: {
 							backgroundColor: 'transparent',
 						},
 						container: {
+							width: _windowWidth,
 							borderRadius: 20,
 						},
+						draggableIcon: {
+							marginTop: '6%'
+						}
 					}}>
 					<View style={{ paddingBottom: 50 }}>
 						<FlatList
@@ -175,7 +189,6 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 						/>
 					</View>
 				</RBSheet>
-			</View>
 		</View>
 	);
 };
