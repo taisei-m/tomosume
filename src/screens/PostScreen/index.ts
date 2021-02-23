@@ -8,12 +8,16 @@ export const fetchShopPredictions = async (
 	latitude: number,
 	longitude: number,
 ): Promise<PredictionJsonType | never> => {
+	console.log(shopName);
+	console.log(latitude);
+	console.log(longitude);
 	const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${shopName}&location=${latitude}, ${longitude}
     &language=ja&radius=5000`;
 	try {
 		const Predictions: Response = await fetch(apiUrl);
 		const json = (await Predictions.json()) as PredictionJsonType;
+		console.log('json', json);
 		return json;
 	} catch (err) {
 		console.log(err);
@@ -22,7 +26,7 @@ export const fetchShopPredictions = async (
 };
 
 export const fetchShopDescription = async (address: string): Promise<any> => {
-	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${GOOGLE_API_KEY}`;
 	const shopDescription = await fetch(apiUrl);
 	const shopDescriptionJson = await shopDescription.json();
 	return shopDescriptionJson;

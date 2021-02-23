@@ -95,6 +95,7 @@
     "typescript": "3.8.3"
   },
   "private": true,
+  "proxy": "'https://maps.googleapis.com",
   "jest": {
     "moduleFileExtensions": [
       "ts",
