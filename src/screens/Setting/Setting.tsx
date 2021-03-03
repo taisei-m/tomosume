@@ -98,9 +98,7 @@ const Setting: React.FC<ProfileStackNavProps<'setting'> & ContainerProps> = (pro
 export const SettingWrapper: React.FC<ProfileStackNavProps<'setting'>> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => (
-				<Setting globalState={globalState} navigation={navigation} />
-			)}
+			{(globalState: GlobalContainer) => <Setting globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };
