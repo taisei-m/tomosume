@@ -1,6 +1,6 @@
 import { db } from '../../../firebaseConfig';
 import { PredictionJsonType } from '../../types/types';
-import apiKey from '../../api/api_key';
+import { GOOGLE_API_KEY } from 'react-native-dotenv';
 
 //TODO:エラー処理について調べる
 export const fetchShopPredictions = async (
@@ -8,12 +8,16 @@ export const fetchShopPredictions = async (
 	latitude: number,
 	longitude: number,
 ): Promise<PredictionJsonType | never> => {
-	const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
+	console.log(shopName);
+	console.log(latitude);
+	console.log(longitude);
+	const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}
     &input=${shopName}&location=${latitude}, ${longitude}
     &language=ja&radius=5000`;
 	try {
 		const Predictions: Response = await fetch(apiUrl);
 		const json = (await Predictions.json()) as PredictionJsonType;
+		console.log('json', json);
 		return json;
 	} catch (err) {
 		console.log(err);
@@ -22,7 +26,7 @@ export const fetchShopPredictions = async (
 };
 
 export const fetchShopDescription = async (address: string): Promise<any> => {
-	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${GOOGLE_API_KEY}`;
 	const shopDescription = await fetch(apiUrl);
 	const shopDescriptionJson = await shopDescription.json();
 	return shopDescriptionJson;

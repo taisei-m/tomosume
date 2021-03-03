@@ -23,6 +23,8 @@ import {
 	canPress,
 } from './index';
 
+import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
+
 const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [shopName, setShopName] = useState<string>('');
 	const [favoriteMenu, changeFavorite] = useState<string>('');
@@ -35,12 +37,13 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isPressed, setIsPressed] = useState<boolean>(false);
 	const [_dialogVisible, setDialogVisible] = useState<boolean>(false);
-	const [permissionDialogVisible, setPermissionDialogVisible] = useState<boolean>(false);
+	const [isPermittedLocationAccess, setIsPermittedLocationAccess] = useState<boolean>(false);
 	const [shareCompleteDialogVisible, setShareCompleteDialogVisible] = useState<boolean>(false);
 	const [_latitude, setLatitude] = useState<number>(35.68123620000001);
 	const [_longitude, setLongitude] = useState<number>(139.7671248);
 	const [canPressSearchButton, setCanPressSearchButton] = useState<boolean>(false);
 	const [whileSearching, setWhileSearching] = useState<boolean>(false);
+	const [alertType, setAlertType] = useState<'post-permission' | 'post-noPermission' | null>(null);
 	const categoryItemList = [
 		{ label: '居酒屋', value: '居酒屋' },
 		{ label: 'カフェ', value: 'カフェ' },
@@ -55,7 +58,7 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 		(async () => {
 			const { status } = await Permissions.askAsync(Permissions.LOCATION);
 			if (status !== 'granted') {
-				setPermissionDialogVisible(true);
+				setIsPermittedLocationAccess(true);
 			} else {
 				const location = await Location.getCurrentPositionAsync({});
 				setLatitude(location.coords.latitude);
@@ -117,6 +120,39 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 		setIsPressed(false);
 	};
 
+	// const checkAlertType = () => {
+	// 	if (permissionDialogVisible) {
+	// 		setAlertType('post-noPermission');
+	// 		return;
+	// 	} else {
+	// 		setAlertType('post-permission');
+	// 		return;
+	// 	}
+	// };
+
+	// const _renderAlert = () => {
+	// 	if (alertType == null) return null;
+	// 	if (alertType == 'post-noPermission') {
+	// 		return (
+	// 			<>
+	// 				<Alert status="error">
+	// 					<AlertIcon />
+	// 					<AlertTitle mr={2}>店名とカテゴリーを入力してください</AlertTitle>
+	// 				</Alert>
+	// 			</>
+	// 		);
+	// 	} else if (alertType == 'post-permission') {
+	// 		return (
+	// 			<>
+	// 				<Alert status="error">
+	// 					<AlertIcon />
+	// 					<AlertTitle mr={2}>店名を入力してください</AlertTitle>
+	// 				</Alert>
+	// 			</>
+	// 		);
+	// 	}
+	// };
+
 	return (
 		<KeyboardAwareScrollView style={{ flex: 1, backgroundColor: 'white' }}>
 			<View style={styles.container}>
@@ -152,7 +188,9 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 								data={predictions}
 								renderItem={({ item }) => (
 									<TouchableOpacity
-										onPress={() => selectShopName(item.structured_formatting.main_text, item.description)}>
+										onPress={() =>
+											selectShopName(item.structured_formatting.main_text, item.description)
+										}>
 										<Text style={styles.suggestion} key={item.id}>
 											{item.description}
 										</Text>
@@ -217,33 +255,6 @@ const PostScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 						disabledStyle={isPressed ? { backgroundColor: '#fbd01d' } : null}
 					/>
 				</View>
-			</View>
-			<View>
-				<Dialog visible={_dialogVisible} onTouchOutside={() => setDialogVisible(false)}>
-					<View>
-						<Text style={{ textAlign: 'center' }}>店名を入力して下さい</Text>
-					</View>
-				</Dialog>
-			</View>
-			<View>
-				<Dialog
-					visible={shareCompleteDialogVisible}
-					onTouchOutside={() => setShareCompleteDialogVisible(false)}>
-					<View>
-						<Text style={{ textAlign: 'center' }}>投稿が完了しました</Text>
-					</View>
-				</Dialog>
-			</View>
-			<View>
-				<Dialog
-					visible={permissionDialogVisible}
-					onTouchOutside={() => setPermissionDialogVisible(false)}>
-					<View>
-						<Text style={{ textAlign: 'center' }}>
-							位置情報利用が許可されていません。位置情報を利用すると、より正確にお店を検索することができます。位置情報を許可する場合は端末の設定から許可をお願いします
-						</Text>
-					</View>
-				</Dialog>
 			</View>
 		</KeyboardAwareScrollView>
 	);
