@@ -21,6 +21,10 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "infoPlist": {
+      "NSLocationAlwaysUsageDescription": "test",
+      "NSLocationWhenInUseUsageDescription": "testtest"
+    },
     "ios": {
       "supportsTablet": true
     },

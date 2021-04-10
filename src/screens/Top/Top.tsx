@@ -16,11 +16,11 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 	const [isReview, setIsReview] = useState<boolean>(true);
 	const userId = props.globalState.state.uid;
 
-	useEffect(() => {
-		(async () => {
-			Permissions.askAsync(Permissions.LOCATION);
-		})();
-	});
+	// useEffect(() => {
+	// 	(async () => {
+	// 		Permissions.askAsync(Permissions.LOCATION);
+	// 	})();
+	// });
 	// fetch all reviews from firestore and show them
 	useEffect(() => {
 		void (async () => {
@@ -79,7 +79,9 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 			) : (
 				<View>
 					<ScrollView
-						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />
+						}>
 						<View style={styles.descriptionPosition}>
 							<View
 								style={{
