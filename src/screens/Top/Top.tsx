@@ -18,7 +18,9 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 
 	// useEffect(() => {
 	// 	(async () => {
-	// 		Permissions.askAsync(Permissions.LOCATION);
+
+	// 		await Permissions.askAsync(Permissions.LOCATION);
+
 	// 	})();
 	// });
 	// fetch all reviews from firestore and show them

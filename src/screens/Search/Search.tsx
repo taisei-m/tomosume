@@ -57,13 +57,23 @@ const Search: React.FC<SearchStackNavProps<'search'> & ContainerProps> = (props)
 
 	useEffect(() => {
 		(async () => {
-			const { status } = await Permissions.askAsync(Permissions.LOCATION);
-			if (status == 'granted') {
-				const location = await Location.getCurrentPositionAsync({});
-				executeSetRegion(location.coords.latitude, location.coords.longitude);
-			} else {
-				executeSetRegion(35.67832667, 139.77044378);
-			}
+			// const { status } = await Permissions.askAsync(Permissions.LOCATION);
+			// if (status == 'granted') {
+			// 	const location = await Location.getCurrentPositionAsync({});
+			// 	setRegion({
+			// 		latitude: location.coords.latitude,
+			// 		longitude: location.coords.longitude,
+			// 		latitudeDelta: 0.05,
+			// 		longitudeDelta: 0.05,
+			// 	});
+			// } else {
+			setRegion({
+				latitude: 35.67832667,
+				longitude: 139.77044378,
+				latitudeDelta: 0.08,
+				longitudeDelta: 0.08,
+			});
+			// }
 		})();
 	}, []);
 	//投稿されているお店の位置情報・店名を取得する
