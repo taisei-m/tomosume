@@ -1,41 +1,28 @@
 {
-  "expo": {
-    "name": "tomosume",
-    "slug": "tomosume",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/tomosume_store_icon.png",
-    "splash": {
-      "image": "./assets/tomosume_splash_new.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "infoPlist": {
-      "NSLocationAlwaysUsageDescription": "test",
-      "NSLocationWhenInUseUsageDescription": "testtest"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ],
-      "package": "com.bi17.tomosume",
-      "versionCode": 2
-    },
-    "description": ""
-  }
+	"expo": {
+		"name": "tomosume",
+		"slug": "tomosume",
+		"platforms": ["ios", "android", "web"],
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/tomosume_store_icon.png",
+		"splash": {
+			"image": "./assets/tomosume_splash_new.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+			"package": "com.bi17.tomosume",
+			"versionCode": 2
+		},
+		"description": ""
+	}
 }
