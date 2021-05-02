@@ -7,6 +7,7 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+*.cache
 web-build/
 web-report/
 .env
@@ -20,3 +21,4 @@ firestore.rules
 firestore.indexes.json
 storage.rules
 ui-debug.log
+web-build

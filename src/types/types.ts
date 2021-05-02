@@ -80,6 +80,23 @@ export type ReviewDocResponse = {
 
 export type ReviewsDocResponse = ReviewDocResponse[];
 
+export type Review = {
+	category: string;
+	createdAt: firebase.firestore.Timestamp;
+	favoriteMenu: string;
+	price: string;
+	shopAddress: string;
+	shopId: string;
+	shopName: string;
+	user: firebase.firestore.DocumentReference;
+	userName: string;
+	iconURL: string;
+	key: string;
+	userId: string;
+};
+
+export type Reviews = Review[];
+
 // findUser.tsx changeUserName
 export type userDescriptionType = {
 	userName: string;
@@ -120,8 +137,21 @@ export type ShopDocResponse = {
 
 export type ShopsArrayType = ShopDocResponse[];
 
+export type ShopDescription = {
+	id: string;
+	latitude: number;
+	longitude: number;
+};
+
+export type PinFunc = {
+	shopDoc: ShopDocResponse;
+	showShopReviews: (id: string, latitude: number, longitude: number) => void;
+	openedPinId: string;
+	setPinId: (isOpen: string) => void;
+}
+
 // Search.tsx
-export type regionType = {
+export type Region = {
 	latitude: number;
 	longitude: number;
 	latitudeDelta: number;

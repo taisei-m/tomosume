@@ -1,6 +1,6 @@
 import { db } from '../../../firebaseConfig';
 import firebase from '../../../firebaseConfig';
-import { ReviewDocResponse, ShopDocResponse } from '../../types/types';
+import { ShopDocResponse, Reviews, Review } from '../../types/types';
 
 export const fetchFolloweeIds = async (uid: string): Promise<string[]> => {
 	const querySnapshot = await db.collection('userList').doc(uid).collection('followee').get();
@@ -10,7 +10,7 @@ export const fetchFolloweeIds = async (uid: string): Promise<string[]> => {
 	return followeeIds;
 };
 
-export const convertToReferenceType = async (
+export const convertArrayToReference = async (
 	followeeIds: string[],
 ): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>[]> => {
 	let reference: firebase.firestore.DocumentReference;
@@ -26,8 +26,9 @@ export const fetchShopDescription = async (
 	shopReviewdByFollowerDocs: any,
 ): Promise<ShopDocResponse[]> => {
 	const shopDescriptions: ShopDocResponse[] = await Promise.all(
-		shopReviewdByFollowerDocs.map(async (item) => {
-			let shopId = item.data().shopId;
+		shopReviewdByFollowerDocs.map(async (item: firebase.firestore.DocumentData) => {
+			let review = item.data() as Review;
+			let shopId = review.shopId;
 			return db
 				.collection('shops')
 				.doc(shopId)
@@ -42,10 +43,12 @@ export const fetchShopDescription = async (
 	return shopDescriptions;
 };
 
-export const fetchReviews = async (queryDocsSnapshot: any): Promise<ReviewDocResponse[]> => {
-	const reviews: ReviewDocResponse[] = await Promise.all(
+export const fetchReviews = async (
+	queryDocsSnapshot: firebase.firestore.QueryDocumentSnapshot<Review>[],
+): Promise<Reviews> => {
+	const reviews: Reviews = await Promise.all(
 		queryDocsSnapshot.map(async (item) => {
-			let review = item.data() as ReviewDocResponse;
+			let review = item.data();
 			review.key = item.id;
 			const profile = await review.user.get();
 			review.userName = profile.get('userName');
@@ -55,4 +58,26 @@ export const fetchReviews = async (queryDocsSnapshot: any): Promise<ReviewDocRes
 		}),
 	);
 	return reviews;
+};
+
+export const fetchShopsDescriptionByFollowees = async (
+	convertedFollowees: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>[],
+): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => {
+	return await db
+		.collectionGroup('reviews')
+		.where('user', 'in', convertedFollowees)
+		.orderBy('createdAt', 'desc')
+		.get();
+};
+
+export const fetchReviewsByFollowees = async (
+	id: string,
+	references: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>[],
+): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> => {
+	return await db
+		.collectionGroup('reviews')
+		.where('shopId', '==', id)
+		.where('user', 'in', references)
+		.orderBy('createdAt', 'desc')
+		.get();
 };
