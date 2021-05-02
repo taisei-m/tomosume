@@ -1,49 +1,28 @@
 {
-  "expo": {
-    "name": "tomosume",
-    "slug": "tomosume",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.1.5",
-    "orientation": "portrait",
-    "icon": "./assets/tomosume2.png",
-    "splash": {
-      "image": "./assets/tomosume_splash_new.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "bundleIdentifier": "com.bi17.tomosume",
-      "buildNumber": "1",
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSLocationAlwaysUsageDescription": "This app access your location infomation to identify your location in this app.",
-        "NSLocationUsageDescription": "This app access your location infomation to identify your location in this app.",
-        "NSLocationWhenInUseUsageDescription": "This app access your location infomation to identify your location in this app."
-      }
-    },
-    "android": {
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ],
-      "package": "com.bi17.tomosume",
-      "versionCode": 18,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAh3MVH7HGvzEBsv_y3hkpVgaUwZJMkssw"
-        }
-      }
-    },
-    "description": ""
-  }
+	"expo": {
+		"name": "tomosume",
+		"slug": "tomosume",
+		"platforms": ["ios", "android", "web"],
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/tomosume_store_icon.png",
+		"splash": {
+			"image": "./assets/tomosume_splash_new.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+			"package": "com.bi17.tomosume",
+			"versionCode": 2
+		},
+		"description": ""
+	}
 }

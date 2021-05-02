@@ -1,6 +1,6 @@
 import { db } from '../../../firebaseConfig';
 import { PredictionJsonType } from '../../types/types';
-import apiKey from '../../api/api_key';
+import { apiKey } from '../../api/api';
 
 //TODO:エラー処理について調べる
 export const fetchShopPredictions = async (

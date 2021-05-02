@@ -18,11 +18,11 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 	const [pageDescription, setPageDescription] = useState<string>('');
 	const userId = props.globalState.state.uid;
 
-	useEffect(() => {
-		(async () => {
-			await Permissions.askAsync(Permissions.LOCATION);
-		})();
-	});
+	// useEffect(() => {
+	// 	(async () => {
+	// 		await Permissions.askAsync(Permissions.LOCATION);
+	// 	})();
+	// });
 	// fetch all reviews from firestore and show them
 	useEffect(() => {
 		void (async () => {
@@ -86,33 +86,33 @@ const Top: React.FC<TopStackNavProps<'Top'> & ContainerProps> = (props) => {
 					onRefresh={handleRefresh}
 				/>
 			) : (
-					<View>
-						<ScrollView
-							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
-							<View style={styles.descriptionPosition}>
-								<View
+				<View>
+					<ScrollView
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => updateReview()} />}>
+						<View style={styles.descriptionPosition}>
+							<View
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+									flex: 1,
+									justifyContent: 'center',
+								}}>
+								<Icon name="hand-o-up" color="#fbd01d" size={40} />
+								<Icon
+									name="arrow-down"
+									color="black"
+									size={25}
 									style={{
-										flexDirection: 'row',
-										alignItems: 'center',
-										flex: 1,
-										justifyContent: 'center',
-									}}>
-									<Icon name="hand-o-up" color="#fbd01d" size={40} />
-									<Icon
-										name="arrow-down"
-										color="black"
-										size={25}
-										style={{
-											marginTop: 10,
-											marginLeft: 5,
-										}}
-									/>
-								</View>
-								<Text style={styles.description}>{pageDescription}</Text>
+										marginTop: 10,
+										marginLeft: 5,
+									}}
+								/>
 							</View>
-						</ScrollView>
-					</View>
-				)}
+							<Text style={styles.description}>{pageDescription}</Text>
+						</View>
+					</ScrollView>
+				</View>
+			)}
 		</View>
 	);
 };
