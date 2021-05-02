@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from './Text';
+import { Text } from '../atoms/Text';
 
 type Props = {
 	onPress: () => void;
