@@ -1,16 +1,43 @@
 import React from 'react';
-import { View, StyleSheet, Text as RNText, TextStyle } from 'react-native';
+import { StyleSheet, Text as RNText } from 'react-native';
 
 type Props = {
-	style?: TextStyle;
+	color?: string;
+	size?: number;
+	weight?: '400' | '700';
+	textAlign?: 'left' | 'center' | 'right' | 'auto';
+	decorationLine?: 'underline' | 'none';
 };
 
-export const Text: React.FC<Props> = ({ children, style }) => {
-	const textStyle = {
-		color: 'black',
-		fontSize: 18,
+export const Text: React.FC<Props> = ({
+	children,
+	color,
+	decorationLine,
+	size,
+	textAlign,
+	weight,
+}) => {
+	const colorStyle = {
+		color: color ? color : 'black',
 	};
-	return <RNText style={[textStyle, style]}>{children}</RNText>;
+	const sizeStyle = {
+		fontSize: size ? size : 18,
+	};
+	const weightStyle = {
+		fontWeight: weight ? weight : '400',
+	};
+	const alignStyle = {
+		textAlign: textAlign ? textAlign : 'auto',
+	};
+	const decorationLineStyle = {
+		textDecorationLine: decorationLine ? decorationLine : 'none',
+	};
+
+	return (
+		<RNText style={[colorStyle, decorationLineStyle, sizeStyle, weightStyle, alignStyle]}>
+			{children}
+		</RNText>
+	);
 };
 
 const styles = StyleSheet.create({});

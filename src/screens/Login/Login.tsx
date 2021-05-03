@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Text } from 'react-native-elements';
 import { Subscribe } from 'unstated';
 import firebase from '../../../firebaseConfig';
 import GlobalContainer from '../../store/GlobalState';
@@ -10,9 +9,10 @@ import { styles } from './style';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button } from '../../components/molecules/Button';
+import { Text } from '../../components/atoms/Text';
 import { Input } from 'react-native-elements';
 
-const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
+const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [emailValidationMessage, setEmailValidationMessage] = useState<string>('');
@@ -103,8 +103,10 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 	return (
 		<KeyboardAwareScrollView style={styles.keyboardScrollView}>
 			<View style={styles.container}>
-				<View>
-					<Text style={styles.logo}>TomoSume</Text>
+				<View style={styles.logoArea}>
+					<Text size={50} weight="700">
+						TomoSume
+					</Text>
 				</View>
 
 				<Input
@@ -115,14 +117,9 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 					onChangeText={setEmail}
 					value={email}
 				/>
-				<View>
-					<Text
-						style={
-							emailValidationMessage === 'ok' ? styles.inputNotErrorMessage : styles.inputErrorMessage
-						}>
-						{emailValidationMessage}
-					</Text>
-				</View>
+				<Text color={emailValidationMessage === 'ok' ? '#48D1CC' : 'red'} size={16} textAlign="center">
+					{emailValidationMessage}
+				</Text>
 				<Input
 					containerStyle={{ width: '80%', marginTop: 20, marginBottom: 10 }}
 					placeholder="パスワード"
@@ -130,25 +127,16 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 					leftIcon={{ type: 'ant-design', name: 'lock' }}
 					leftIconContainerStyle={{ width: 24, marginRight: 10 }}
 					onChangeText={setPassword}
-					autoCapitalize="none"
 					secureTextEntry={true}
 				/>
 				<View>
-					<Text
-						style={
-							passwordValidationMessage === 'ok' ? styles.inputNotErrorMessage : styles.inputErrorMessage
-						}>
+					<Text color={emailValidationMessage === 'ok' ? '#48D1CC' : 'red'} size={16} textAlign="center">
 						{passwordValidationMessage}
 					</Text>
 				</View>
-				<TouchableOpacity
-					onPress={() => {
-						props.navigation.navigate('ResetPassword');
-					}}>
-					<Text style={styles.forgotText}>パスワードをお忘れの方はこちら</Text>
-				</TouchableOpacity>
+
 				<View>
-					<Text style={styles.aboveButtonMessage}>{signinErrorText}</Text>
+					<Text>{signinErrorText}</Text>
 				</View>
 
 				<View style={{ width: '80%' }}>
@@ -156,12 +144,26 @@ const LoginScreen: React.FC<NavigationProps & ContainerProps> = (props) => {
 						ログイン
 					</Button>
 				</View>
-				<TouchableOpacity
-					onPress={() => {
-						props.navigation.navigate('CreateAccount');
-					}}>
-					<Text style={styles.createAccountText}> 新しいアカウントを作成 </Text>
-				</TouchableOpacity>
+				<View style={styles.fogetPasswordButtonArea}>
+					<TouchableOpacity
+						onPress={() => {
+							props.navigation.navigate('ResetPassword');
+						}}>
+						<Text size={16} decorationLine="underline" color="grey">
+							パスワードをお忘れの方はこちら
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.newAccountButtonArea}>
+					<TouchableOpacity
+						onPress={() => {
+							props.navigation.navigate('CreateAccount');
+						}}>
+						<Text size={16} decorationLine="underline" color="grey">
+							新しいアカウントを作成
+						</Text>
+					</TouchableOpacity>
+				</View>
 				<TouchableOpacity
 					onPress={() => {
 						props.navigation.navigate('ResendEmail');
@@ -180,9 +182,7 @@ type NavigationProps = {
 export const LoginScreenWrapper: React.FC<NavigationProps> = ({ navigation }) => {
 	return (
 		<Subscribe to={[GlobalContainer]}>
-			{(globalState: GlobalContainer) => (
-				<LoginScreen globalState={globalState} navigation={navigation} />
-			)}
+			{(globalState: GlobalContainer) => <Login globalState={globalState} navigation={navigation} />}
 		</Subscribe>
 	);
 };

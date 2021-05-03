@@ -10,7 +10,9 @@ type Props = {
 export const Button: React.FC<Props> = ({ disabled, onPress, children }) => {
 	return (
 		<TouchableOpacity style={styles.btn} disabled={disabled} onPress={onPress}>
-			<Text style={styles.btnText}>{children}</Text>
+			<Text textAlign="center" color="white" weight="700">
+				{children}
+			</Text>
 		</TouchableOpacity>
 	);
 };
@@ -23,10 +25,5 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		borderRadius: 40,
 		backgroundColor: '#fbd01d',
-	},
-	btnText: {
-		textAlign: 'center',
-		color: 'white',
-		fontWeight: '700',
 	},
 });

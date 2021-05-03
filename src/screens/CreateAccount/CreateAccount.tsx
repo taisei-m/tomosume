@@ -6,7 +6,7 @@ import firebase from '../../../firebaseConfig';
 import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { testEmailPattern, testPasswordPattern } from '../LoginScreen/index';
+import { testEmailPattern, testPasswordPattern } from '../Login/index';
 import {
 	usernameErrorMessageInput,
 	emailErrorMessageInput,

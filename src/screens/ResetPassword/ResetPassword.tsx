@@ -8,7 +8,7 @@ import GlobalContainer from '../../store/GlobalState';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { errorMessageAboveSubmitButtonInput } from './index';
-import { testEmailPattern } from '../LoginScreen/index';
+import { testEmailPattern } from '../Login/index';
 
 const ResetPassword: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [navigation] = useState(props.navigation);
