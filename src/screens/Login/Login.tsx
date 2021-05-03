@@ -11,6 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Button } from '../../components/molecules/Button';
 import { Text } from '../../components/atoms/Text';
 import { Input } from 'react-native-elements';
+import { validateAuth } from '../../utils/validateAuthInfo';
 
 const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [email, setEmail] = useState<string>('');
@@ -36,42 +37,22 @@ const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 		}
 	}, [emailValidationMessage, passwordValidationMessage]);
 
-	const validateEmail = () => {
-		const isValidated = checkEmailPattern(email);
-		if (email === '') {
-			setEmailValidationMessage('');
-			return;
-		}
-		if (isValidated) {
-			setEmailValidationMessage('ok');
-			return;
-		} else {
-			setEmailValidationMessage('メールアドレスの形式が正しくありません');
-			return;
-		}
-	};
-
-	const validatePassword = () => {
-		const isValidated = checkPasswordPattern(password);
-		if (password === '') {
-			setPasswordValidationMessage('');
-			return;
-		}
-		if (isValidated) {
-			setPasswordValidationMessage('ok');
-			return;
-		} else {
-			setPasswordValidationMessage('半角英数字を含む6文字以上にしてください');
-			return;
-		}
-	};
-
 	const validate = (inputedPlace: string) => {
 		if (inputedPlace === 'email') {
-			validateEmail();
+			const validationMessage = validateAuth(email, 'email');
+			if (validationMessage) {
+				setEmailValidationMessage(validationMessage);
+			} else {
+				setEmailValidationMessage('');
+			}
 		}
 		if (inputedPlace === 'password') {
-			validatePassword();
+			const validationMessage = validateAuth(password, 'password');
+			if (validationMessage) {
+				setPasswordValidationMessage(validationMessage);
+			} else {
+				setPasswordValidationMessage('');
+			}
 		}
 	};
 
@@ -139,7 +120,7 @@ const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 					<Text>{signinErrorText}</Text>
 				</View>
 
-				<View style={{ width: '80%' }}>
+				<View style={{ width: '80%', marginTop: 10 }}>
 					<Button disabled={!canSignin} onPress={login}>
 						ログイン
 					</Button>

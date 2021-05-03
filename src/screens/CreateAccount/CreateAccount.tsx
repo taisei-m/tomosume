@@ -7,6 +7,7 @@ import { Subscribe } from 'unstated';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { testEmailPattern, testPasswordPattern } from '../Login/index';
+import { validateAuth } from '../../utils/validateAuthInfo';
 import {
 	usernameErrorMessageInput,
 	emailErrorMessageInput,
@@ -50,16 +51,6 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 		})();
 	}, []);
 
-	//input関数
-	const usernameInput = (passedUsername: string) => {
-		setUsername(passedUsername);
-	};
-	const emailInput = (passedEmail: string) => {
-		setEmail(passedEmail);
-	};
-	const passwordInput = (passedPassword: string) => {
-		setPassword(passedPassword);
-	};
 	const signupButtonDisabledInput = (result: boolean) => {
 		setSignupButtonDisabled(result);
 	};
@@ -90,17 +81,20 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 
 	//フォームの入力を監視、入力に応じてvalidate関数を呼ぶ
 	const inputUsername = (inputedUsername: string) => {
-		usernameInput(inputedUsername);
+		setUsername(inputedUsername);
 		autoValidation(inputedUsername, 'username');
 	};
 	const inputEmail = (inputedEmail: string) => {
-		emailInput(inputedEmail);
+		setEmail(inputedEmail);
 		autoValidation(inputedEmail, 'email');
 	};
 	const inutPassword = (inputedPassword: string) => {
-		passwordInput(inputedPassword);
+		setPassword(inputedPassword);
 		autoValidation(inputedPassword, 'password');
 	};
+	useEffect(() => {
+		validateAuth(_email, 'email');
+	}, [_email]);
 
 	const autoValidation = (inputedText: string, inputedForm: string) => {
 		// 新規作成ボタンの上のエラーメッセージを非表示にする
@@ -263,11 +257,6 @@ const CreateAccount: React.FC<NavigationProps & ContainerProps> = (props) => {
 	return (
 		<KeyboardAwareScrollView style={styles.keyboardScrollView}>
 			<View style={styles.container}>
-				{/* <View>
-
-            <Text style={styles.logo}>アカウント新規作成</Text>
-
-        </View> */}
 				<View style={styles.inputView}>
 					<Input
 						inputStyle={styles.inputText}

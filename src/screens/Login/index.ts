@@ -1,19 +1,3 @@
-// メールアドレスの正規表現
-const emailPattern = new RegExp(
-	/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-);
-
-// パスワードの正規表現
-const passwordPattern = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}$/, 'i');
-
-export const checkEmailPattern = (email: string): boolean => {
-	return emailPattern.test(email);
-};
-
-export const checkPasswordPattern = (password: string): boolean => {
-	return passwordPattern.test(password);
-};
-
 // ログインボタンの上のエラーメッセージの表示
 export const signinErrorTextInputFirebase = (errorCode: string, errorMessage: string): string => {
 	let outputErrorText = '';
