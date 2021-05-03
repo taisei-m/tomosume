@@ -48,3 +48,22 @@ export const validateAuth = (inputedText: string, inputedPlace: string) => {
 		return validationMessage;
 	}
 };
+
+export const validate = (inputedText: string, inputedPlace: string) => {
+	if (inputedPlace === 'email') {
+		const validationMessage = validateAuth(inputedText, 'email');
+		if (validationMessage) {
+			return validationMessage;
+		} else {
+			return '';
+		}
+	}
+	if (inputedPlace === 'password') {
+		const validationMessage = validateAuth(inputedText, 'password');
+		if (validationMessage) {
+			return validationMessage;
+		} else {
+			return '';
+		}
+	}
+};

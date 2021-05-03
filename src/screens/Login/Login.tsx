@@ -4,14 +4,14 @@ import { Subscribe } from 'unstated';
 import firebase from '../../../firebaseConfig';
 import GlobalContainer from '../../store/GlobalState';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { signinErrorTextInputFirebase, checkEmailPattern, checkPasswordPattern } from './index';
+import { signinErrorTextInputFirebase } from './index';
 import { styles } from './style';
 import { NavUnloginParamList, ContainerProps } from '../../types/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button } from '../../components/molecules/Button';
 import { Text } from '../../components/atoms/Text';
 import { Input } from 'react-native-elements';
-import { validateAuth } from '../../utils/validateAuthInfo';
+import { validate } from '../../utils/validateAuthInfo';
 
 const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [email, setEmail] = useState<string>('');
@@ -22,11 +22,21 @@ const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 	const [canSignin, setCanSignin] = useState<boolean>(false);
 
 	useEffect(() => {
-		validate('email');
+		const validationMessage = validate(email, 'email');
+		if (validationMessage) {
+			setEmailValidationMessage(validationMessage);
+		} else {
+			setEmailValidationMessage('');
+		}
 	}, [email]);
 
 	useEffect(() => {
-		validate('password');
+		const validationMessage = validate(password, 'password');
+		if (validationMessage) {
+			setPasswordValidationMessage(validationMessage);
+		} else {
+			setPasswordValidationMessage('');
+		}
 	}, [password]);
 
 	useEffect(() => {
@@ -36,25 +46,6 @@ const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 			setCanSignin(false);
 		}
 	}, [emailValidationMessage, passwordValidationMessage]);
-
-	const validate = (inputedPlace: string) => {
-		if (inputedPlace === 'email') {
-			const validationMessage = validateAuth(email, 'email');
-			if (validationMessage) {
-				setEmailValidationMessage(validationMessage);
-			} else {
-				setEmailValidationMessage('');
-			}
-		}
-		if (inputedPlace === 'password') {
-			const validationMessage = validateAuth(password, 'password');
-			if (validationMessage) {
-				setPasswordValidationMessage(validationMessage);
-			} else {
-				setPasswordValidationMessage('');
-			}
-		}
-	};
 
 	const login = () => {
 		setCanSignin(false);
@@ -121,7 +112,7 @@ const Login: React.FC<NavigationProps & ContainerProps> = (props) => {
 				</View>
 
 				<View style={{ width: '80%', marginTop: 10 }}>
-					<Button disabled={!canSignin} onPress={login}>
+					<Button disabled={!canSignin} onPress={login} color={!canSignin ? 'lightgrey' : '#fbd01d'}>
 						ログイン
 					</Button>
 				</View>

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
 	keyboardScrollView: {
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: 'white',
 		alignItems: 'center',
-		paddingTop: '30%',
+		paddingTop: '50%',
 	},
 	logo: {
 		fontWeight: 'bold',
@@ -55,5 +55,8 @@ export const styles = StyleSheet.create({
 	AlreadyHaveAccountText: {
 		textDecorationLine: 'underline',
 		marginTop: '5%',
+	},
+	alreadyHaveAccountBtnArea: {
+		marginTop: 20,
 	},
 });

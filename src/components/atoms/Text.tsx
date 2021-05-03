@@ -7,6 +7,7 @@ type Props = {
 	weight?: '400' | '700';
 	textAlign?: 'left' | 'center' | 'right' | 'auto';
 	decorationLine?: 'underline' | 'none';
+	onPress?: () => void;
 };
 
 export const Text: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const Text: React.FC<Props> = ({
 	size,
 	textAlign,
 	weight,
+	onPress,
 }) => {
 	const colorStyle = {
 		color: color ? color : 'black',
@@ -34,7 +36,9 @@ export const Text: React.FC<Props> = ({
 	};
 
 	return (
-		<RNText style={[colorStyle, decorationLineStyle, sizeStyle, weightStyle, alignStyle]}>
+		<RNText
+			style={[colorStyle, decorationLineStyle, sizeStyle, weightStyle, alignStyle]}
+			onPress={onPress}>
 			{children}
 		</RNText>
 	);
