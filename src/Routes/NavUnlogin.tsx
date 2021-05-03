@@ -1,6 +1,6 @@
 import React from 'react';
 // import { SelectLoginOrSignupWrapper } from '../screens/SelectLoginOrSignup/SelectLoginOrSignup';
-import { LoginScreenWrapper } from '../screens/LoginScreen/LoginScreen';
+import { LoginScreenWrapper } from '../screens/Login/Login';
 import { CreateAccountWrapper } from '../screens/CreateAccount/CreateAccount';
 import { ResetPasswordWrapper } from '../screens/ResetPassword/ResetPassword';
 import { AfterResetPasswordWrapper } from '../screens/AfterResetPassword/AfterResetPassword';
