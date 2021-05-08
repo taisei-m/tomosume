@@ -14,56 +14,48 @@ import { Icon } from "react-native-elements";
 import ProfileNumber from "../../components/ProfileNumber";
 import ProfileReviews from "../../components/ProfileReviews";
 import {
-  fetchAllUserReviews,
-  fetchUserIconImage,
+  fetchReviews,
+  fetchUserDescription,
   fetchFollowers,
   setIconUrlOnFirestore,
-  changeIconUrl
+  getProfileIcon
 } from "./index";
 import GlobalContainer from "../../store/GlobalState";
 import {
   ProfileStackNavProps,
   userDataDocResponse,
-  userReviewsType,
   ContainerProps
 } from "../../types/types";
 import { Subscribe } from "unstated";
 import { Text, Button } from "../../components/atoms/index";
-//@ts-ignore
-import { ProgressDialog } from "react-native-simple-dialogs";
+import { Review } from "../../types/review";
 
 const Profile: React.FC<
   ProfileStackNavProps<"ProfileWrapper"> & ContainerProps
 > = (props) => {
   const [_userName, setUserName] = useState<string>();
-  const [_followee, setFollowee] = useState<number>(0);
-  const [_follower, setFollower] = useState<number>(0);
+  const [followeeNum, setFolloweeNum] = useState<number>(0);
+  const [followerNum, setFollowerNum] = useState<number>(0);
   const [_postNumber, setPostNumber] = useState<number>(0);
-  const [_allReviews, setAllReviews] = useState<userReviewsType>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [_userIcon, setUserIcon] = useState<string>();
-  const [progressVisible, setProgressVisible] = useState<boolean>(false);
   const [userDataUpdate, setUserDataUpdate] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      const allUserReviews = await fetchAllUserReviews(
-        props.globalState.state.uid
-      );
-      setAllReviews(allUserReviews);
-      setPostNumber(allUserReviews.length);
+      const reviews = await fetchReviews(props.globalState.state.uid);
+      setReviews(reviews);
+      setPostNumber(reviews.length);
     })();
   }, [refresh]);
-  // ユーザーのアイコン画像を取得
   useEffect(() => {
     (async () => {
-      const user = await fetchUserIconImage(props.globalState.state.uid);
+      const user = await fetchUserDescription(props.globalState.state.uid);
       setUserIcon(user.iconURL);
     })();
   }, []);
-  // ユーザの名前を取得
   useEffect(() => {
-    // fetchUserName(props.globalState.state.uid)
     const unsubscribe = db
       .collection("userList")
       .doc(props.globalState.state.uid)
@@ -75,16 +67,13 @@ const Profile: React.FC<
       unsubscribe();
     };
   }, []);
-  // ユーザのfollowerを取得
   useEffect(() => {
     (async () => {
-      const followerNumber = await fetchFollowers(props.globalState.state.uid);
-      setFollower(followerNumber);
+      const followerNum = await fetchFollowers(props.globalState.state.uid);
+      setFollowerNum(followerNum);
     })();
   }, [refresh]);
-  // ユーザのfolloweeを取得
   useEffect(() => {
-    // fetchFollowees(props.globalState.state.uid)
     let followees: string[] = [];
     const unsubscribe = db
       .collection("userList")
@@ -96,7 +85,7 @@ const Profile: React.FC<
           followees.push(doc.id);
         });
         const followeeNumber: number = followees.length - 1;
-        setFollowee(followeeNumber);
+        setFolloweeNum(followeeNumber);
       });
     return () => {
       unsubscribe();
@@ -114,14 +103,11 @@ const Profile: React.FC<
 
   const changeIcon = async () => {
     try {
-      setProgressVisible(true);
-      const iconUrl = await changeIconUrl(props.globalState.state.uid);
-      if (iconUrl == "cancel") {
-        setProgressVisible(false);
+      const profileIcon = await getProfileIcon(props.globalState.state.uid);
+      if (profileIcon == "cancel") {
       } else {
-        await setIconUrlOnFirestore(props.globalState.state.uid, iconUrl);
-        setUserIcon(iconUrl);
-        setProgressVisible(false);
+        await setIconUrlOnFirestore(props.globalState.state.uid, profileIcon);
+        setUserIcon(profileIcon);
       }
     } catch (error) {
       console.log(error);
@@ -137,13 +123,6 @@ const Profile: React.FC<
           />
         }
       >
-        <View>
-          <ProgressDialog
-            visible={progressVisible}
-            title="アイコン画像を変更しています"
-            message="しばらくお待ちください"
-          />
-        </View>
         <View style={styles.profileDescriptionArea}>
           <View>
             <TouchableOpacity onPress={changeIcon}>
@@ -158,7 +137,7 @@ const Profile: React.FC<
           >
             <View style={styles.userNameArea}>
               <Text weight="700" size={20}>
-                山田太郎
+                {_userName}
               </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
@@ -199,12 +178,12 @@ const Profile: React.FC<
           >
             <ProfileNumber number={_postNumber} itemName="投稿" />
             <ProfileNumber
-              number={_follower}
+              number={followeeNum}
               itemName="フォロワー"
               press={() => props.navigation.navigate("followerList")}
             />
             <ProfileNumber
-              number={_followee}
+              number={followerNum}
               itemName="フォロー"
               press={() => props.navigation.navigate("followeeList")}
             />
@@ -212,7 +191,7 @@ const Profile: React.FC<
         </View>
         <SafeAreaView style={[styles.list, { marginHorizontal: "5%" }]}>
           <FlatList
-            data={_allReviews}
+            data={reviews}
             renderItem={({ item }) => (
               <ProfileReviews
                 shopName={item.shopName}
