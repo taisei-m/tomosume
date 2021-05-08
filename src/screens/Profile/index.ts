@@ -1,7 +1,7 @@
 import firebase from "../../../firebaseConfig";
 import { db } from "../../../firebaseConfig";
 import * as ImagePicker from "expo-image-picker";
-import { userDataDocResponse, pickerResult } from "../../types/types";
+import { pickerResult } from "../../types/types";
 
 import { Review } from "../../types/review";
 import { User } from "../../types/user";
@@ -43,7 +43,6 @@ export const fetchFollowers = async (uid: string): Promise<number> => {
     .collection("follower")
     .get()
     .then((qs) => {
-      //@ts-ignore
       const _followers = qs.docs.map((doc) => {
         return doc.data().id as string;
       });
@@ -54,11 +53,11 @@ export const fetchFollowers = async (uid: string): Promise<number> => {
 
 export const getProfileIcon = async (uid: string): Promise<string> => {
   const selectedIcon = (await selectIcon()) as pickerResult;
+  //画像選択画面でキャンセルをした際，selectedIcon.cancelledがtrueになる
   if (!selectedIcon.cancelled) {
-    const data = await fetchIconUrl(selectedIcon.uri, uid);
-    return data;
+    const iconUrl = await fetchIconUrl(selectedIcon.uri, uid);
+    return iconUrl;
   } else {
-    // 画像の変更をキャンセルした際にダイアログの表示を消す
     return "cancel";
   }
 };
@@ -83,11 +82,11 @@ export const fetchIconUrl = async (
   const response = await fetch(uri);
   const blob = await response.blob();
   await storageRef.put(blob);
-  const url = await storageRef.getDownloadURL();
-  return url;
+  const iconUrl = (await storageRef.getDownloadURL()) as string;
+  return iconUrl;
 };
 
-export const setIconUrlOnFirestore = (
+export const setIconUrl = (
   uid: string,
   url: string | boolean
 ): Promise<void> => {

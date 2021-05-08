@@ -17,7 +17,7 @@ import {
   fetchReviews,
   fetchUserDescription,
   fetchFollowers,
-  setIconUrlOnFirestore,
+  setIconUrl,
   getProfileIcon
 } from "./index";
 import GlobalContainer from "../../store/GlobalState";
@@ -106,7 +106,7 @@ const Profile: React.FC<
       const profileIcon = await getProfileIcon(props.globalState.state.uid);
       if (profileIcon == "cancel") {
       } else {
-        await setIconUrlOnFirestore(props.globalState.state.uid, profileIcon);
+        await setIconUrl(props.globalState.state.uid, profileIcon);
         setUserIcon(profileIcon);
       }
     } catch (error) {
